@@ -11,9 +11,9 @@ class Placeholder : public Node {
 public:
 	Placeholder(float t);
 //	using Node::addOutputNode;
-	using Node::compute;
-	using Node::getDatavalue;
-	using Node::setDatavalue;
+	using Node::forwards;
+//	using Node::getDatavalue;
+//	using Node::setDatavalue;
 	using Node::getInputNodes;
 //	using Node::getType;
 //protected:

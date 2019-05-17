@@ -9,10 +9,20 @@ void Node::addOutputNode(std::shared_ptr<Node> n){
 	_outputNodes.push_back(n);
 }
 
-float Node::getDatavalue() const {
-	return _datavalue;
+float Node::getForwardData() const {
+	return _forwardData;
 }
 
-void Node::setDatavalue(float datavalue) {
-	_datavalue = datavalue;
+void Node::setForwardData(float forwardData) {
+	_forwardData = forwardData;
 }
+
+float Node::getBackwardData() const {
+	return _backwardData;
+}
+
+void Node::setBackwardData(float backwardData) {
+	_backwardData = backwardData;
+}
+
+

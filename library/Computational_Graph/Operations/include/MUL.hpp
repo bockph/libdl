@@ -10,6 +10,8 @@ class MUL : public Operation {
 public:
 	MUL(std::vector<std::shared_ptr<Node>> inputNodes):Operation(inputNodes){};//;
 	~MUL()=default;
-	void compute() override;
+	void forwards() override;
+	void backwards(float previousGradient) override;
+
 
 };

@@ -5,7 +5,7 @@
 #include "Placeholder.hpp"
 
 Placeholder::Placeholder(float t){
-	setDatavalue(t);
+	setForwardData(t);
 
 //	graph->addPlaceholder(std::make_shared<Node>(this));
 }

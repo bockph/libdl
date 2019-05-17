@@ -3,7 +3,7 @@ project(test VERSION 0.1
         DESCRIPTION "testing CI setup"
         LANGUAGES CXX)
 set (CMAKE_CXX_STANDARD 14)
-
+find_package(Eigen3 REQUIRED)
 add_subdirectory(extern)
 add_subdirectory(library)
 #<-------Stuff for directly building an Application----->

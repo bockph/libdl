@@ -4,6 +4,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <Eigen/Dense>
 
 class Node {
 
@@ -14,11 +15,16 @@ public:
 
 	virtual void addOutputNode(std::shared_ptr<Node> n);
 
-	virtual float getDatavalue() const;
+	float getForwardData() const;
 
-	virtual void setDatavalue(float datavalue);
+	void setForwardData(float forwardData);
 
-	virtual void compute(){};
+	float getBackwardData() const;
+
+	void setBackwardData(float backwardData);
+
+	virtual void forwards(){};
+	virtual void backwards(float previousGradient){};
 	/**
 	 * This method is used to identify the type of the instances
 	 * Therefore the following numbers apply
@@ -28,7 +34,11 @@ public:
 //	int getType(){return _id;};
 //protected:
 //	  int _id;
-	 float _datavalue;
+	 float _forwardData;
+	 float _backwardData;
+	Eigen::VectorXf _forwardCache;
+
+	Eigen::VectorXf _gradients;
 virtual const std::vector<std::shared_ptr<Node>> &getInputNodes(){return _inputNodes;} ;
 
 private:

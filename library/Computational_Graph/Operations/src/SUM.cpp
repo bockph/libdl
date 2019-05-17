@@ -4,10 +4,17 @@
 
 #include "SUM.hpp"
 
-void SUM::compute(){
+void SUM::forwards(){
 	float tmp =0;
-	for(std::shared_ptr<Node> input: getInputNodes()){
-		tmp+= input->getDatavalue();
+	for(int i=0;i<getInputNodes().size();i++){
+		_forwardCache(i)=getInputNodes().at(i)->getForwardData();
+		tmp+= getInputNodes().at(i)->getForwardData();
 	}
-	setDatavalue(tmp);
-};
+	setForwardData(tmp);
+}
+void SUM::backwards(float previousGradient) {
+	for(int i =0;i<_forwardCache.size();i++){
+		_gradients(i)=previousGradient;
+	}
+
+}

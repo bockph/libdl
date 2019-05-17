@@ -8,13 +8,18 @@
  Operation::Operation(std::vector<std::shared_ptr<Node>> inputNodes):
  //store all references of input Nodes
 _inputNodes(inputNodes)
+
+
 {
 	//add this Node as a Output Node for all reference inputNodes
 	for(std::shared_ptr<Node> input: _inputNodes){
 		auto tmp(std::make_shared<Operation>(*this));
 		input->addOutputNode( tmp);//std::make_shared<Operation>(this));
 	}
-	std::cout<<"Operation"<<std::endl;
+
+	_forwardCache=Eigen::VectorXf(inputNodes.size());
+
+	_gradients=Eigen::VectorXf(inputNodes.size());
 
 	//append to default active graph
 //	graph->addOperation(std::make_shared<Node>(this));//setOperations(this);

@@ -10,7 +10,8 @@ class SUM : public Operation {
 public:
 	SUM(std::vector<std::shared_ptr<Node>> inputNodes):Operation(inputNodes){};//;
 	~SUM()=default;
-	void compute() override;
+	void forwards() override;
+	void backwards(float previousGradient) override;
 
 };
 
