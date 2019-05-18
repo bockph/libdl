@@ -14,7 +14,6 @@ public:
 
 
 	virtual void addOutputNode(std::shared_ptr<Node> n);
-
 	float getForwardData() const;
 
 	void setForwardData(float forwardData);

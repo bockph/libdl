@@ -11,8 +11,9 @@ void Sigmoid::forwards(){
 	if(getInputNodes().size()!=1){
 		throw std::invalid_argument("The Sigmoid function does only accept one Node");
 	}else{
-		setForwardData(sigmoid(getInputNodes().at(0)->getForwardData()));
 		_forwardCache(0)=getInputNodes().at(0)->getForwardData();
+		setForwardData(sigmoid(_forwardCache(0)));
+
 	}
 };
 void Sigmoid::backwards(float previousGradient) {

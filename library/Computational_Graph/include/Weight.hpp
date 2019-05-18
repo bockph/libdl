@@ -1,20 +1,18 @@
 //
-// Created by phili on 10.05.2019.
+// Created by phili on 17.05.2019.
 //
 
 #pragma once
 
 #include <Node.hpp>
 #include <Operation.hpp>
-class Placeholder : public Node {
+class Weight : public Node {
 
 public:
-	Placeholder(float t);
+	Weight(float t);
 	using Node::forwards;
 	using Node::getInputNodes;
 	void backwards(float previousGradient) override;
-
 };
-
 
 

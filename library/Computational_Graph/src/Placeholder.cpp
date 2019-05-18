@@ -9,3 +9,6 @@ Placeholder::Placeholder(float t){
 
 //	graph->addPlaceholder(std::make_shared<Node>(this));
 }
+void Placeholder::backwards(float previousGradient) {
+
+}

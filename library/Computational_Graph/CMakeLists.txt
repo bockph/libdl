@@ -9,7 +9,9 @@ set(GRAPH_SOURCES
          src/Session.cpp
          Operations/src/SUM.cpp
         Operations/src/MUL.cpp
-        Operations/src/Sigmoid.cpp)
+        Operations/src/Sigmoid.cpp
+        Operations/src/MSE.cpp
+        src/Weight.cpp)
 
 add_library(${GRAPH_NAME}  ${GRAPH_SOURCES})
 target_include_directories(${GRAPH_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include
