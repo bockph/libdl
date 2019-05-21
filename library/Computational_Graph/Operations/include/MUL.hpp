@@ -13,7 +13,7 @@ public:
 	~MUL()=default;
 	void forwards() override;
 	void backwards(float previousGradient) override;
-	void backwards(bool first = false) override;
+	void backwards() override;
 
 
 };

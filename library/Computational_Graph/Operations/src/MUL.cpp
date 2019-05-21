@@ -51,7 +51,7 @@ void MUL::backwards(float previousGradient) {
 //		}
 //	}
 }
-void MUL::backwards(bool first) {
+void MUL::backwards() {
 
 //if(first){
 //	Eigen::MatrixXf inputGradient = 1*(getInputB()->getForward().transpose());

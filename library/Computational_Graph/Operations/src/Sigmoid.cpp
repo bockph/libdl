@@ -37,7 +37,7 @@ void Sigmoid::backwards(float previousGradient) {
 	_gradients(0) = previousGradient*sigCalculated*(1-sigCalculated);
 
 }
-void Sigmoid::backwards(bool first) {
+void Sigmoid::backwards() {
 	auto tmp = getForward();
 /*	std::cout<<"Gradients:"<<getCurrentGradients()<<std::endl;
 	std::cout<<"Forward:"<<getForward()<<std::endl;*/

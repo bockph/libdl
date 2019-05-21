@@ -15,7 +15,7 @@ public:
 	using Node::forwards;
 	using Node::getInputNodes;
 	void backwards(float previousGradient) override;
-	void backwards(bool first = false) override;
+	void backwards() override;
 
 };
 

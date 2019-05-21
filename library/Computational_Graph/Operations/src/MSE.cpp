@@ -19,17 +19,13 @@ void MSE::forwards(){
 	}
 
 	float loss=0;
-/*	std::cout<<"Input A:"<<getInputA()->getForward()<<std::endl;
-	std::cout<<"Input C:"<<getInputB()->getForward()<<std::endl;*/
+//	std::cout<<"Input A:"<<getInputA()->getForward()<<std::endl;
+//	std::cout<<"Input C:"<<getInputB()->getForward()<<std::endl;
 	auto diff = getInputA()->getForward()-getInputB()->getForward();
-/*
-	std::cout<<"Diff:"<<diff<<std::endl;
-*/
+//	std::cout<<"Diff:"<<diff<<std::endl;
 
 	Eigen::MatrixXf squared = diff.array().pow(2);
-/*
-	std::cout<<"squared:"<<squared<<std::endl;
-*/
+//	std::cout<<"squared:"<<squared<<std::endl;
 
 	Eigen::MatrixXf mse(squared.rows(),squared.cols());
 	mse.setZero();
@@ -48,17 +44,15 @@ void MSE::forwards(){
 	for(int i=0;i<squared.rows();i++){
 		mse(i,0)=tmp;
 	}
-/*
-	std::cout<<"MSE2:"<<mse<<std::endl;
-*/
+//	std::cout<<"MSE2:"<<mse<<std::endl;
 
 	setForward(mse);
 };
 void MSE::backwards(float previousGradient) {
 	_gradients(0) = 2*(_forwardCache(0)-_forwardCache(1));
 }
-void MSE::backwards(bool first) {/*
-	std::cout<<"Forward:"<<getForward()<<std::endl;
+void MSE::backwards() {
+/*	std::cout<<"Forward:"<<getForward()<<std::endl;
 	std::cout<<"C:"<<getInputB()->getForward()<<std::endl;*/
 getInputA()->setCurrentGradients(2*(getForward()-getInputB()->getForward()));
 

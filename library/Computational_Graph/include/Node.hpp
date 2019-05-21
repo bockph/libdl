@@ -44,7 +44,7 @@ public:
 
 	virtual void forwards(){};
 	virtual void backwards(float previousGradient){};
-	virtual void backwards(bool first=false){};
+	virtual void backwards(){};
 
 	 float _forwardData;
 	 float _backwardData;

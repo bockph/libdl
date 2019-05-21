@@ -19,7 +19,7 @@ Placeholder::Placeholder(Eigen::MatrixXf m)
 //	currentGradients(m.cols(),m.rows());
 
 }
-void Placeholder::backwards(bool first) {
+void Placeholder::backwards() {
 /*
 	std::cout<<"BackProp Input:"<<getCurrentGradients()<<std::endl;
 */

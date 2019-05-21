@@ -40,9 +40,9 @@ std::vector<std::shared_ptr<Node>> Session::preOrderTraversal(const std::shared_
 
 void Session::backProp(std::shared_ptr<Node> &endNode, float gradient,bool first) {
 //	endNode->backwards(gradient);
-if(first)
-	endNode->backwards(true);
-else
+//if(first)
+//	endNode->backwards(true);
+//else
 	endNode->backwards();
 
 	auto tmp = endNode->getInputNodes();

@@ -15,6 +15,6 @@ public:
 	void forwards() override;
 	void backwards(float previousGradient) override;
 	static float sigmoid(float a);
-	void backwards(bool first = false) override;
+	void backwards() override;
 
 };

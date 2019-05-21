@@ -17,9 +17,9 @@ Weight::Weight(Eigen::MatrixXf m){
 void Weight::backwards(float previousGradient) {
 	setForwardData(getForwardData()-0.1*previousGradient);
 }
-void Weight::backwards(bool first) {
+void Weight::backwards() {
 /*
 	std::cout<<"BackProp Weight:"<<getCurrentGradients()<<std::endl;
 */
-	setForward(getForward()-0.1*getCurrentGradients());
+	setForward(getForward()-50*getCurrentGradients());
 }
