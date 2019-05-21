@@ -3,6 +3,7 @@ image: elsa/ubu18-clang6:latest
 stages:
   - compile
 
+
 build-linux-gcc:
   stage: compile
   script:
@@ -10,7 +11,7 @@ build-linux-gcc:
     - cd build
     - cmake ..
     - make
-    - ./test_Mul
+    - test_Mul
   tags:
     - linux
   cache:
@@ -25,7 +26,7 @@ build-linux-clang:
     - cd build
     - cmake .. -DCMAKE_CXX_COMPILER=/usr/bin/clang++
     - make
-    - ./test_Mul
+    - test_Mul
   tags:
     - linux
   cache:
