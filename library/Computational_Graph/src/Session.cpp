@@ -9,7 +9,7 @@ Session::Session(const std::shared_ptr<Node> &endNode, std::unique_ptr<Graph> gr
 		_graph(std::move(graph))
 		, _postOrderTraversedList(postOrderTraversal(endNode))
 		, _preOrderTraversedList(preOrderTraversal(endNode))
-		, _endNode(endNode){
+		, _endNode(endNode) {
 
 }
 
@@ -25,6 +25,7 @@ std::vector<std::shared_ptr<Node>> Session::postOrderTraversal(const std::shared
 	toReturn.push_back(endNode);
 	return toReturn;
 }
+
 std::vector<std::shared_ptr<Node>> Session::preOrderTraversal(const std::shared_ptr<Node> &endNode) {
 	std::vector<std::shared_ptr<Node>> toReturn;
 	toReturn.push_back(endNode);
@@ -38,21 +39,15 @@ std::vector<std::shared_ptr<Node>> Session::preOrderTraversal(const std::shared_
 	return toReturn;
 }
 
-void Session::backProp(std::shared_ptr<Node> &endNode, float gradient,bool first) {
-//	endNode->backwards(gradient);
-//if(first)
-//	endNode->backwards(true);
-//else
+void Session::backProp(std::shared_ptr<Node> &endNode) {
+
 	endNode->backwards();
 
 	auto tmp = endNode->getInputNodes();
-//	if (!tmp.empty()) {
-		for (int i = 0; i < tmp.size(); i++) {
-//			backProp(tmp.at(i), endNode->_gradients(i));
-			backProp(tmp.at(i));//, endNode->_gradients(i));
+	for (int i = 0; i < tmp.size(); i++) {
+		backProp(tmp.at(i));
 
-		}
-//	}
+	}
 }
 
 void Session::run(std::vector<float> feed) {
@@ -66,16 +61,7 @@ void Session::run(std::vector<float> feed) {
 	Eigen::MatrixXf tmp = _endNode->getForward();
 	tmp.setOnes();
 	_endNode->setCurrentGradients(tmp);
-	backProp(_endNode,0,true);//,1);
-
-//	for(int i=0;i<_preOrderTraversedList.size();i++){
-//		if(i==0)_preOrderTraversedList.at(i)->backwards(1);
-//		else{
-//			_preOrderTraversedList.at(i)->backwards(_preOrderTraversedList.at(i-1)->getBackwardData());
-//		}
-//
-//	}
-
+	backProp(_endNode);
 
 }
 

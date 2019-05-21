@@ -8,13 +8,14 @@
 
 class Sigmoid : public Operation {
 public:
-	Sigmoid(std::vector<std::shared_ptr<Node>> inputNodes):Operation(inputNodes){};//;
-	Sigmoid(std::shared_ptr<Node> X):Operation(X){};
+	Sigmoid(std::shared_ptr<Node> X)
+			: Operation(X) {};
 
-	~Sigmoid()=default;
+	~Sigmoid() = default;
+
 	void forwards() override;
-	void backwards(float previousGradient) override;
-	static float sigmoid(float a);
-	void backwards() override;
 
+	static float sigmoid(float a);
+
+	void backwards() override;
 };

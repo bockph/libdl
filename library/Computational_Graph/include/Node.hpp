@@ -43,7 +43,6 @@ public:
 	void setCurrentGradients(const Eigen::MatrixXf &currentGradients);
 
 	virtual void forwards(){};
-	virtual void backwards(float previousGradient){};
 	virtual void backwards(){};
 
 	 float _forwardData;

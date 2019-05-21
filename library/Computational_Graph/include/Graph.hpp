@@ -11,21 +11,7 @@
 #include <Placeholder.hpp>
 
 class Graph {
-//public:
-//	const std::vector<std::shared_ptr<Node>> &getPlaceholder() const;
-////
-//	void addPlaceholder(std::shared_ptr<Node> placeholder);
-////
-//	const std::vector<std::shared_ptr<Node>> &getOperations() const;
-//
-//	void addOperation(std::shared_ptr<Node> operation);
-//
-////private:
-//	std::vector<std::shared_ptr<Node>> _placeholder;
-//	std::vector<std::shared_ptr<Node>> _operations;
-//
-//};
-//
+
 public:
 	const std::vector<std::shared_ptr<Placeholder>> &getPlaceholder() const;
 //
