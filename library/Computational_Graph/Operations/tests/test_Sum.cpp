@@ -11,7 +11,7 @@
 
 
 
-TEST_CASE("SUM ", "[operation]") {
+/*TEST_CASE("SUM ", "[operation]") {
 	auto x1 = std::make_shared<Placeholder>(25);
 	auto x2 = std::make_shared<Placeholder>(50);
 	auto x3 = std::make_shared<Placeholder>(75);
@@ -84,7 +84,7 @@ TEST_CASE("SUM ", "[operation]") {
 		REQUIRE(o1->_gradients(0)==1);
 		REQUIRE(o1->_gradients(1)==1);
 		REQUIRE(o2->_gradients(0)==1);
-	}
+	}*/
 
 }
 

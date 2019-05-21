@@ -15,6 +15,7 @@
 #include <Weight.hpp>
 
 
+/*
 TEST_CASE("Multiplication Node ", "[operation]") {
 	auto x1 = std::make_shared<Placeholder>(25);
 	auto x2 = std::make_shared<Placeholder>(50);
@@ -145,5 +146,6 @@ TEST_CASE("XOR test ", "[real problem]") {
 
 
 }
+*/
 
 
