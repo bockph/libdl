@@ -10,9 +10,12 @@ class Placeholder : public Node {
 
 public:
 	Placeholder(float t);
+	Placeholder(Eigen::MatrixXf);
 	using Node::forwards;
 	using Node::getInputNodes;
+	using Node::_forward;
 	void backwards(float previousGradient) override;
+	void backwards(bool first = false) override;
 
 };
 

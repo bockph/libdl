@@ -38,12 +38,19 @@ std::vector<std::shared_ptr<Node>> Session::preOrderTraversal(const std::shared_
 	return toReturn;
 }
 
-void Session::backProp(std::shared_ptr<Node> &endNode, float gradient) {
-	endNode->backwards(gradient);
+void Session::backProp(std::shared_ptr<Node> &endNode, float gradient,bool first) {
+//	endNode->backwards(gradient);
+if(first)
+	endNode->backwards(true);
+else
+	endNode->backwards();
+
 	auto tmp = endNode->getInputNodes();
 //	if (!tmp.empty()) {
 		for (int i = 0; i < tmp.size(); i++) {
-			backProp(tmp.at(i), endNode->_gradients(i));
+//			backProp(tmp.at(i), endNode->_gradients(i));
+			backProp(tmp.at(i));//, endNode->_gradients(i));
+
 		}
 //	}
 }
@@ -56,7 +63,10 @@ void Session::run(std::vector<float> feed) {
 	for (std::shared_ptr<Node> operation: _postOrderTraversedList) {
 		operation->forwards();
 	}
-	backProp(_endNode,1);
+	Eigen::MatrixXf tmp = _endNode->getForward();
+	tmp.setOnes();
+	_endNode->setCurrentGradients(tmp);
+	backProp(_endNode,0,true);//,1);
 
 //	for(int i=0;i<_preOrderTraversedList.size();i++){
 //		if(i==0)_preOrderTraversedList.at(i)->backwards(1);

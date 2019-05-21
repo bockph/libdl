@@ -9,10 +9,12 @@
 class Sigmoid : public Operation {
 public:
 	Sigmoid(std::vector<std::shared_ptr<Node>> inputNodes):Operation(inputNodes){};//;
+	Sigmoid(std::shared_ptr<Node> X):Operation(X){};
+
 	~Sigmoid()=default;
 	void forwards() override;
 	void backwards(float previousGradient) override;
-	float sigmoid(float a);
-
+	static float sigmoid(float a);
+	void backwards(bool first = false) override;
 
 };

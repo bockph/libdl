@@ -13,7 +13,7 @@ public:
 private:
 	std::vector<std::shared_ptr<Node>> postOrderTraversal(const std::shared_ptr<Node> &endNode);
 	std::vector<std::shared_ptr<Node>> preOrderTraversal(const std::shared_ptr<Node> &endNode);
-	void backProp(std::shared_ptr<Node> &endNode,float gradient);
+	void backProp(std::shared_ptr<Node> &endNode,float gradient=0,bool first=false);
 	std::vector<std::shared_ptr<Node>>_postOrderTraversedList;
 	std::vector<std::shared_ptr<Node>>_preOrderTraversedList;
 	std::unique_ptr<Graph> _graph;
