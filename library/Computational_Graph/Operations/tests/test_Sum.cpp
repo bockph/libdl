@@ -84,7 +84,8 @@
 		REQUIRE(o1->_gradients(0)==1);
 		REQUIRE(o1->_gradients(1)==1);
 		REQUIRE(o2->_gradients(0)==1);
-	}*/
+	}
 
 }
 
+*/
