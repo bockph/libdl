@@ -12,13 +12,15 @@ void SUM::forwards(){
 		tmp+= getInputNodes().at(i)->getForwardData();
 	}
 	setForwardData(tmp);*/
-	//
-	//B should be a Col vector
-//	setForward(getInputA()->getForward().rowwise()+getInputB()->getForward().transpose());
-/*	std::cout<<"X"<<getInputA()->getForward()<<std::endl;
-	std::cout<<"B"<<getInputB()->getForward()<<std::endl;*/
 
+	int rowsA =getInputA()->getForward().rows();
+	int rowsB=getInputB()->getForward().rows();
+
+if(rowsA!=rowsB)
+	setForward(getInputA()->getForward()+getInputB()->getForward().replicate(rowsA,1));
+else
 	setForward(getInputA()->getForward()+getInputB()->getForward());
+
 
 }
 void SUM::backwards(float previousGradient) {

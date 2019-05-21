@@ -16,6 +16,7 @@
 #include <Sigmoid.hpp>
 #include <MSE.hpp>
 #include <SUM.hpp>
+#include <Bias.hpp>
 
 
 TEST_CASE("Multiplication Node ", "[operation]") {
@@ -218,23 +219,23 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 
 		Eigen::MatrixXf mW1(2,2);
 		mW1<<0.5,0.4,0.3,0.234;//,0.3,0.7;
-		Eigen::MatrixXf b1(4,2);
-		b1<<1,1,1,1,1,1,1,1;
+		Eigen::MatrixXf b1(1,2);
+		b1<<1,1;//,1,1,1,1,1,1;
 
 		Eigen::MatrixXf mW12(2,2);
 		mW12<<0.8,0.3,0.7,0.3;
 
 		Eigen::MatrixXf mW2(2,1);
 		mW2<<0.5,0.1;//,0.4,0.8;
-		Eigen::MatrixXf b2(4,1);
-		b2<<1,1,1,1;
+		Eigen::MatrixXf b2(1,1);
+		b2<<1;//,1,1,1;
 
 
 
 		auto X = std::make_shared<Placeholder>(mX1);
 		auto W = std::make_shared<Weight>(mW1);
-		auto B1 = std::make_shared<Weight>(b1);
-		auto B2 = std::make_shared<Weight>(b2);
+		auto B1 = std::make_shared<Bias>(b1);
+		auto B2 = std::make_shared<Bias>(b2);
 //		auto W12 = std::make_shared<Weight>(mW12);
 
 		auto W2 = std::make_shared<Weight>(mW2);
@@ -256,7 +257,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		std::cout<<"         Round "<<1<<std::endl;
 		std::cout<<"Output:\n"<<sig2->getForward()<<std::endl;
 		std::cout<<"LOSS:\n"<<mse->getForward()<<std::endl;
-		for(int i =0;i<100000;i++){
+		for(int i =0;i<500;i++){
 			session.run();
 //			std::cout<<"         Round "<<i<<std::endl;
 //			std::cout<<"Output:\n"<<sig2->getForward()<<std::endl;
