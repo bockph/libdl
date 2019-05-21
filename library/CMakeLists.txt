@@ -8,6 +8,7 @@ MACRO (LIBDL_TEST NAME)
 ENDMACRO (LIBDL_TEST)
 
 add_subdirectory(Computational_Graph)
+add_subdirectory(Utils)
 set(other_srcs )
 #add_library(libdl ${other_srcs} $<TARGET_OBJECTS:graph>)# '''$<TARGET_OBJECTS:B>''')
 

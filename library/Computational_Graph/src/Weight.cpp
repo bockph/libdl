@@ -12,5 +12,5 @@ Weight::Weight(Eigen::MatrixXf m) {
 
 void Weight::backwards() {
 
-	setForward(getForward() - 50 * getCurrentGradients());
+	setForward(getForward() - 1 * getCurrentGradients());
 }

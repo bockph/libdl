@@ -12,7 +12,8 @@ set(GRAPH_SOURCES
         Operations/src/Sigmoid.cpp
         Operations/src/MSE.cpp
         src/Weight.cpp
-        src/Bias.cpp)
+        src/Bias.cpp
+        )
 
 add_library(${GRAPH_NAME}  ${GRAPH_SOURCES})
 target_include_directories(${GRAPH_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include
