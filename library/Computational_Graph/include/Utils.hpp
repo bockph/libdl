@@ -4,7 +4,7 @@
 
 #include <Eigen/Dense>
 
-Eigen::MatrixXf generateMatrix(float LO,float HI,int rows,int cols){
+Eigen::MatrixXf generateRandomMatrix(float LO, float HI, int rows, int cols){
 
 	float range= HI-LO;
 	Eigen::MatrixXf m = Eigen::MatrixXf::Random(rows,cols); // 3x3 Matrix filled with random numbers between (-1,1)
