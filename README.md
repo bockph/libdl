@@ -1,4 +1,3 @@
-#libdl
 #XOR Problem
 The XOR problem is simulated in the build File Example_XOR, which is build from the Code in Example_XOR.cpp\
 When executing, it uses the following Mini-batch where one data point is represented by one row:\
@@ -16,7 +15,7 @@ with the Corresponding Classes stored in the Vector C\
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,\
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,\
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0;\
-\\
+\
 and randomly initialized Weights and Biases.\
 \
 As a output it gives first the results of the first forward pass and the loss of the first forward pass.\
