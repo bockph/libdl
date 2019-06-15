@@ -30,3 +30,4 @@ add_subdirectory(Catch2)
 add_subdirectory(pybind11)
 add_subdirectory(spdlog)
 
+#//https://foonathan.net/blog/2016/07/07/cmake-dependency-handling.html <-- do this, see E-mail Tobias

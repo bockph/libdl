@@ -22,3 +22,7 @@ void SUM::backwards() {
 	getInputA()->setCurrentGradients(getCurrentGradients());
 
 }
+
+std::string SUM::printForward() {
+	return "SUM:0";
+}

@@ -13,6 +13,8 @@ set(GRAPH_SOURCES
         Operations/src/MSE.cpp
         src/Weight.cpp
         src/Bias.cpp
+        src/Filter.cpp
+        Operations/src/ConvolveFilter.cpp
         )
 
 add_library(${GRAPH_NAME}  ${GRAPH_SOURCES})

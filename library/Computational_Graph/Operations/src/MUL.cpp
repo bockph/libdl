@@ -19,3 +19,6 @@ void MUL::backwards() {
 	getInputB()->setCurrentGradients(weightGradient);
 
 }
+std::string MUL::printForward() {
+	return "MUL:0";
+}

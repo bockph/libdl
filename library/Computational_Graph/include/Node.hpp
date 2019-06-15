@@ -9,8 +9,7 @@
 class Node {
 
 public:
-//	Node(const Node& n)= default;
-//	Node( Node&& n)= default;
+
 
 
 	virtual void addOutputNode(std::shared_ptr<Node> n);
@@ -61,6 +60,7 @@ private:
 	std::vector<std::shared_ptr<Node>> _outputNodes;
 	std::shared_ptr<Node> inputA;
 	std::shared_ptr<Node> inputB;
+
 
 
 

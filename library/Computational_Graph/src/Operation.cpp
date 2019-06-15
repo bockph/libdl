@@ -31,7 +31,9 @@ Operation::Operation(std::shared_ptr<Node> X) {
 const std::vector<std::shared_ptr<Node>> &Operation::getInputNodes() {
 	return _inputNodes;
 }
-
+std::string Operation::printForward() {
+	return "Operation:0";
+}
 
 
 

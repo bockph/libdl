@@ -16,6 +16,7 @@ public:
 	Operation(std::shared_ptr<Node> X);
 
 	const std::vector<std::shared_ptr<Node>> &getInputNodes() override;
+	virtual std::string printForward();
 
 
 private:
