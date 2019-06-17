@@ -6,7 +6,9 @@
 
 #include <iostream>
 
-
+int getChannels(){
+    return 1;
+}
 void ConvolveFilter::forwards() {
 	//this results in a Vector containing in each row the result for a different input of the Batch
 	//	setForward(getInputA()->getForward() * getInputB()->getForward());
@@ -15,35 +17,43 @@ void ConvolveFilter::forwards() {
 	int imgN = getInputA()->getForward().rows();
 	int filterN = getInputB()->getForward().rows();
 	int imgDim = getInputA()->getForward().cols();
-	int filterDim = getInputB()->getForward().cols();
-	int outputDim = std::floor((imgDim - filterDim) / _stride) + 1;
-//	int outDimSquare = std::pow(outputDim,2);
+	int imgDimSQRT=std::sqrt(imgDim);
+
+    int amountPixels = imgDim/getChannels();
+    int amountRows = std::sqrt(amountPixels);
+    int amountCols = amountRows*getChannels();
+
+
+    int filterDim = getInputB()->getForward().cols();
+    int filterDimSQRT = std::sqrt(filterDim);
+	int outputDimSQRT = std::floor((imgDimSQRT - filterDimSQRT) / _stride) + 1;
+	int outputDim = std::pow(outputDimSQRT,2);
 	Eigen::MatrixXf outputMatrix = Eigen::MatrixXf::Zero(imgN, outputDim * filterN);
 	//loop over all images :
 	for (int i = 0; i < imgN; i++) {
-		//1. img= get each row of X; imgDim = img.dim
-//		auto img =getInputA()->getForward()[i];
+		//get the Image as Matrix, currently only with greyscale/oneChannel Images
+		//TODO: Implement multi channels
+        Eigen::MatrixXf tmpIMG = getInputA()->getForward().block(i,0,1,imgDim);
+        tmpIMG.resize(imgDimSQRT,imgDimSQRT);
+        tmpIMG.transposeInPlace();
 		//2. loop over all filters
 		for (int j = 0; j < filterN; j++) {
-			//2.1 filter = row of W; filterDim = filter.dim
-//			auto filter = getInputB()->getForward()[j];
-			//2.2 loop over outputDim
-			for (int o = 0; o < outputDim; o++) {
-				//2.2.1 part = img.block(...) <-- should get the part of the image the kernel is applied to
-				/*std::cout<<"outputMatrix:"<<std::endl;
-				std::cout<<outputMatrix<<std::endl;
-				std::cout<<"A:"<<std::endl;
-				std::cout<<getInputA()->getForward().block(i,
-						o * filterDim + (_stride - 1) * o, 1, filterDim)<<std::endl;
-				std::cout<<"B:"<<std::endl;
-				std::cout<<getInputB()->getForward().block(j, 0, 1, filterDim)<<std::endl;*/
-				outputMatrix(i, o + j * outputDim) =
-						(getInputA()->getForward().block(i,
-								o * filterDim + (_stride - 1) * o, 1, filterDim).cwiseProduct(
-										getInputB()->getForward().block(j, 0, 1, filterDim)))
-								.sum();
+            //get the Filter as Matrix, currently only with greyscale Images
+            //TODO: Implement multi channels
+            Eigen::MatrixXf tmpFilter = getInputB()->getForward().block(j,0,1,filterDim);
+            tmpFilter.resize(filterDimSQRT,filterDimSQRT);
+            tmpFilter.transposeInPlace();
 
-			}
+            std::cout<<"Filter:"<<tmpFilter<<std::endl;
+			//2.2 loop over amount of possible convolutions and apply filter to img
+            for (int x = 0; x < outputDimSQRT; x++) {
+                for(int y =0;y< outputDimSQRT; y++){
+                    int x_stride = x*_stride;
+                    int y_stride = y*_stride;
+                    outputMatrix(i, y+x*outputDimSQRT) =
+                            tmpIMG.block(x_stride,y_stride,filterDimSQRT,filterDimSQRT).cwiseProduct(tmpFilter).sum();
+                }
+            }
 
 		}
 
