@@ -5,8 +5,10 @@
 #include "Placeholder.hpp"
 
 
-Placeholder::Placeholder(Eigen::MatrixXf m) {
+Placeholder::Placeholder(Eigen::MatrixXf m,int dim,int channel) {
 	setForward(m);
+	setOutputDim(dim);
+    setChannels(channel);
 }
 
 void Placeholder::backwards() {}

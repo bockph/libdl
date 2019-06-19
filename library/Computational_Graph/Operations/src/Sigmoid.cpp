@@ -7,6 +7,13 @@
 
 
 void Sigmoid::forwards() {
+    /*
+ * GENERALL STUFF
+ */
+//    setChannels(getInputA()->getChannels());
+    beforeForward();/*
+ *
+ */
 //TODO: Might try using fast sigmoid f(x) = x / (1 + abs(x))
 //https://stackoverflow.com/questions/10732027/fast-sigmoid-algorithm
 	setForward(getInputA()->getForward().unaryExpr(std::ref(sigmoid)));

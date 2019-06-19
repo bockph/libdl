@@ -20,7 +20,13 @@ public:
 
     void backwards() override;
     std::string printForward() override;
+
+    const Eigen::MatrixXf &getMaxIndexMatrix() const;
+
+    void setMaxIndexMatrix(const Eigen::MatrixXf &maxIndexMatrix);
+
 private:
     int _stride;
     int _windowSize;
+    Eigen::MatrixXf _maxIndexMatrix;
 };

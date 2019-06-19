@@ -6,15 +6,27 @@
 #include "SUM.hpp"
 
 void SUM::forwards() {
+/*
+ * GENERALL STUFF
+ */
 
-	int rowsA = getInputA()->getForward().rows();
-	int rowsB = getInputB()->getForward().rows();
+//    setChannels(getInputA()->getChannels());
+    beforeForward();
+/*
+ *
+ */
+    int rowsA = getInputA()->getForward().rows();
+    int rowsB = getInputB()->getForward().rows();
+    int colsA = getInputA()->getForward().cols();
+    int colsB = getInputB()->getForward().cols();
 
 	if (rowsA != rowsB) {
 		setForward(getInputA()->getForward() + getInputB()->getForward().replicate(rowsA, 1));
 	} else {
 		setForward(getInputA()->getForward() + getInputB()->getForward());
 	}
+
+
 }
 
 void SUM::backwards() {

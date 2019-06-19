@@ -7,6 +7,13 @@
 
 
 void MSE::forwards() {
+    /*
+ * GENERALL STUFF
+ */
+//    setChannels(getInputA()->getChannels());
+    beforeForward();/*
+ *
+ */
 	auto diff = getInputA()->getForward() - getInputB()->getForward();
 	Eigen::MatrixXf squared = diff.array().pow(2);
 

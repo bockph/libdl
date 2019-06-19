@@ -15,7 +15,8 @@ set(GRAPH_SOURCES
         src/Bias.cpp
         src/Filter.cpp
         Operations/src/ConvolveFilter.cpp
-        Operations/src/MaxPool.cpp )
+        Operations/src/MaxPool.cpp
+        Operations/src/ReLu.cpp)
 
 add_library(${GRAPH_NAME}  ${GRAPH_SOURCES})
 target_include_directories(${GRAPH_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include

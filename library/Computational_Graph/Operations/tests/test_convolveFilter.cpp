@@ -31,17 +31,8 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		Eigen::MatrixXf filter(1, 1);
 		filter << 2;
 
-//auto test1 =img;
-//img = img.transpose();
-//test1.resize(2,2);
-//std::cout<<"test1:"<<test1<<std::endl;
-//Eigen::MatrixXf test2 =test1.block(0,0,3,3);
-//std::cout<<"test2_1:"<<test2.size()<<std::endl;
-//
-//test2.resize(1,9);
-//std::cout<<"test2_2:"<<test2<<std::endl;
-		auto X = std::make_shared<Placeholder>(img);
-		auto W = std::make_shared<Filter>(filter);
+		auto X = std::make_shared<Placeholder>(img,2,1);
+		auto W = std::make_shared<Filter>(filter,1,1);
 
 		auto conv = std::make_shared<ConvolveFilter>(X, W);
 
@@ -61,8 +52,8 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		filter << 2;
 
 
-		auto X = std::make_shared<Placeholder>(img);
-		auto W = std::make_shared<Filter>(filter);
+		auto X = std::make_shared<Placeholder>(img,2,1);
+		auto W = std::make_shared<Filter>(filter,1,1);
 
 		auto conv = std::make_shared<ConvolveFilter>(X, W);
 
@@ -83,8 +74,8 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		filter << 2;
 
 
-		auto X = std::make_shared<Placeholder>(img);
-		auto W = std::make_shared<Filter>(filter);
+		auto X = std::make_shared<Placeholder>(img,3,1);
+		auto W = std::make_shared<Filter>(filter,1,1);
 
 		auto conv = std::make_shared<ConvolveFilter>(X, W,2);
 
@@ -120,8 +111,8 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		0,1,0,
 		1,0,1;
 
-		auto X = std::make_shared<Placeholder>(img);
-		auto W = std::make_shared<Filter>(filter);
+		auto X = std::make_shared<Placeholder>(img,5,1);
+		auto W = std::make_shared<Filter>(filter,3,1);
 
 		auto conv = std::make_shared<ConvolveFilter>(X, W);
 
@@ -132,10 +123,88 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		4,3,4,
 		2,4,3,
 		2,3,4;
-        std::cout<<"Result: "<<conv->getForward()<<std::endl;
-
         REQUIRE(conv->getForward().isApprox(test));
 	}
+    SECTION("MultiChannel", "[Multi_Channel_Image]") {
+
+        auto graph = std::make_unique<Graph>();
+        Eigen::MatrixXf img(1, 8);
+        img << 1, 2, 3, 4,1,2,3,4;
+        Eigen::MatrixXf filter(1, 2);
+        filter << 2,3;
+
+        auto X = std::make_shared<Placeholder>(img,2,2);
+        auto W = std::make_shared<Filter>(filter,1,2);
+
+        auto conv = std::make_shared<ConvolveFilter>(X, W);
+
+        Session session(conv, std::move(graph));
+        session.run();
+        Eigen::MatrixXf test = Eigen::MatrixXf(1, 4);
+        test << 5,10,15,20;
+        REQUIRE(conv->getForward().isApprox(test));
+    }
+    SECTION("One dimensional filter, miniBatch as input", "[Multi_Channel_Image]") {
+
+        auto graph = std::make_unique<Graph>();
+        Eigen::MatrixXf img(2, 8);
+        img << 1, 2, 3, 4,1,2,3,4,
+                1, 2, 3, 4,1,2,3,4;
+        Eigen::MatrixXf filter(1, 2);
+        filter << 2,3;
+
+
+        auto X = std::make_shared<Placeholder>(img,2,2);
+        auto W = std::make_shared<Filter>(filter,1,2);
+
+        auto conv = std::make_shared<ConvolveFilter>(X, W);
+
+        Session session(conv, std::move(graph));
+        session.run();
+        Eigen::MatrixXf test = Eigen::MatrixXf(2, 4);
+        test << 5,10,15,20,
+        5,10,15,20;
+
+        REQUIRE(conv->getForward().isApprox(test));
+    }
+    SECTION("Two Filters and Two Convolutional Layers", "[Multi_Channel_Image]") {
+
+        auto graph = std::make_unique<Graph>();
+        Eigen::MatrixXf img(2, 8);
+        img << 1, 2, 3, 4,1,2,3,4,
+                1, 2, 3, 4,1,2,3,4;
+        Eigen::MatrixXf filter(2, 2);
+        filter << 2,3,
+        1,1;
+
+
+        auto X = std::make_shared<Placeholder>(img,2,2);
+        auto W = std::make_shared<Filter>(filter,1,2);
+
+        auto conv = std::make_shared<ConvolveFilter>(X, W);
+
+        Session session(conv, std::move(graph));
+        session.run();
+        Eigen::MatrixXf test = Eigen::MatrixXf(2, 8);
+        test << 5,10,15,20,2,4,6,8,
+                5,10,15,20,2,4,6,8;
+
+        REQUIRE(conv->getForward().isApprox(test));
+        Eigen::MatrixXf filter2(1, 2);
+        filter2 << 2,3;
+        auto W2 = std::make_shared<Filter>(filter2,1,2);
+        auto conv2 = std::make_shared<ConvolveFilter>(conv, W2);
+
+        Session session2(conv2, std::move(graph));
+        session2.run();
+        Eigen::MatrixXf test2 = Eigen::MatrixXf(2, 4);
+        test2 << 16,32,48,64,
+        16,32,48,64;
+        REQUIRE(conv2->getForward().isApprox(test2));
+
+
+    }
+
 
 }
 

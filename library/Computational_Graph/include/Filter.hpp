@@ -11,11 +11,12 @@
 class Filter : public Node {
 
 public:
-	Filter(Eigen::MatrixXf t);
+	Filter(Eigen::MatrixXf t,int dim=1,int channel=1);
 
 	~Filter() = default;
 
 	void backwards() override;
+
 
 
 };

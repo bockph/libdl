@@ -65,4 +65,28 @@ void Node::setCurrentGradients(const Eigen::MatrixXf &currentGradients) {
 	Node::currentGradients = currentGradients;
 }
 
+int Node::getChannels() const {
+    return _channels;
+}
+
+int Node::getOutputDim() const {
+    return _outputDim;
+}
+
+void Node::setChannels(int channels) {
+    _channels = channels;
+}
+
+void Node::setOutputDim(int outputDim) {
+    _outputDim = outputDim;
+}
+
+int Node::getInputDim() const {
+    return _inputDim;
+}
+
+void Node::setInputDim(int inputDim) {
+    _inputDim = inputDim;
+}
+
 

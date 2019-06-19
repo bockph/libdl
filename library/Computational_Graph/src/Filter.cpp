@@ -5,12 +5,15 @@
 #include "Filter.hpp"
 
 
-Filter::Filter(Eigen::MatrixXf m) {
+Filter::Filter(Eigen::MatrixXf m,int dim, int channel) {
 	setForward(m);
-	/*
-	 * A Filter should be a row vector (for the beginning ) of the Form RGB, RGB,RGB,... so 3 data points per pixel
-	 * If several filters are used, a matrix -existing of several row vectors- is used
-	 */
+    setOutputDim(dim);
+    setChannels(channel);
+
+    /*
+     * A Filter should be a row vector (for the beginning ) of the Form RGB, RGB,RGB,... so 3 data points per pixel
+     * If several filters are used, a matrix -existing of several row vectors- is used
+     */
 
 }
 
