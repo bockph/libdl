@@ -16,8 +16,8 @@ public:
 	~ConvolveFilter() = default;
 
 
-    Eigen::MatrixXf addPadding(Eigen::MatrixXf m, int rowPadding, int colPadding);
-    Eigen::MatrixXf addStridePadding(Eigen::MatrixXf m, int stride);
+    void addPadding(Eigen::MatrixXf& m, int rowPadding, int colPadding);
+    void addStridePadding(Eigen::MatrixXf& m, int stride);
 
     int getStride() const;
 
