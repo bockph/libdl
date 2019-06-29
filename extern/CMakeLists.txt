@@ -26,14 +26,22 @@ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/spdlog/CMakeLists.txt")
     message(FATAL_ERROR "Problems with submodule  spdlog.")
 endif()
 add_library(eigenI INTERFACE)
-target_include_directories(eigenI INTERFACE ${PROJECT_SOURCE_DIR}/extern/eigen/Eigen)
+target_include_directories(eigenI INTERFACE ${PROJECT_SOURCE_DIR}/extern/eigen)
 
 add_library(catch2I INTERFACE)
-target_include_directories(catch2I INTERFACE ${PROJECT_SOURCE_DIR}/extern/Catch2/include)
+target_include_directories(catch2I INTERFACE ${PROJECT_SOURCE_DIR}/extern/Catch2/single_include)
+#target_include_directories(catch2I INTERFACE ${PROJECT_SOURCE_DIR}/extern/Catch2/internal)
+#
+#target_sources(catch2I INTERFACE ${PROJECT_SOURCE_DIR}/extern/Catch2/include/internal)
 add_library(spdlogI INTERFACE)
-target_include_directories(spdlogI INTERFACE ${PROJECT_SOURCE_DIR}/extern/spdlog/include/spdlog)
+target_include_directories(spdlogI INTERFACE ${PROJECT_SOURCE_DIR}/extern/spdlog/include)
 add_library(pybind11I INTERFACE)
-target_include_directories(pybind11I INTERFACE ${PROJECT_SOURCE_DIR}/extern/pybind11/include/pybind11)
+target_include_directories(pybind11I INTERFACE ${PROJECT_SOURCE_DIR}/extern/pybind11/include)
+
+
+
+
+
 #
 #set(EIGEN_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extern/eigen/Eigen CACHE PATH "eigen include directory")
 #set(install {CMAKE_CURRENT_SOURCE_DIR}/extern/eigenInstall)
@@ -45,6 +53,6 @@ target_include_directories(pybind11I INTERFACE ${PROJECT_SOURCE_DIR}/extern/pybi
 ##add_subdirectory(eigen)
 #add_subdirectory(Catch2)
 #add_subdirectory(pybind11)
-add_subdirectory(spdlog)
+#add_subdirectory(spdlog)
 
 #//https://foonathan.net/blog/2016/07/07/cmake-dependency-handling.html <-- do this, see E-mail Tobias
