@@ -10,7 +10,7 @@ void Sigmoid::forwards() {
     /*
  * GENERALL STUFF
  */
-//    setChannels(getInputA()->getChannels());
+//    setOutputChannels(getInputA()->getOutputChannels());
     beforeForward();/*
  *
  */

@@ -8,7 +8,7 @@
 Placeholder::Placeholder(Eigen::MatrixXf m,int dim,int channel) {
 	setForward(m);
 	setOutputDim(dim);
-    setChannels(channel);
+    setOutputChannels(channel);
 }
 
 void Placeholder::backwards() {}

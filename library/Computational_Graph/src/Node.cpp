@@ -62,19 +62,21 @@ const Eigen::MatrixXf &Node::getCurrentGradients() const {
 }
 
 void Node::setCurrentGradients(const Eigen::MatrixXf &currentGradients) {
+    if(currentGradients.rows()!=getForward().rows()&&currentGradients.cols()!=getForward().cols())
+        throw::std::invalid_argument("The Gradient should have the same dimensions as the input");
 	Node::currentGradients = currentGradients;
 }
 
-int Node::getChannels() const {
-    return _channels;
+int Node::getOutputChannels() const {
+    return _outputChannels;
 }
 
 int Node::getOutputDim() const {
     return _outputDim;
 }
 
-void Node::setChannels(int channels) {
-    _channels = channels;
+void Node::setOutputChannels(int channels) {
+    _outputChannels = channels;
 }
 
 void Node::setOutputDim(int outputDim) {
@@ -87,6 +89,14 @@ int Node::getInputDim() const {
 
 void Node::setInputDim(int inputDim) {
     _inputDim = inputDim;
+}
+
+int Node::getInputChannels() const {
+    return _inputChannels;
+}
+
+void Node::setInputChannels(int inputChannels) {
+    _inputChannels = inputChannels;
 }
 
 

@@ -41,17 +41,21 @@ public:
 
 	void setCurrentGradients(const Eigen::MatrixXf &currentGradients);
 
-    void setChannels(int channels);
+    void setOutputChannels(int channels);
 
     void setOutputDim(int outputDim);
 
-    int getChannels() const;
+    int getOutputChannels() const;
 
     int getOutputDim() const;
 
     int getInputDim() const;
 
     void setInputDim(int inputDim);
+
+    int getInputChannels() const;
+
+    void setInputChannels(int inputChannels);
 
     virtual void forwards(){};
 	virtual void backwards(){};
@@ -73,7 +77,8 @@ private:
 	std::vector<std::shared_ptr<Node>> _outputNodes;
 	std::shared_ptr<Node> inputA;
 	std::shared_ptr<Node> inputB;
-	int _channels;
+	int _outputChannels;
+	int _inputChannels;
 	int _outputDim;
 	int _inputDim;
 

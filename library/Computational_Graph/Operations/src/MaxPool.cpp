@@ -14,7 +14,7 @@ void MaxPool::forwards() {
     /*
 * GENERALL STUFF
 */
-//    setChannels(getInputA()->getChannels());
+//    setOutputChannels(getInputA()->getOutputChannels());
     beforeForward();
     /*
  *
@@ -33,17 +33,18 @@ void MaxPool::forwards() {
     Eigen::MatrixXf::Index maxRow, maxCol;
 
 
-    Eigen::MatrixXf outputMatrix = Eigen::MatrixXf::Zero(imgN, outputDim * outputDim * getChannels());
+    Eigen::MatrixXf outputMatrix = Eigen::MatrixXf::Zero(imgN, outputDim * outputDim * getOutputChannels());
     Eigen::MatrixXf indexMatrix = Eigen::MatrixXf::Zero(imgN, imgDim*imgDim);
 
     //loop over all images :
     for (int i = 0; i < imgN; i++) {
 
-        for (int c = 0; c < getInputA()->getChannels(); c++) {
+        for (int c = 0; c < getInputA()->getOutputChannels(); c++) {
             Eigen::MatrixXf tmpIMG = getInputA()->getForward().block(i, imgSizeOneChannel * c, 1, imgSizeOneChannel);
             tmpIMG.resize(imgDim, imgDim);
             tmpIMG.transposeInPlace();
             Eigen::MatrixXf indexTMP=Eigen::MatrixXf::Zero(imgDim,imgDim);
+
 
 
 
@@ -88,7 +89,7 @@ void MaxPool::backwards() {
 
     //loop over all images :
     for (int i = 0; i < imgN; i++) {
-        for (int c = 0; c < getInputA()->getChannels(); c++) {
+        for (int c = 0; c < getInputA()->getOutputChannels(); c++) {
             Eigen::MatrixXf tmpIMG = getMaxIndexMatrix().block(i, imgSizeOneChannel * c, 1, imgSizeOneChannel);
             tmpIMG.resize(imgDim, imgDim);
             tmpIMG.transposeInPlace();

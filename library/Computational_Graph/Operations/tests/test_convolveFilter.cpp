@@ -142,6 +142,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
         session.run();
         Eigen::MatrixXf test = Eigen::MatrixXf(1, 4);
         test << 5,10,15,20;
+
         REQUIRE(conv->getForward().isApprox(test));
     }
     SECTION("One dimensional filter, miniBatch as input", "[Multi_Channel_Image]") {
@@ -201,6 +202,201 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
         test2 << 16,32,48,64,
         16,32,48,64;
         REQUIRE(conv2->getForward().isApprox(test2));
+
+
+    }
+
+
+}
+
+
+TEST_CASE("Backpropagation Filter ", "[operation]") {
+
+    SECTION("One dimensional filter, one input", "[One_Channel_Image]") {
+
+        auto graph = std::make_unique<Graph>();
+        Eigen::MatrixXf img(1, 4);
+        img << 1, 2, 3, 4;
+        Eigen::MatrixXf filter(1, 1);
+        filter << 2;
+
+        auto X = std::make_shared<Placeholder>(img,2,1);
+        auto W = std::make_shared<Filter>(filter,1,1);
+
+        auto conv = std::make_shared<ConvolveFilter>(X, W);
+
+        Session session(conv, std::move(graph));
+        session.run();
+        Eigen::MatrixXf test = Eigen::MatrixXf(1, 1);
+        test << 10;
+//        std::cout<<W->getCurrentGradients()<<std::endl;
+
+        REQUIRE(W->getCurrentGradients().isApprox(test));
+    }
+    SECTION("One dimensional filter, miniBatch as input", "[One_Channel_Image]") {
+
+        auto graph = std::make_unique<Graph>();
+        Eigen::MatrixXf img(2, 4);
+        img << 1, 2, 3, 4,
+                1, 2, 3, 4;
+        Eigen::MatrixXf filter(1, 1);
+        filter << 2;
+
+
+        auto X = std::make_shared<Placeholder>(img,2,1);
+        auto W = std::make_shared<Filter>(filter,1,1);
+
+        auto conv = std::make_shared<ConvolveFilter>(X, W);
+
+        Session session(conv, std::move(graph));
+        session.run();
+        Eigen::MatrixXf test = Eigen::MatrixXf(1,1);
+        test << 10;
+
+        REQUIRE(W->getCurrentGradients().isApprox(test));
+    }
+    SECTION("One dimensional filter, stride >1", "[One_Channel_Image]") {
+
+        auto graph = std::make_unique<Graph>();
+        Eigen::MatrixXf img(1, 9);
+        img << 1, 2, 3, 4,5,6,7,8,9;
+        Eigen::MatrixXf filter(1, 1);
+        filter << 2;
+
+
+        auto X = std::make_shared<Placeholder>(img,3,1);
+        auto W = std::make_shared<Filter>(filter,1,1);
+
+        auto conv = std::make_shared<ConvolveFilter>(X, W,2);
+
+        Session session(conv, std::move(graph));
+        session.run();
+        Eigen::MatrixXf test = Eigen::MatrixXf(1, 1);
+        test<<1+3+7+9;
+
+        REQUIRE(W->getCurrentGradients().isApprox(test));
+
+        auto conv2 = std::make_shared<ConvolveFilter>(X, W,3);
+
+        Session session2(conv2, std::move(graph));
+        session2.run();
+        Eigen::MatrixXf test2 = Eigen::MatrixXf(1, 1);
+        test2 << 1;
+
+        REQUIRE(W->getCurrentGradients().isApprox(test2));
+    }
+    SECTION("Multi-dimensional filter, stride 1", "[One_Channel_Image]") {
+
+        auto graph = std::make_unique<Graph>();
+        Eigen::MatrixXf img(1, 25);
+        img <<
+                1,1,1,0,0,
+                0,1,1,1,0,
+                0,0,1,1,1,
+                0,0,1,1,0,
+                0,1,1,0,0;
+        Eigen::MatrixXf filter(1, 9);
+        filter <<
+                1,0,1,
+                0,1,0,
+                1,0,1;
+
+        auto X = std::make_shared<Placeholder>(img,5,1);
+        auto W = std::make_shared<Filter>(filter,3,1);
+
+        auto conv = std::make_shared<ConvolveFilter>(X, W);
+
+        Session session(conv, std::move(graph));
+        session.run();
+        Eigen::MatrixXf test = Eigen::MatrixXf(1, 9);
+        test <<
+                6,7,6,
+                4,7,7,
+                4,6,6;
+        REQUIRE(W->getCurrentGradients().isApprox(test));
+    }
+    SECTION("MultiChannel", "[Multi_Channel_Image]") {
+
+        auto graph = std::make_unique<Graph>();
+        Eigen::MatrixXf img(1, 8);
+        img << 1, 2, 3, 4,1,2,3,4;
+        Eigen::MatrixXf filter(1, 2);
+        filter << 2,3;
+
+        auto X = std::make_shared<Placeholder>(img,2,2);
+        auto W = std::make_shared<Filter>(filter,1,2);
+
+        auto conv = std::make_shared<ConvolveFilter>(X, W);
+
+        Session session(conv, std::move(graph));
+        session.run();
+        Eigen::MatrixXf test = Eigen::MatrixXf(1, 2);
+        test << 10,10;
+
+        REQUIRE(W->getCurrentGradients().isApprox(test));
+    }
+    SECTION("One dimensional filter, miniBatch as input", "[Multi_Channel_Image]") {
+
+        auto graph = std::make_unique<Graph>();
+        Eigen::MatrixXf img(2, 8);
+        img << 1, 2, 3, 4,1,2,3,4,
+                1, 2, 3, 4,1,2,3,4;
+        Eigen::MatrixXf filter(1, 2);
+        filter << 2,3;
+
+
+        auto X = std::make_shared<Placeholder>(img,2,2);
+        auto W = std::make_shared<Filter>(filter,1,2);
+
+        auto conv = std::make_shared<ConvolveFilter>(X, W);
+
+        Session session(conv, std::move(graph));
+        session.run();
+        Eigen::MatrixXf test = Eigen::MatrixXf(1, 2);
+        test << 10,10;
+        REQUIRE(W->getCurrentGradients().isApprox(test));
+    }
+    SECTION("Two Filters and Two Convolutional Layers", "[Multi_Channel_Image]") {
+
+        auto graph = std::make_unique<Graph>();
+        Eigen::MatrixXf img(2, 8);
+        img << 1, 2, 3, 4,1,2,3,4,
+                1, 2, 3, 4,1,2,3,4;
+        Eigen::MatrixXf filter(2, 2);
+        filter << 2,3,
+                1,1;
+        Eigen::MatrixXf filter2(1, 2);
+        filter2 << 2,3;
+
+        auto X = std::make_shared<Placeholder>(img,2,2);
+        auto W = std::make_shared<Filter>(filter,1,2);
+        auto conv = std::make_shared<ConvolveFilter>(X, W);
+        auto W2 = std::make_shared<Filter>(filter2,1,2);
+        auto conv2 = std::make_shared<ConvolveFilter>(conv, W2);
+
+        Session session2(conv2, std::move(graph));
+        session2.run();
+
+//        Session session(conv, std::move(graph));
+//        session.run();
+//        Eigen::MatrixXf test = Eigen::MatrixXf(2, 2);
+//        test << 10,10,
+//        10,10;
+//
+////        std::cout<<W->getCurrentGradients()<<std::endl;
+//
+//        REQUIRE(W->getCurrentGradients().isApprox(test));
+
+
+
+
+        Eigen::MatrixXf test2 = Eigen::MatrixXf(1,2);
+        test2 << 50,20;
+        std::cout<<W->getCurrentGradients()<<std::endl;
+        Eigen::MatrixXf test3 = Eigen::MatrixXf(2,2);
+        test3 << 500,200,500,200;
+        REQUIRE(W2->getCurrentGradients().isApprox(test2));
+        REQUIRE(W->getCurrentGradients().isApprox(test3));
 
 
     }

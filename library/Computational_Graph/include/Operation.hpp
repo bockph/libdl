@@ -15,14 +15,27 @@ public:
 
 	Operation(std::shared_ptr<Node> X);
 
-	const std::vector<std::shared_ptr<Node>> &getInputNodes() override;
+    int getInputDimX() const;
+
+    void setInputDimX(int inputDimX);
+
+    int getInputDimW() const;
+
+    void setInputDimW(int inputDimW);
+
+    const std::vector<std::shared_ptr<Node>> &getInputNodes() override;
 	virtual std::string printForward();
     void beforeForward();
 
+    int getAmountOfInputs() const;
+
+    void setAmountOfInputs(int amountOfInputs);
 
 private:
 	std::vector<std::shared_ptr<Node>> _inputNodes;
-
+    int _amountOfInputs;
+    int _inputDimX;
+    int _inputDimW;
 
 };
 

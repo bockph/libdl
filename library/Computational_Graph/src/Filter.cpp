@@ -8,7 +8,7 @@
 Filter::Filter(Eigen::MatrixXf m,int dim, int channel) {
 	setForward(m);
     setOutputDim(dim);
-    setChannels(channel);
+    setOutputChannels(channel);
 
     /*
      * A Filter should be a row vector (for the beginning ) of the Form RGB, RGB,RGB,... so 3 data points per pixel

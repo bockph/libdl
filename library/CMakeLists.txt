@@ -3,7 +3,7 @@
 MACRO (LIBDL_TEST NAME)
     SET(MODULES "${ARGN}")
     ADD_EXECUTABLE(test_${NAME} test_${NAME}.cpp ${PROJECT_SOURCE_DIR}/library/test_main.cpp)
-    TARGET_LINK_LIBRARIES(test_${NAME} ${MODULES} Catch2)# ${Catch})
+    TARGET_LINK_LIBRARIES(test_${NAME} ${MODULES} eigenI spdlogI catch2I )
     ADD_TEST(test_${NAME} test_${NAME})
 ENDMACRO (LIBDL_TEST)
 

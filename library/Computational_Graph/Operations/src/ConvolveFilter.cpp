@@ -6,50 +6,85 @@
 
 #include <iostream>
 
+ConvolveFilter::ConvolveFilter(std::shared_ptr<Node> X, std::shared_ptr<Filter> W,int stride ):
+Operation(X, W),
+_stride(stride),
+_amountFilters(W->getForward().rows())
+{
+    setOutputDim(std::floor((getInputDimX() - getInputDimW()) / _stride) + 1);
+    setOutputChannels(getAmountFilters());
+    setImgSizeOneChannel(std::pow(getInputDimX(),2));
+    setFilterSizeOneChannel(std::pow(getInputDimW(),2));
+    setOutputSizeOneFilter(std::pow(getOutputDim(),2));
+    setOutputSize( getOutputSizePerChannel() * getOutputChannels());
+}
 
+Eigen::MatrixXf ConvolveFilter::addPadding(Eigen::MatrixXf m, int rowPadding, int colPadding){
+    Eigen::MatrixXf paddedMatrix = Eigen::MatrixXf::Zero(m.rows()+rowPadding*2,m.cols()+colPadding*2);
+    paddedMatrix.block(rowPadding,colPadding,m.rows(),m.cols())=m;
+    return paddedMatrix;
+}
+//TODO hier ungewollte transponierung?
+Eigen::MatrixXf ConvolveFilter::addStridePadding(Eigen::MatrixXf m, int stride){
+    if(stride==1) return m;
+//    stride-=1;
+    int pRows = m.rows()+(stride-1)*(m.rows()-1) ;
+    int pCols = m.cols()+(stride-1)*(m.cols()-1);
+    Eigen::MatrixXf paddedMatrix = Eigen::MatrixXf::Zero(pRows,pCols);
+    for(int i =0,  x=0;i<paddedMatrix.rows();i+=stride,x++){
+        for(int j =0,  y=0;j<paddedMatrix.cols();j+=stride,y++){
+            paddedMatrix(i,j)=m(x,y);
+        }
+    }
+    return paddedMatrix;
+}
+
+//TODO hier ungewollte transponierung? durch optimierung
+//convolve is optimized for column-major order
+Eigen::MatrixXf ConvolveFilter::convolve(const Eigen::MatrixXf &input, const Eigen::MatrixXf &kernel,int stride,int outputDim) {
+   int kernelDim = kernel.rows();
+   Eigen::MatrixXf output=Eigen::MatrixXf::Zero(outputDim,outputDim);
+   for (int x = 0; x < outputDim; x++) {
+       for(int y =0;y< outputDim; y++){
+           int x_stride = x*stride;
+           int y_stride = y*stride;
+           output(y, x) += input.block(x_stride,y_stride,kernelDim,kernelDim).cwiseProduct(kernel).sum();
+       }
+   }
+   return output;
+
+
+
+}
 void ConvolveFilter::forwards() {
-    // Makes sure amount of channels of input and filter is the same
-    auto A =getInputA()->getChannels();
-    auto B = getInputB()->getChannels();
-    assert(getInputA()->getChannels()==getInputB()->getChannels());
 
-    //this results in a Vector containing in each row the result for a different input of the Batch
-	//	setForward(getInputA()->getForward() * getInputB()->getForward());
+
 	//TODO for efficency maybe change eigen to row major order for convfilter this should make sense, not sure about the
 	// other operations ( as long as each input is a row)
 
-	int imgN = getInputA()->getForward().rows();
-	int filterN = getInputB()->getForward().rows();
-	int imgDim=getInputA()->getOutputDim();
-    int filterDim = getInputB()->getOutputDim();
-	int outputDim = std::floor((imgDim - filterDim) / _stride) + 1;
-    int imgSizeOneChannel = std::pow(imgDim,2);
-    int filterSizeOneChannel = std::pow(filterDim,2);
-	Eigen::MatrixXf outputMatrix = Eigen::MatrixXf::Zero(imgN, outputDim*outputDim * filterN);
-	//loop over all images :
-	for (int i = 0; i < imgN; i++) {
-		for(int c =0;c<getInputA()->getChannels();c++){
-            Eigen::MatrixXf tmpIMG = getInputA()->getForward().block(i,imgSizeOneChannel*c,1,imgSizeOneChannel);
-            tmpIMG.resize(imgDim,imgDim);
-            tmpIMG.transposeInPlace();
-            //2. loop over all filters
-            for (int j = 0; j < filterN; j++) {
-                //get the Filter as Matrix, currently only with greyscale Images
-                auto rowsFilter =getInputB()->getForward().rows();
-                auto colsFilter =getInputB()->getForward().cols();
-                Eigen::MatrixXf tmpFilter = getInputB()->getForward().block(j,filterSizeOneChannel*c,1,filterSizeOneChannel);
-                tmpFilter.resize(filterDim,filterDim);
-                tmpFilter.transposeInPlace();
 
-                //2.2 loop over amount of possible convolutions and apply filter to img
-                for (int x = 0; x < outputDim; x++) {
-                    for(int y =0;y< outputDim; y++){
-                        int x_stride = x*_stride;
-                        int y_stride = y*_stride;
-                        outputMatrix(i, y+x*outputDim+j*outputDim*outputDim) +=
-                                tmpIMG.block(x_stride,y_stride,filterDim,filterDim).cwiseProduct(tmpFilter).sum();
-                    }
-                }
+
+	Eigen::MatrixXf outputMatrix = Eigen::MatrixXf::Zero(getAmountOfInputs(), getOutputSize());
+	//loop over all images :
+	for (int i = 0; i < getAmountOfInputs(); i++) {
+	    //DO convolution for image i
+		for(int c =0;c< getInputChannels();c++){
+		    //get the channel at c
+            Eigen::MatrixXf currentChannel = getInputA()->getForward().block(i,_imgSizeOneChannel*c,1,_imgSizeOneChannel);
+            currentChannel.resize(getInputDimX(),getInputDimX());
+
+            //2. loop over all filters
+            for (int j = 0; j < getAmountFilters(); j++) {
+                //get the kernel at j
+                Eigen::MatrixXf currentKernel = getInputB()->getForward().block(j,_filterSizeOneChannel*c,1,_filterSizeOneChannel);
+                currentKernel.resize(getInputDimW(),getInputDimW());
+
+                auto convolvedOutput = convolve(currentChannel,currentKernel,_stride,getOutputDim());
+
+                //Transpose is necessary because of resize operation
+                convolvedOutput.transposeInPlace();
+                convolvedOutput.resize(1,_outputSizeOneFilter);
+                outputMatrix.block(i,_outputSizeOneFilter*j,1,_outputSizeOneFilter)+= convolvedOutput.block(0,0,1,_outputSizeOneFilter);
 
             }
 
@@ -58,18 +93,116 @@ void ConvolveFilter::forwards() {
 	}
 
 	setForward(outputMatrix);
-	setOutputDim(outputDim);
-	setChannels(filterN);
 
 
 };
 
 void ConvolveFilter::backwards() {
 
-//	Eigen::MatrixXf inputGradient = getCurrentGradients() * (getInputB()->getForward().transpose());
-//	Eigen::MatrixXf weightGradient = (getInputA()->getForward().transpose()) * getCurrentGradients();
-//	getInputA()->setCurrentGradients(inputGradient);
-//	getInputB()->setCurrentGradients(weightGradient);
+
+//Gradient of Kernel is convolution of inputA with the gradient
+    Eigen::MatrixXf gradientsKernel = Eigen::MatrixXf::Zero(getAmountFilters(), _filterSizeOneChannel * getInputChannels());
+	//loop over all images :
+	for (int i = 0; i < getAmountOfInputs(); i++) {
+	    //DO convolution for image i
+		for(int c =0;c< getInputChannels();c++){
+		    //get the channel at c
+            Eigen::MatrixXf currentChannel = getInputA()->getForward().block(i,_imgSizeOneChannel*c,1,_imgSizeOneChannel);
+            currentChannel.resize(getInputDimX(),getInputDimX());
+
+            //2. loop over all filters
+            for (int j = 0; j < getAmountFilters(); j++) {
+                //get the kernel at j
+                Eigen::MatrixXf currentKernel = getCurrentGradients().block(i,_outputSizeOneFilter*j,1,_outputSizeOneFilter);//.block(j,_filterSizeOneChannel*c,1,_filterSizeOneChannel);
+                currentKernel.resize(getOutputDim(),getOutputDim());
+                currentKernel = addStridePadding(currentKernel,_stride);
+                auto convolvedOutput = convolve(currentChannel,currentKernel,_stride,getInputDimW());
+
+                //Transpose is necessary because of resize operation
+                convolvedOutput.transposeInPlace();
+                convolvedOutput.resize(1,_filterSizeOneChannel);
+                gradientsKernel.block(j,_filterSizeOneChannel*c,1,_filterSizeOneChannel)+=convolvedOutput.block(0,0,1,_filterSizeOneChannel);
+
+            }
+
+        }
+
+	}
+	gradientsKernel/=getAmountOfInputs();
+	getInputB()->setCurrentGradients(gradientsKernel);
+
+    Eigen::MatrixXf gradientsInput = Eigen::MatrixXf::Zero(getAmountOfInputs(), getImgSizeOneChannel() * getInputChannels());
+    //loop over all images :/*  Eigen::MatrixXf gradientsKernel = Eigen::MatrixXf::Zero(getAmountFilters(), _filterSizeOneChannel * getInputChannels());
+	//loop over all images :
+	for (int i = 0; i < getAmountOfInputs(); i++) {
+	    //DO convolution for image i
+		for(int c =0;c< getInputChannels();c++){
+		    //get the channel at c
+            Eigen::MatrixXf currentChannel = getInputA()->getForward().block(i,_imgSizeOneChannel*c,1,_imgSizeOneChannel);
+            currentChannel.resize(getInputDimX(),getInputDimX());
+
+            //2. loop over all filters
+            for (int j = 0; j < getAmountFilters(); j++) {
+                //get the kernel at j
+                Eigen::MatrixXf currentKernel = getCurrentGradients().block(i,_outputSizeOneFilter*j,1,_outputSizeOneFilter);//.block(j,_filterSizeOneChannel*c,1,_filterSizeOneChannel);
+                currentKernel.resize(getOutputDim(),getOutputDim());
+                currentKernel = addStridePadding(currentKernel,_stride);
+                auto convolvedOutput = convolve(currentChannel,currentKernel,_stride,getInputDimW());
+
+                //Transpose is necessary because of resize operation
+                convolvedOutput.transposeInPlace();
+                convolvedOutput.resize(1,_filterSizeOneChannel);
+                gradientsKernel.block(j,_filterSizeOneChannel*c,1,_filterSizeOneChannel)+=convolvedOutput.block(0,0,1,_filterSizeOneChannel);
+
+            }
+
+        }
+
+	}
+	gradientsKernel/=getAmountOfInputs();
+	getInputB()->setCurrentGradients(gradientsKernel);*/
+    for (int i = 0; i < getAmountOfInputs(); i++) {
+        //DO convolution for image i
+        for (int j = 0; j < getAmountFilters(); j++) {
+            //get the channel at c
+            Eigen::MatrixXf currentChannel = getCurrentGradients().block(i,_outputSizeOneFilter*j,1,_outputSizeOneFilter);
+            currentChannel.resize(getInputDimX(),getInputDimX());
+            auto BIR = currentChannel.rows();
+            auto BIC = currentChannel.cols();
+            //APPLY pADDING
+            addPadding(currentChannel,getInputDimW()-1,getInputDimW()-1);
+            //APPLY DILATION FOR STRIDES
+            addStridePadding(currentChannel,_stride);
+            auto IR = currentChannel.rows();
+            auto IC = currentChannel.cols();
+            for(int c =0;c< getInputChannels();c++){
+
+                    //get the kernel at j
+                Eigen::MatrixXf currentKernel = getInputB()->getForward().block(j,_filterSizeOneChannel*c,1,_filterSizeOneChannel);//.block(j,_filterSizeOneChannel*c,1,_filterSizeOneChannel);
+                currentKernel.resize(getOutputDim(),getOutputDim());
+                currentKernel.reverse().eval();
+                auto convolvedOutput = convolve(currentChannel,currentKernel,_stride,getInputDimW());
+
+                //Transpose is necessary because of resize operation
+                convolvedOutput.transposeInPlace();
+                convolvedOutput.resize(1,_imgSizeOneChannel);
+                auto GR = gradientsInput.rows();
+                auto GC = gradientsInput.cols();
+                auto ISOC = _imgSizeOneChannel;
+                auto cR = convolvedOutput.rows();
+                auto CC = convolvedOutput.cols();
+                gradientsInput.block(i,_imgSizeOneChannel*c,1,_imgSizeOneChannel)+=convolvedOutput.block(0,0,1,_imgSizeOneChannel);
+
+            }
+
+        }
+
+    }
+    gradientsInput/=getAmountOfInputs();
+    getInputA()->setCurrentGradients(gradientsInput);
+
+
+//
 
 }
 
@@ -82,4 +215,52 @@ std::string ConvolveFilter::printForward() {
 		outStream << std::endl;
 	}
 	return outStream.str();
+}
+
+int ConvolveFilter::getStride() const {
+    return _stride;
+}
+
+void ConvolveFilter::setStride(int stride) {
+    _stride = stride;
+}
+
+int ConvolveFilter::getAmountFilters() const {
+    return _amountFilters;
+}
+
+void ConvolveFilter::setAmountFilters(int amountFilters) {
+    _amountFilters = amountFilters;
+}
+
+int ConvolveFilter::getImgSizeOneChannel() const {
+    return _imgSizeOneChannel;
+}
+
+void ConvolveFilter::setImgSizeOneChannel(int imgSizeOneChannel) {
+    _imgSizeOneChannel = imgSizeOneChannel;
+}
+
+int ConvolveFilter::getFilterSizeOneChannel() const {
+    return _filterSizeOneChannel;
+}
+
+void ConvolveFilter::setFilterSizeOneChannel(int filterSizeOneChannel) {
+    _filterSizeOneChannel = filterSizeOneChannel;
+}
+
+int ConvolveFilter::getOutputSizePerChannel() const {
+    return _outputSizeOneFilter;
+}
+
+void ConvolveFilter::setOutputSizeOneFilter(int outputSizeOneFilter) {
+    _outputSizeOneFilter = outputSizeOneFilter;
+}
+
+int ConvolveFilter::getOutputSize() const {
+    return _outputSize;
+}
+
+void ConvolveFilter::setOutputSize(int outputSize) {
+    _outputSize = outputSize;
 }

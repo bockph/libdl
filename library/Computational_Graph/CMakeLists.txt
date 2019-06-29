@@ -17,11 +17,13 @@ set(GRAPH_SOURCES
         Operations/src/ConvolveFilter.cpp
         Operations/src/MaxPool.cpp
         Operations/src/ReLu.cpp)
+include_directories(${PROJECT_SOURCE_DIR}/extern/eigen/Eigen)
 
 add_library(${GRAPH_NAME}  ${GRAPH_SOURCES})
 target_include_directories(${GRAPH_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include
         ${CMAKE_CURRENT_LIST_DIR}/Operations/include)
-target_link_libraries(${GRAPH_NAME} Eigen3::Eigen)
+#target_link_libraries(${GRAPH_NAME} Eigen3::Eigen)
+target_link_libraries(${GRAPH_NAME} eigenI spdlogI catch2I pybind11I)
 set_target_properties(${GRAPH_NAME} PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 add_subdirectory(Operations/tests)
