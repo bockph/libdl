@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(test VERSION 0.1
+project(libdl VERSION 0.1
         DESCRIPTION "testing CI setup"
         LANGUAGES CXX)
 set (CMAKE_CXX_STANDARD 14)
