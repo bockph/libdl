@@ -6,8 +6,10 @@
 #include <iostream>
 #include "Bias.hpp"
 
-Bias::Bias(Eigen::MatrixXf m) {
+Bias::Bias(Eigen::MatrixXf m, int channel) {
 	setForward(m);
+	setOutputChannels(channel);
+
 }
 
 

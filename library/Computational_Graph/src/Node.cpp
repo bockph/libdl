@@ -4,6 +4,7 @@
 
 #include <memory>
 #include "Node.hpp"
+Node::Node():_outputChannels(0){}
 
 void Node::addOutputNode(std::shared_ptr<Node> n){
 	_outputNodes.push_back(n);

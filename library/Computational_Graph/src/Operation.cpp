@@ -20,9 +20,15 @@ _inputDimW(W->getOutputDim()){
 	X->addOutputNode(tmp);
 	W->addOutputNode(tmp);
 
-    if(getInputA()->getOutputChannels()!= getInputB()->getOutputChannels())
-        throw std::invalid_argument("Input X and W should have the same amount of Channels");
+    if(getInputA()->getOutputChannels()!= getInputB()->getOutputChannels()){
+    	auto AChannels =getInputA()->getOutputChannels();
+    	auto BChannels =getInputB()->getOutputChannels();
+		throw std::invalid_argument("Input X and W should have the same amount of Channels");
+
+	}
     setInputChannels(getInputA()->getOutputChannels());
+    setOutputChannels(getInputChannels());
+    setOutputDim(X->getOutputDim());
 }
 
 Operation::Operation(std::shared_ptr<Node> X):
@@ -35,13 +41,18 @@ Operation::Operation(std::shared_ptr<Node> X):
 	X->addOutputNode(tmp);
 
     setInputChannels(getInputA()->getOutputChannels());
+	setOutputChannels(getInputChannels());
+	setOutputDim(X->getOutputDim());
+
 
 
 }
-
+//This can not be applied to all, this needs to be changed
 void Operation::beforeForward(){
+
     setOutputChannels(getInputA()->getOutputChannels());
     setOutputDim(getInputA()->getOutputDim());
+
 }
 
 const std::vector<std::shared_ptr<Node>> &Operation::getInputNodes() {

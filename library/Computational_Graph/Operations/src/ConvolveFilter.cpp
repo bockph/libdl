@@ -182,7 +182,7 @@ void ConvolveFilter::backwards() {
 	gradientsKernel/=getAmountOfInputs();
 	getInputB()->setCurrentGradients(gradientsKernel);*/
 
-	std::cout<<"\ncurrent Gradients:\n"<<getCurrentGradients()<<std::endl;
+//	std::cout<<"\ncurrent Gradients:\n"<<getCurrentGradients()<<std::endl;
 
 	for (int i = 0; i < getAmountOfInputs(); i++) {
         //DO convolution for image i
@@ -208,11 +208,11 @@ void ConvolveFilter::backwards() {
                 currentKernel.resize(getInputDimW(),getInputDimW());
                 currentKernel.reverse().eval();
 
-				std::cout<<"\ncurrentChannel:\n"<<currentChannel<<std::endl;
-				std::cout<<"\ncurrentKernel:\n"<<currentKernel<<std::endl;
+//				std::cout<<"\ncurrentChannel:\n"<<currentChannel<<std::endl;
+//				std::cout<<"\ncurrentKernel:\n"<<currentKernel<<std::endl;
 
 				auto convolvedOutput = convolve(currentChannel,currentKernel,1,getInputDimW());
-				std::cout<<"\nconvolved Output:\n"<<convolvedOutput<<std::endl;
+//				std::cout<<"\nconvolved Output:\n"<<convolvedOutput<<std::endl;
 
                 //Transpose is necessary because of resize operation
                 convolvedOutput.transposeInPlace();

@@ -9,7 +9,8 @@
 class Node {
 
 public:
-
+	Node();
+	~Node() = default;
 
 
 	virtual void addOutputNode(std::shared_ptr<Node> n);
