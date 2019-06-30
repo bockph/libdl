@@ -19,6 +19,7 @@
 #include <ConvolveFilter.hpp>
 #include <ReLu.hpp>
 #include <MaxPool.hpp>
+#include <Flatten.hpp>
 
 
 int main() {
@@ -35,7 +36,7 @@ int main() {
 
     auto X = std::make_shared<Placeholder>(img,28,1);
     auto F = std::make_shared<Filter>(filter1,5,1);
-    auto B1 = std::make_shared<Bias>(bias1);
+    auto B1 = std::make_shared<Bias>(bias1,8);
 
 
     auto conv1 = std::make_shared<ConvolveFilter>(X,F,1);
@@ -44,13 +45,13 @@ int main() {
 
 //convolutional Layer 2
     Eigen::MatrixXf filter2(8,5*5*8);
-    filter2 = generateRandomMatrix(0.,1.,1,5*5*8);
+    filter2 = generateRandomMatrix(0.,1.,8,5*5*8);
 
     auto outputDim2 =std::floor((outputDim - 5) / 1) + 1;
-    Eigen::MatrixXf bias2=Eigen::MatrixXf::Zero(1,outputDim2*outputDim2);
+    Eigen::MatrixXf bias2=Eigen::MatrixXf::Zero(1,outputDim2*outputDim2*8);
 
     auto F2 = std::make_shared<Filter>(filter2,5,8);
-    auto B2 = std::make_shared<Bias>(bias2);
+    auto B2 = std::make_shared<Bias>(bias2,8);
 
 
     auto conv2 = std::make_shared<ConvolveFilter>(relu1,F2,1);
@@ -61,21 +62,22 @@ int main() {
     auto outputDim3 =std::floor((outputDim2 - 2) / 2) + 1;
     auto maxPool = std::make_shared<MaxPool>(relu2,2,2);
 
-
+	auto flattened = std::make_shared<Flatten>(maxPool);
+	auto out3DimSQ = std::pow(outputDim3,2)*8;
 //Dense Layer 1
     //Weights Hidden Layer 1
-    Eigen::MatrixXf mW1 = generateRandomMatrix(0., 1., outputDim3*outputDim3, outputDim3*outputDim3);
+    Eigen::MatrixXf mW1 = generateRandomMatrix(0., 1., out3DimSQ, out3DimSQ);
     auto W1 = std::make_shared<Weight>(mW1);
     //Bias
-    Eigen::MatrixXf b3 = Eigen::MatrixXf::Zero(1, outputDim3*outputDim3);
+    Eigen::MatrixXf b3 = Eigen::MatrixXf::Zero(1,out3DimSQ);
     auto B3 = std::make_shared<Bias>(b3);
 
-    auto mul1 = std::make_shared<MUL>(maxPool, W1);
+    auto mul1 = std::make_shared<MUL>(flattened, W1);
     auto sum3 = std::make_shared<SUM>(mul1, B3);
     auto relu3 = std::make_shared<ReLu>(sum3);
 //Dense Layer 2
     //Weights Hidden Layer 2
-    Eigen::MatrixXf mW2 = generateRandomMatrix(0., 1., outputDim3*outputDim3,10 );
+    Eigen::MatrixXf mW2 = generateRandomMatrix(0., 1., out3DimSQ,10 );
     auto W2 = std::make_shared<Weight>(mW2);
     //Bias
     Eigen::MatrixXf b4 = Eigen::MatrixXf::Zero(1, 10);
@@ -90,8 +92,15 @@ int main() {
     Session session(sum4, std::move(graph));
 
     //session.run() Executes Forward Pass & Backpropagation, Learning Rate is hardcoded at the moment and is 1
-    session.run();
-//    std::cout << "First Run" << std::endl;
+	//	std::cout<<"\ncurrent Gradients:\n"<<getCurrentGradients()<<std::endl;
+	std::cout<<"\ngo:\n"<<std::endl;
+
+	
+		session.run();
+	
+	std::cout<<"\nend:\n"<<std::endl;
+//
+	//    std::cout << "First Run" << std::endl;
 //    std::cout << "Output:\n" << sig2->getForward() << std::endl;
 //    std::cout << "LOSS:\n" << mse->getForward() << std::endl;
 //    for (int i = 0; i < 5000; i++) {

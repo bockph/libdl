@@ -16,7 +16,8 @@ set(GRAPH_SOURCES
         src/Filter.cpp
         Operations/src/ConvolveFilter.cpp
         Operations/src/MaxPool.cpp
-        Operations/src/ReLu.cpp)
+        Operations/src/ReLu.cpp
+        Operations/src/Flatten.cpp)
 include_directories(${PROJECT_SOURCE_DIR}/extern/eigen/Eigen)
 
 add_library(${GRAPH_NAME}  ${GRAPH_SOURCES})
