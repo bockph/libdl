@@ -20,6 +20,7 @@
 #include <ReLu.hpp>
 #include <MaxPool.hpp>
 #include <Flatten.hpp>
+#include <Softmax.hpp>
 
 
 int main() {
@@ -85,19 +86,22 @@ int main() {
 
     auto mul2 = std::make_shared<MUL>(relu3, W2);
     auto sum4 = std::make_shared<SUM>(mul2, B4);
+
+//    Output/Cost Layer
+	auto soft = std::make_shared<Softmax>(sum4,10);
 //    auto relu3 = std::make_shared<ReLu>(sum3);
 
 
     //Create Deep Learning session
-    Session session(sum4, std::move(graph));
+    Session session(soft, std::move(graph));
 
     //session.run() Executes Forward Pass & Backpropagation, Learning Rate is hardcoded at the moment and is 1
 	//	std::cout<<"\ncurrent Gradients:\n"<<getCurrentGradients()<<std::endl;
 	std::cout<<"\ngo:\n"<<std::endl;
 
-	
+
 		session.run();
-	
+
 	std::cout<<"\nend:\n"<<std::endl;
 //
 	//    std::cout << "First Run" << std::endl;
