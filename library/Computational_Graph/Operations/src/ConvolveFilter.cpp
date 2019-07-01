@@ -60,6 +60,10 @@ Eigen::MatrixXf ConvolveFilter::convolve(const Eigen::MatrixXf &input, const Eig
 
 }
 void ConvolveFilter::forwards() {
+
+	std::cout<<"inputA:\n"<< getInputA()->getForward()<<std::endl;
+	std::cout<<"inputB:\n"<< getInputB()->getForward()<<std::endl;
+
 /*
 	* GENERALL STUFF
 	*/
@@ -110,6 +114,7 @@ void ConvolveFilter::forwards() {
 
 	setForward(outputMatrix);
 //	std::cout<<"\nOutputMatrix:\n"<<getForward()<<std::endl;
+	std::cout<<"Output Convolve:\n"<< getForward()<<std::endl;
 
 
 };

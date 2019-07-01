@@ -13,6 +13,12 @@ add_executable(${TEST_TARGET_ONE} Example_XOR.cpp)
 target_link_libraries (${TEST_TARGET_ONE} graph eigenI spdlogI catch2I pybind11I )# libdl)# pybind11)
 target_compile_features(${TEST_TARGET_ONE} PUBLIC cxx_std_17)
 
+set(TEST_TARGET_ONE_2 Example_XOR_2)
+add_executable(${TEST_TARGET_ONE_2} Example_XOR_2.cpp)
+#target_link_libraries (${TEST_TARGET_ONE} graph Eigen3::Eigen )# libdl)# pybind11)
+target_link_libraries (${TEST_TARGET_ONE_2} graph eigenI spdlogI catch2I pybind11I )# libdl)# pybind11)
+target_compile_features(${TEST_TARGET_ONE_2} PUBLIC cxx_std_17)
+
 set(TEST_TARGET_TWO Example_MNIST)
 add_executable(${TEST_TARGET_TWO} Example_MNIST.cpp)
 #target_link_libraries (${TEST_TARGET_TWO} graph Eigen3::Eigen )# libdl)# pybind11)

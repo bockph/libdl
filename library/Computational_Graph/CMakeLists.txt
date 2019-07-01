@@ -18,7 +18,8 @@ set(GRAPH_SOURCES
         Operations/src/MaxPool.cpp
         Operations/src/ReLu.cpp
         Operations/src/Flatten.cpp
-        Operations/src/Softmax.cpp)
+        Operations/src/Softmax.cpp
+        Operations/src/CrossEntropyLoss.cpp)
 include_directories(${PROJECT_SOURCE_DIR}/extern/eigen/Eigen)
 
 add_library(${GRAPH_NAME}  ${GRAPH_SOURCES})

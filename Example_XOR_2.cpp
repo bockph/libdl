@@ -11,6 +11,8 @@
 #include <MUL.hpp>
 #include <MSE.hpp>
 #include <Utils.hpp>
+#include <Softmax.hpp>
+#include <CrossEntropyLoss.hpp>
 
 
 int main() {
@@ -22,21 +24,21 @@ int main() {
 			0, 0,
 			1, 1;
 	//Corresponding Classes of input Data DImensions are : Amount of Training Samples x 1
-	Eigen::MatrixXf C(4, 1);
-	C << 1,
-			1,
-			0,
-			0;
+	Eigen::MatrixXf C(4, 2);
+	C << 	1,0,
+			1,0,
+			0,1,
+			0,1;
 	auto CN = std::make_shared<Placeholder>(C,0,0);
 	//Weights Hidden Layer 1
 	Eigen::MatrixXf mW1 = generateRandomMatrix(0., 1., 2, 2);
 	//Bias Hidden Layer 1
-	Eigen::MatrixXf b1 = generateRandomMatrix(0., 10., 1, 2);
+	Eigen::MatrixXf b1 = generateRandomMatrix(0., 0., 1, 2);
 
 	//Weights OutputLayer
-	Eigen::MatrixXf mW2 = generateRandomMatrix(0., 1., 2, 1);
+	Eigen::MatrixXf mW2 = generateRandomMatrix(0., 1., 2, 2);
 	//Bias Output Layer
-	Eigen::MatrixXf b2 = generateRandomMatrix(0., 10., 1, 1);
+	Eigen::MatrixXf b2 = generateRandomMatrix(0., 0., 1, 2);
 
 	//create Inputs, Weights and Biases
 	auto X = std::make_shared<Placeholder>(mX1,0,0);
@@ -53,10 +55,11 @@ int main() {
 	//create output layer
 	auto mul2 = std::make_shared<MUL>(sig1, W2);
 	auto sum2 = std::make_shared<SUM>(mul2, B2);
-	auto sig2 = std::make_shared<Sigmoid>(sum2);
+//	auto sig2 = std::make_shared<Sigmoid>(sum2);
+	auto soft = std::make_shared<Softmax>(sum2,2);
 
 	//create Loss function
-	auto mse = std::make_shared<MSE>(sig2, CN);
+	auto mse = std::make_shared<CrossEntropyLoss>(soft, CN);
 
 	//Create Deep Learning session
 	Session session(mse, std::move(graph));
@@ -64,13 +67,13 @@ int main() {
 	//session.run() Executes Forward Pass & Backpropagation, Learning Rate is hardcoded at the moment and is 1
 	session.run();
 	std::cout << "First Run" << std::endl;
-	std::cout << "Output:\n" << sig2->getForward() << std::endl;
+	std::cout << "Output:\n" << soft->getForward() << std::endl;
 	std::cout << "LOSS:\n" << mse->getForward() << std::endl;
-	for (int i = 0; i < 50000; i++) {
+	for (int i = 0; i < 5000000; i++) {
 		session.run();
 	}
 	session.run();
 	std::cout << " Results of Last Run (5002th)" << std::endl;
-	std::cout << "Output:\n" << sig2->getForward() << std::endl;
+	std::cout << "Output:\n" << soft->getForward() << std::endl;
 	std::cout << "LOSS:\n" << mse->getForward() << std::endl;
 }
