@@ -25,6 +25,9 @@ endif()
 if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/spdlog/CMakeLists.txt")
     message(FATAL_ERROR "Problems with submodule  spdlog.")
 endif()
+if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/mnist/MNISTConfig.cmake")
+    message(FATAL_ERROR "Problems with submodule  mnist.")
+endif()
 add_library(eigenI INTERFACE)
 target_include_directories(eigenI INTERFACE ${PROJECT_SOURCE_DIR}/extern/eigen)
 
@@ -37,6 +40,9 @@ add_library(spdlogI INTERFACE)
 target_include_directories(spdlogI INTERFACE ${PROJECT_SOURCE_DIR}/extern/spdlog/include)
 add_library(pybind11I INTERFACE)
 target_include_directories(pybind11I INTERFACE ${PROJECT_SOURCE_DIR}/extern/pybind11/include)
+
+add_library(mnist INTERFACE)
+target_include_directories(mnist INTERFACE ${PROJECT_SOURCE_DIR}/extern/mnist/include)
 
 
 

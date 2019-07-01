@@ -21,13 +21,44 @@
 #include <MaxPool.hpp>
 #include <Flatten.hpp>
 #include <Softmax.hpp>
+#include <CrossEntropyLoss.hpp>
+#include "mnist/mnist_reader.hpp"
+
 
 
 int main() {
+	int batch_size = 6;
+
+	mnist::MNIST_dataset<std::vector, std::vector<uint8_t>, uint8_t> dataset =
+			mnist::read_dataset<std::vector, std::vector, uint8_t, uint8_t>(MNIST_DATA_LOCATION,batch_size);
+	std::cout<<"Dataset:"<<dataset.training_images.size()<<std::endl;
+
+
     auto graph = std::make_unique<Graph>();
     //Input Data: with dimensions: Amount of Training Samples x Dimension of training Sample
-    Eigen::MatrixXf img(1,28*28);
-    img=generateRandomMatrix(0.,1.,1,28*28);
+    Eigen::MatrixXf img(batch_size,28*28);
+    /*for ( int i = 0;i< batch_size;i++){
+    	Eigen::Matrix<unsigned char,1,784> tmp(dataset.training_images.at(i).data());
+    	Eigen::MatrixXf tmp2 = tmp.cast<float>();
+    	img.block(i,0,1,784)=tmp2;
+    }*/
+    img=generateRandomMatrix(0.,1.,6,28*28);
+
+	Eigen::MatrixXf C(batch_size,10);
+    C.setZero();
+	for ( int i = 0;i< batch_size;i++){
+		C(i,dataset.training_labels.at(i))=1;
+		/*Eigen::Matrix<unsigned char,1,784> tmp(dataset.training_images.at(i).data());
+		Eigen::MatrixXf tmp2 = tmp.cast<float>();
+		img.block(i,0,1,784)=tmp2;*/
+	}
+	C<<1,0,0,0,0,0,0,0,0,0,
+			0,1,0,0,0,0,0,0,0,0,
+			1,0,0,0,0,0,0,0,0,0,
+			0,0,1,0,0,0,0,0,0,0,
+			0,0,0,1,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,1;
+	auto CN = std::make_shared<Placeholder>(C,0,0);
 
     Eigen::MatrixXf filter1(8,5*5);
     filter1 = generateRandomMatrix(0.,1.,8,5*5);
@@ -92,17 +123,77 @@ int main() {
 //    auto relu3 = std::make_shared<ReLu>(sum3);
 
 
+
+	auto CE = std::make_shared<CrossEntropyLoss>(soft,CN);
+
     //Create Deep Learning session
-    Session session(soft, std::move(graph));
+    Session session(CE, std::move(graph));
 
     //session.run() Executes Forward Pass & Backpropagation, Learning Rate is hardcoded at the moment and is 1
 	//	std::cout<<"\ncurrent Gradients:\n"<<getCurrentGradients()<<std::endl;
 	std::cout<<"\ngo:\n"<<std::endl;
 
 
+	session.run();
+	/*std::cout << "\nFirst Run\n" << std::endl;
+	std::cout << "Output:\n" << soft->getForward() << std::endl;*/
+	std::cout << "LOSS:\n" << CE->getForward() << std::endl;
+	for (int i = 0; i < 10; i++) {
 		session.run();
+		std::cout<<i<<". run achieved"<<std::endl;
+		std::cout << "LOSS:\n" << CE->getForward()(0,0) << std::endl;
 
-	std::cout<<"\nend:\n"<<std::endl;
+	}
+	std::cout << "\n Results of Last Run (5002th)\n" << std::endl;
+//	std::cout << "Output:\n" << soft->getForward() << std::endl;
+	std::cout << "LOSS:\n" << CE->getForward() << std::endl;
+
+	std::cout<<"\nend:\n\n\n"<<std::endl;
+/*	session.run();
+
+int test_size =batch_size;
+	Eigen::MatrixXf test(test_size,28*28);
+	for ( int i = 0;i< test_size;i++){
+		Eigen::Matrix<unsigned char,1,784> tmp(dataset.test_images.at(i).data());
+		Eigen::MatrixXf tmp2 = tmp.cast<float>();
+		img.block(i,0,1,784)=tmp2;
+	}
+//    img=generateRandomMatrix(0.,1.,6,28*28);
+	 auto XTest = std::make_shared<Placeholder>(test,28,1);
+	conv1->setInputA(XTest);
+
+	Eigen::MatrixXf CTest(test_size,10);
+	C.setZero();
+	for ( int i = 0;i< test_size;i++){
+		C(i,dataset.test_labels.at(i))=1;
+		*//*Eigen::Matrix<unsigned char,1,784> tmp(dataset.training_images.at(i).data());
+		Eigen::MatrixXf tmp2 = tmp.cast<float>();
+		img.block(i,0,1,784)=tmp2;*//*
+	}
+	session.run();
+	Eigen::MatrixXf::Index maxRow, maxCol;
+	float correct=0;
+	float wrong=0;
+	for(int i =0;i<test_size;i++){
+		soft->getForward().block(i,0,1,10).maxCoeff(&maxRow,&maxCol);
+		int p = maxCol;
+		C.block(i,0,1,10).maxCoeff(&maxRow,&maxCol);
+		int A = maxCol;
+
+		if(p==A)correct++;
+		else wrong++;
+//		std::cout<<"P: "<<p<<std::endl;
+//		std::cout<<"A: "<<A<<std::endl;
+
+	}
+
+	std::cout<<"Amount Correct:"<<correct<<"Percentage :"<<correct/(float)test_size<<std::endl;
+	std::cout<<"Amount Wrong:"<<wrong<<"Percentage :"<<wrong/(float)test_size<<std::endl;*/
+
+
+
+
+
 //
 	//    std::cout << "First Run" << std::endl;
 //    std::cout << "Output:\n" << sig2->getForward() << std::endl;
