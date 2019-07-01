@@ -19,6 +19,7 @@ void SUM::forwards() {
     int rowsB = getInputB()->getForward().rows();
     int colsA = getInputA()->getForward().cols();
     int colsB = getInputB()->getForward().cols();
+	std::cout<<"input:\n"<< getInputA()->getForward()<<std::endl;
 
 	if (rowsA != rowsB) {
 		setForward(getInputA()->getForward() + getInputB()->getForward().replicate(rowsA, 1));

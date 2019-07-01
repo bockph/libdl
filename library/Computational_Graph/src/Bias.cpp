@@ -18,9 +18,9 @@ void Bias::backwards() {
 	int rowsCurrent = getForward().rows();
 	//TODO: Implement Learning Rate
 	if (rowsCurrent != rowsG) {
-		setForward(getForward().replicate(rowsG, 1) - 1 * getCurrentGradients());
+		setForward(getForward().replicate(rowsG, 1) - 0.01 * getCurrentGradients());
 	} else {
-		setForward(getForward() - 1 * getCurrentGradients());
+		setForward(getForward() - 0.01 * getCurrentGradients());
 	}
 
 }

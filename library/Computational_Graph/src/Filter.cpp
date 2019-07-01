@@ -19,5 +19,5 @@ Filter::Filter(Eigen::MatrixXf m,int dim, int channel) {
 
 void Filter::backwards() {
 
-//	setForward(getForward() - 1 * getCurrentGradients());
+	setForward(getForward() - 0.01 * getCurrentGradients());
 }
