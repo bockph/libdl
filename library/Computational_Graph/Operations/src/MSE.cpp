@@ -28,7 +28,10 @@ void MSE::forwards() {
 		tmp /= squared.rows();
 	}
 	for (int i = 0; i < squared.rows(); i++) {
-		mse(i, 0) = tmp;
+		for(int j = 0;j<squared.cols();j++){
+			mse(i, j) = tmp;
+
+		}
 	}
 	setForward(mse);
 }
