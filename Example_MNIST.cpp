@@ -287,7 +287,7 @@ int main() {
             train(params,correct,total,false);
 
         }
-        std::cout<<"Amount Correct: "<<correct<<"Amount Wrong: "<<total-correct<<"Percentage: "<<correct/(float)
+        std::cout<<"Amount Correct: "<<correct<<"Amount Wrong: "<<total-correct<<"Percentage Correct: "<<correct/(float)
                 total<<std::endl;
     }
 

@@ -21,3 +21,8 @@ and randomly initialized Weights and Biases.\
 \
 As a output it gives first the results of the first forward pass and the loss of the first forward pass.\
 Second, it gives the result and Loss after 5000x forward pass & backprop.\
+
+# MNIST
+The MNIST problem is simulated in the build File Example_MNIST, which is build from the Code in Example_MNIST.cpp\
+The settings are predefined so that pre-learned weights are read from the WeightDeposit and are then used to predict a subset of the MNIST testset.
+At the beginning of the main method of Example_MNIST.cpp these settings can be changed (as explained there), in order to train ones own weights.
