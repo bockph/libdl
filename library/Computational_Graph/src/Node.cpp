@@ -10,21 +10,7 @@ void Node::addOutputNode(std::shared_ptr<Node> n){
 	_outputNodes.push_back(n);
 }
 
-float Node::getForwardData() const {
-	return _forwardData;
-}
 
-void Node::setForwardData(float forwardData) {
-	_forwardData = forwardData;
-}
-
-float Node::getBackwardData() const {
-	return _backwardData;
-}
-
-void Node::setBackwardData(float backwardData) {
-	_backwardData = backwardData;
-}
 
 const Eigen::MatrixXf &Node::getForward() const {
 	return _forward;
@@ -50,13 +36,6 @@ void Node::setInputB(const std::shared_ptr<Node> &inputB) {
 	Node::inputB = inputB;
 }
 
-float Node::getCurrentGradient() const {
-	return currentGradient;
-}
-
-void Node::setCurrentGradient(float currentGradient) {
-	Node::currentGradient = currentGradient;
-}
 
 const Eigen::MatrixXf &Node::getCurrentGradients() const {
 	return currentGradients;

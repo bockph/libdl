@@ -14,7 +14,9 @@ public:
 	Bias(Eigen::MatrixXf t, int channels =0);
 
 	void backwards() override;
-
+private:
+    Eigen::MatrixXf _s1;
+    Eigen::MatrixXf _v1;
 };
 
 

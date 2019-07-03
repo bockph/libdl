@@ -77,7 +77,14 @@ void MaxPool::forwards() {
 	}
 	setMaxIndexMatrix(indexMatrix);
 	setForward(outputMatrix);
-
+   /* Eigen::MatrixXf test = getForward();
+//    test.transpose().eval();
+    test.resize(getOutputDim(),getOutputDim()*getOutputChannels());
+    std::cout<<"Output MAXPOOL:\n"<< getForward()<<std::endl;
+    std::cout<<"\nOUTPUT MAXPOOL:\n"<<test<<std::endl;
+    std::cout<<"Output Max:\n"<< getForward().array().maxCoeff()<<std::endl;
+    std::cout<<"Output Average:\n"<< getForward().mean()<<std::endl;
+    int x=2+3;*/
 
 };
 

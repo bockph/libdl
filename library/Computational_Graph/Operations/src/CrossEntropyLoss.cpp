@@ -17,6 +17,10 @@ void CrossEntropyLoss::forwards() {
 /*
 	std::cout<<"input:\n"<<getInputA()->getForward()<<std::endl;
 */
+    int rowsA = getInputA()->getForward().rows();
+    int rowsB = getInputB()->getForward().rows();
+    int colsA = getInputA()->getForward().cols();
+    int colsB = getInputB()->getForward().cols();
 
 	Eigen::MatrixXf log = Eigen::log(getInputA()->getForward().array());
 //	std::cout<<"log:\n"<<log<<std::endl;

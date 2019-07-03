@@ -14,6 +14,10 @@ public:
 	~Weight() = default;
 
 	void backwards() override;
+
+private:
+    Eigen::MatrixXf _s1;
+    Eigen::MatrixXf _v1;
 };
 
 

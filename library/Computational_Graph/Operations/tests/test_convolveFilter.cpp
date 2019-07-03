@@ -70,12 +70,16 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(1, 9);
 		img << 1, 2, 3, 4, 5, 6, 7, 8, 9;
-		Eigen::MatrixXf filter(1, 1);
-		filter << 2;
+
+        Eigen::MatrixXf filter(1, 1);
+        filter << 2;
+        Eigen::MatrixXf filter2(1, 1);
+        filter2 << 2;
 
 
 		auto X = std::make_shared<Placeholder>(img, 3, 1);
-		auto W = std::make_shared<Filter>(filter, 1, 1);
+        auto W = std::make_shared<Filter>(filter, 1, 1);
+        auto W2 = std::make_shared<Filter>(filter2, 1, 1);
 
 		auto conv = std::make_shared<ConvolveFilter>(X, W, 2);
 
@@ -86,13 +90,13 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 
 		REQUIRE(conv->getForward().isApprox(test));
 
-		auto conv2 = std::make_shared<ConvolveFilter>(X, W, 3);
+		auto conv2 = std::make_shared<ConvolveFilter>(X, W2, 3);
 
 		Session session2(conv2, std::move(graph));
 		session2.run();
 		Eigen::MatrixXf test2 = Eigen::MatrixXf(1, 1);
 		test2 << 2;
-
+        std::cout<<conv2->getForward()<<std::endl;
 		REQUIRE(conv2->getForward().isApprox(test2));
 	}
 	SECTION("Multi-dimensional filter, stride 1", "[One_Channel_Image]") {
@@ -188,22 +192,52 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		auto conv2 = std::make_shared<ConvolveFilter>(conv, W2);
 
 
-		Session session(conv, std::move(graph));
-		session.run();
-		Eigen::MatrixXf test = Eigen::MatrixXf(2, 8);
-		test << 5, 10, 15, 20, 2, 4, 6, 8,
-				5, 10, 15, 20, 2, 4, 6, 8;
+//		Session session(conv, std::move(graph));
+//		session.run();
 
-		REQUIRE(conv->getForward().isApprox(test));
 
 
 		Session session2(conv2, std::move(graph));
 		session2.run();
-		Eigen::MatrixXf test2 = Eigen::MatrixXf(2, 4);
-		test2 << 16, 32, 48, 64,
-				16, 32, 48, 64;
-		REQUIRE(conv2->getForward().isApprox(test2));
+		//Test ForwardPass
+        Eigen::MatrixXf testConvF = Eigen::MatrixXf(2, 8);
+        testConvF << 5, 10, 15, 20, 2, 4, 6, 8,
+                5, 10, 15, 20, 2, 4, 6, 8;
 
+        REQUIRE(conv->getForward().isApprox(testConvF));
+
+
+		Eigen::MatrixXf testConv2F = Eigen::MatrixXf(2, 4);
+        testConv2F << 16, 32, 48, 64,
+				16, 32, 48, 64;
+		REQUIRE(conv2->getForward().isApprox(testConv2F));
+
+		//Test Backwardpass Weights
+
+
+        Eigen::MatrixXf testW = Eigen::MatrixXf(2, 2);
+        testW << 20, 20, 30, 30;
+        REQUIRE(W->getCurrentGradients().isApprox(testW));
+
+
+
+
+        Eigen::MatrixXf testW2= Eigen::MatrixXf(1, 2);
+        testW2 << 50,20;
+        std::cout<<W->getCurrentGradients()<<std::endl;
+        std::cout<<W2->getCurrentGradients()<<std::endl;
+        REQUIRE(W2->getCurrentGradients().isApprox(testW2));
+
+        //Test Backwardpass Placeholder
+
+        Eigen::MatrixXf testConvG = Eigen::MatrixXf(2, 8);
+        testConvG << 	2,2,2,2,3,3,3,3,
+                2,2,2,2,3,3,3,3;
+        Eigen::MatrixXf testCG = Eigen::MatrixXf(2, 8);
+        testCG << 7,7,7,7,9,9,9,9,
+                7,7,7,7,9,9,9,9;
+        REQUIRE(conv->getCurrentGradients().isApprox(testConvG));
+        REQUIRE(X->getCurrentGradients().isApprox(testCG));
 
 	}
 
@@ -263,7 +297,12 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 		img << 1, 2, 3, 4, 5, 6, 7, 8, 9;
 		Eigen::MatrixXf filter(1, 1);
 		filter << 2;
+        Eigen::MatrixXf filter2(1, 1);
+        filter2 << 2;
 
+
+
+        auto W2 = std::make_shared<Filter>(filter2, 1, 1);
 
 		auto X = std::make_shared<Placeholder>(img, 3, 1);
 		auto W = std::make_shared<Filter>(filter, 1, 1);
@@ -277,14 +316,14 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 
 		REQUIRE(W->getCurrentGradients().isApprox(test));
 
-		auto conv2 = std::make_shared<ConvolveFilter>(X, W, 3);
+		auto conv2 = std::make_shared<ConvolveFilter>(X, W2, 3);
 
 		Session session2(conv2, std::move(graph));
 		session2.run();
 		Eigen::MatrixXf test2 = Eigen::MatrixXf(1, 1);
 		test2 << 1;
 
-		REQUIRE(W->getCurrentGradients().isApprox(test2));
+		REQUIRE(W2->getCurrentGradients().isApprox(test2));
 	}
 	SECTION("Multi-dimensional filter, stride 1", "[One_Channel_Image]") {
 
@@ -380,13 +419,6 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 
 
 
-		Eigen::MatrixXf test2 = Eigen::MatrixXf(1, 2);
-		test2 << 65, 25;
-        std::cout<<W->getCurrentGradients()<<std::endl;
-		Eigen::MatrixXf test3 = Eigen::MatrixXf(2, 2);
-		test3 << 20, 30, 30, 45;
-		REQUIRE(W2->getCurrentGradients().isApprox(test2));
-        REQUIRE(W->getCurrentGradients().isApprox(test3));
 
 
 	}
@@ -448,6 +480,12 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		img << 1, 2, 3, 4, 5, 6, 7, 8, 9;
 		Eigen::MatrixXf filter(1, 1);
 		filter << 2;
+        Eigen::MatrixXf filter2(1, 1);
+        filter2 << 2;
+
+
+
+        auto W2 = std::make_shared<Filter>(filter2, 1, 1);
 
 
 		auto X = std::make_shared<Placeholder>(img, 3, 1);
@@ -464,14 +502,14 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 		REQUIRE(X->getCurrentGradients().isApprox(test));
 
-		auto conv2 = std::make_shared<ConvolveFilter>(X, W, 3);
+		auto conv2 = std::make_shared<ConvolveFilter>(X, W2, 3);
 
 		Session session2(conv2, std::move(graph));
 		session2.run();
 		Eigen::MatrixXf test2 = Eigen::MatrixXf(1, 1);
 		test2 << 1;
 
-		REQUIRE(W->getCurrentGradients().isApprox(test2));
+		REQUIRE(W2->getCurrentGradients().isApprox(test2));
 	}
 	SECTION("Multi-dimensional filter, stride 1", "[One_Channel_Image]") {
 
@@ -569,14 +607,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		Session session2(conv2, std::move(graph));
 		session2.run();
 
-		Eigen::MatrixXf test2 = Eigen::MatrixXf(2, 8);
-		test2 << 	2,2,2,2,3,3,3,3,
-					2,2,2,2,3,3,3,3;
-		Eigen::MatrixXf test3 = Eigen::MatrixXf(2, 8);
-		test3 << 7,7,7,7,9,9,9,9,
-				7,7,7,7,9,9,9,9;
-		REQUIRE(conv->getCurrentGradients().isApprox(test2));
-        REQUIRE(X->getCurrentGradients().isApprox(test3));
+
 
 
 	}

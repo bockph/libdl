@@ -5,7 +5,10 @@
 #include <vector>
 #include <memory>
 #include <Eigen/Dense>
-
+#define alpha 0.01
+#define beta1 0.95
+#define beta2 0.99
+#define BATCH_SIZE 16
 class Node {
 
 public:
@@ -14,13 +17,8 @@ public:
 
 
 	virtual void addOutputNode(std::shared_ptr<Node> n);
-	float getForwardData() const;
 
-	void setForwardData(float forwardData);
 
-	float getBackwardData() const;
-
-	void setBackwardData(float backwardData);
 
 	const Eigen::MatrixXf &getForward() const;
 
@@ -34,9 +32,7 @@ public:
 
 	void setInputB(const std::shared_ptr<Node> &inputB);
 
-	float getCurrentGradient() const;
 
-	void setCurrentGradient(float currentGradient);
 
 	const Eigen::MatrixXf &getCurrentGradients() const;
 
@@ -61,11 +57,7 @@ public:
     virtual void forwards(){};
 	virtual void backwards(){};
 
-	 float _forwardData;
-	 float _backwardData;
-	Eigen::VectorXf _forwardCache;
 
-	Eigen::VectorXf _gradients;
 
 	Eigen::MatrixXf _forward;
 	float currentGradient;

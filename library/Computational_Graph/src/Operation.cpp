@@ -23,7 +23,8 @@ _inputDimW(W->getOutputDim()){
     if(getInputA()->getOutputChannels()!= getInputB()->getOutputChannels()){
     	auto AChannels =getInputA()->getOutputChannels();
     	auto BChannels =getInputB()->getOutputChannels();
-		throw std::invalid_argument("Input X and W should have the same amount of Channels");
+    	//TODO uncomment the exception
+//		throw std::invalid_argument("Input X and W should have the same amount of Channels");
 
 	}
     setInputChannels(getInputA()->getOutputChannels());
