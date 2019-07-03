@@ -59,8 +59,8 @@ void Session::run(std::vector<float> feed) {
 		operation->forwards();
 	}
 	Eigen::MatrixXf tmp = _endNode->getForward();
-//	tmp.setOnes();
-//	_endNode->setCurrentGradients(tmp);
+	tmp.setOnes();
+	_endNode->setCurrentGradients(tmp);
 	backProp(_endNode);
 
 }

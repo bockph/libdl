@@ -3,7 +3,6 @@
 //
 
 #include <iostream>
-//#include <Eigen/Dense>
 #include <Graph.hpp>
 #include <Placeholder.hpp>
 #include <Operation.hpp>
@@ -11,9 +10,7 @@
 #include <SUM.hpp>
 #include <Weight.hpp>
 #include <Bias.hpp>
-#include <Sigmoid.hpp>
 #include <MUL.hpp>
-#include <MSE.hpp>
 #include <Utils.hpp>
 #include <Filter.hpp>
 #include <ConvolveFilter.hpp>
@@ -24,6 +21,7 @@
 #include <CrossEntropyLoss.hpp>
 #include "mnist/mnist_reader.hpp"
 #include <mnist/mnist_utils.hpp>
+#include <Sigmoid.hpp>
 
 namespace Eigen{
     void write_binary(const char* filename, const MatrixXf& matrix){
@@ -49,7 +47,7 @@ void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf>&
 
     mnist::MNIST_dataset<std::vector, std::vector<uint8_t>, uint8_t> dataset =
             mnist::read_dataset<std::vector, std::vector, uint8_t, uint8_t>(MNIST_DATA_LOCATION,
-            		batch_size*amountBatches+1);
+            		batch_size*amountBatches);
     mnist::normalize_dataset(dataset);
 
     training_data.clear();
@@ -96,7 +94,7 @@ void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf>&
 
 
 }
-void train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bool train =true){
+float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bool train =true){
     /*
      * params = [img,label,f1,f2,w3,w4,b1,b2,b3,b4]
      */
@@ -150,20 +148,9 @@ void train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, boo
 
 
     if(train){
-       /* for (int i = 0; i < 500; i++) {
-//            std::cout<<i<<". run achieved"<<std::endl;
-//            std::cout << "LOSS:\n" << CE->getForward()(0,0) << std::endl;
-            if(CE->getForward()(0,0)<0.5)break;
 
-        }*/
 		session.run();
 
-		std::cout << "LOSS:\n" << CE->getForward()(0,0) << std::endl;
-
-//        std::cout << "\n Results of Last Run \n" << std::endl;
-//        std::cout << "Output:\n" << soft->getForward() << std::endl;
-//        std::cout << "LOSS:\n" << CE->getForward()(0,0) << std::endl;
-//        std::cout<<"\nExpected:\n\n\n"<<CN->getForward()<<std::endl;
         params[2] = F1->getForward();
         params[3] = F2->getForward();
         params[4] = W1->getForward();
@@ -172,19 +159,11 @@ void train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, boo
         params[7] = B2->getForward();
         params[8] = B3->getForward();
         params[9] = B4->getForward();
-     /*   write_binary("/home/pbo/Schreibtisch/StoredValues/f1.txt",params[2]);
-        write_binary("/home/pbo/Schreibtisch/StoredValues/f2.txt",params[3]);
-        write_binary("/home/pbo/Schreibtisch/StoredValues/w1.txt",params[4]);
-        write_binary("/home/pbo/Schreibtisch/StoredValues/w2.txt",params[5]);
-        write_binary("/home/pbo/Schreibtisch/StoredValues/b1.txt",params[6]);
-        write_binary("/home/pbo/Schreibtisch/StoredValues/b2.txt",params[7]);
-        write_binary("/home/pbo/Schreibtisch/StoredValues/b3.txt",params[8]);
-        write_binary("/home/pbo/Schreibtisch/StoredValues/b4.txt",params[9]);*/
     }else{
         session.run();
+
         Eigen::MatrixXf::Index maxRow, maxCol;
-        /*float correct=0;
-        float wrong=0;*/
+
         for(int i =0;i<params[0].rows();i++){
             soft->getForward().block(i,0,1,10).maxCoeff(&maxRow,&maxCol);
             int p = maxCol;
@@ -193,16 +172,13 @@ void train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, boo
 
             if(p==A)correct++;
             total++;
-//            else wrong++;
-
 
         }
 
-//        std::cout<<"Amount Correct: "<<correct<<"Amount Wrong: "<<wrong<<"Percentage: "<<correct/(float)params[0].rows()<<std::endl;
-//        std::cout<<"Amount Wrong:"<<wrong<<"Percentage :"<<wrong/(float)params[0].rows()<<std::endl;
     }
 
 
+    return CE->getForward()(0,0);
 
 
 }
@@ -210,9 +186,27 @@ void train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, boo
 
 
 int main() {
+    /*
+     * batch_size: Don't change this unless one changes as well #define BATCH_SIZE in Node.hpp
+     * epochs: self explanatory, but to big values in combination with amount_batches can lead to OutOfMemory
+     * amount_batches: batch_size*amount_batches gives the total amount of samples
+     * trainModel: if training should be done with TRAINING data
+     * testModel: if prediction should be done with TEST data
+     * writeWeights: writes the trained Weights to Source_Directory/WeightDeposit
+     * readWeights: if Weights have already been Written once (check WeightDeposit Folder), this can be set to true --> no random initialization
+     */
 	int batch_size = 8;
-	int epochs =50;
-	int amount_batches =200;
+	int epochs =10;
+	int amount_batches =100;
+	bool trainModel = false;
+	bool testModel =true;
+    bool writeWeights = false;
+    bool readWeights =true;
+
+
+
+
+
 	float correct,total;
     std::vector<Eigen::MatrixXf> training_data,training_label;
     std::vector<Eigen::MatrixXf> test_data,test_label;
@@ -220,18 +214,15 @@ int main() {
     getBatches(batch_size,amount_batches,training_data,training_label);
     getBatches(batch_size,amount_batches,test_data,test_label,false);
 
-    //Initialize Weights & Bias & Filter
+    //precalculate Dimensions needed for Weights
     auto outputDim =std::floor((28 - 5) / 1) + 1;
     auto outputDim2 =std::floor((outputDim - 5) / 1) + 1;
     auto outputDim3 =std::floor((outputDim2 - 2) / 2) + 1;
     auto out3DimSQ = std::pow(outputDim3,2)*8;
 
 
-	/*Eigen::MatrixXf filter1 = initializeFilter(8,5*5);// generateRandomMatrix(0,.1,8,5*5);
-	Eigen::MatrixXf filter2 = initializeFilter(8,5*5*8);//generateRandomMatrix(0.,.1,8,5*5*8);*/
+    //Initialize Weights & Bias & Filter
 
-/*	Eigen::MatrixXf W1 = initializeWeights(out3DimSQ,128);//generateRandomMatrix(0., .1, out3DimSQ, 128);
-	Eigen::MatrixXf W2 = initializeWeights(128,10);//generateRandomMatrix(0., .1,128, 10 );*/
 	Eigen::MatrixXf filter1 = generateRandomMatrix(0,.1,8,5*5);
 	Eigen::MatrixXf filter2 = generateRandomMatrix(0.,.1,8,5*5*8);
 
@@ -243,61 +234,63 @@ int main() {
     Eigen::MatrixXf b3 = Eigen::MatrixXf::Zero(batch_size,128);
     Eigen::MatrixXf b4 = Eigen::MatrixXf::Zero(batch_size, 10);
     std::vector<Eigen::MatrixXf> params ={training_data[0],training_label[0],filter1,filter2,W1,W2,b1,b2,b3,b4};
-    read_binary("/home/pbo/Schreibtisch/StoredValues/f1.txt",params[2]);
-    read_binary("/home/pbo/Schreibtisch/StoredValues/f2.txt",params[3]);
-    read_binary("/home/pbo/Schreibtisch/StoredValues/w1.txt",params[4]);
-    read_binary("/home/pbo/Schreibtisch/StoredValues/w2.txt",params[5]);
-    read_binary("/home/pbo/Schreibtisch/StoredValues/b1.txt",params[6]);
-    read_binary("/home/pbo/Schreibtisch/StoredValues/b2.txt",params[7]);
-    read_binary("/home/pbo/Schreibtisch/StoredValues/b3.txt",params[8]);
-    read_binary("/home/pbo/Schreibtisch/StoredValues/b4.txt",params[9]);
-  /* for(int k = 0;k<epochs;k++){
-	   for(int i = 0;i<amount_batches;i++){
-		   params[0] = training_data[i];
-		   params[1] = training_label[i];
-		   *//*if(i!=0){
-
-		   }*//*
-
-
-		   train(params,correct,total);
-
-	   }
-	   std::cout<<"Left to go: "<<epochs-k<<std::endl;
-
-   }*/
-
-   /* write_binary("/home/pbo/Schreibtisch/StoredValues/f1.txt",params[2]);
-    write_binary("/home/pbo/Schreibtisch/StoredValues/f2.txt",params[3]);
-    write_binary("/home/pbo/Schreibtisch/StoredValues/w1.txt",params[4]);
-    write_binary("/home/pbo/Schreibtisch/StoredValues/w2.txt",params[5]);
-    write_binary("/home/pbo/Schreibtisch/StoredValues/b1.txt",params[6]);
-    write_binary("/home/pbo/Schreibtisch/StoredValues/b2.txt",params[7]);
-    write_binary("/home/pbo/Schreibtisch/StoredValues/b3.txt",params[8]);
-    write_binary("/home/pbo/Schreibtisch/StoredValues/b4.txt",params[9]);*/
-//    write_binary("/home/pbo/Schreibtisch/StoredValues/b4.txt",params[9]);
-//    std::cout<<"Actual:\n"<<params[9]<<std::endl;
-//    params[9].setZero();
-//    std::cout<<"Actual:\n"<<params[9]<<std::endl;
-//
-//    read_binary("/home/pbo/Schreibtisch/StoredValues/b4.txt",params[9]);
-//    std::cout<<"Read:\n"<<params[9]<<std::endl;
-    for(int i = 0;i<amount_batches;i++){
-        /*read_binary("/home/pbo/Schreibtisch/StoredValues/f1.txt",params[2]);
-        read_binary("/home/pbo/Schreibtisch/StoredValues/f2.txt",params[3]);
-        read_binary("/home/pbo/Schreibtisch/StoredValues/w1.txt",params[4]);
-        read_binary("/home/pbo/Schreibtisch/StoredValues/w2.txt",params[5]);
-        read_binary("/home/pbo/Schreibtisch/StoredValues/b1.txt",params[6]);
-        read_binary("/home/pbo/Schreibtisch/StoredValues/b2.txt",params[7]);
-        read_binary("/home/pbo/Schreibtisch/StoredValues/b3.txt",params[8]);
-        read_binary("/home/pbo/Schreibtisch/StoredValues/b4.txt",params[9]);*/
-        params[0] = test_data[i];
-        params[1] = test_label[i];
-        train(params,correct,total,false);
-
+    if(readWeights){
+        read_binary(WEIGHT_DEPOSIT"/f1.txt",params[2]);
+        read_binary(WEIGHT_DEPOSIT"/f2.txt",params[3]);
+        read_binary(WEIGHT_DEPOSIT"/w1.txt",params[4]);
+        read_binary(WEIGHT_DEPOSIT"/w2.txt",params[5]);
+        read_binary(WEIGHT_DEPOSIT"/b1.txt",params[6]);
+        read_binary(WEIGHT_DEPOSIT"/b2.txt",params[7]);
+        read_binary(WEIGHT_DEPOSIT"/b3.txt",params[8]);
+        read_binary(WEIGHT_DEPOSIT"/b4.txt",params[9]);
     }
-	std::cout<<"Amount Correct: "<<correct<<"Amount Wrong: "<<total-correct<<"Percentage: "<<correct/(float)
-	total<<std::endl;
+
+
+
+
+    /*
+     * Train Data
+     */
+    if(trainModel){
+        float cost =0;
+        for(int k = 0;k<epochs;k++){
+            cost=0;
+            for(int i = 0;i<amount_batches;i++){
+                params[0] = training_data[i];
+                params[1] = training_label[i];
+
+                cost+=train(params,correct,total);
+
+            }
+            cost/=(float)amount_batches;
+            std::cout<<"Current Cost:"<<cost<<" Round: "<<k<<std::endl;
+            if(cost<1)break;
+
+        }
+    }
+
+    if(writeWeights){
+        write_binary(WEIGHT_DEPOSIT"/f1.txt",params[2]);
+        write_binary(WEIGHT_DEPOSIT"/f2.txt",params[3]);
+        write_binary(WEIGHT_DEPOSIT"/w1.txt",params[4]);
+        write_binary(WEIGHT_DEPOSIT"/w2.txt",params[5]);
+        write_binary(WEIGHT_DEPOSIT"/b1.txt",params[6]);
+        write_binary(WEIGHT_DEPOSIT"/b2.txt",params[7]);
+        write_binary(WEIGHT_DEPOSIT"/b3.txt",params[8]);
+        write_binary(WEIGHT_DEPOSIT"/b4.txt",params[9]);
+    }
+
+    if(testModel){
+        for(int i = 0;i<amount_batches;i++){
+            params[0] = test_data[i];
+            params[1] = test_label[i];
+            train(params,correct,total,false);
+
+        }
+        std::cout<<"Amount Correct: "<<correct<<"Amount Wrong: "<<total-correct<<"Percentage: "<<correct/(float)
+                total<<std::endl;
+    }
+
 
 
 

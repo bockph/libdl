@@ -81,7 +81,6 @@ void ConvolveFilter::forwards() {
 	//TODO for efficency maybe change eigen to row major order for convfilter this should make sense, not sure about the
 	// other operations ( as long as each input is a row)
 
-//    std::cout<<"input:\n"<< getInputA()->getForward()<<std::endl;
 
 
 	Eigen::MatrixXf outputMatrix = Eigen::MatrixXf::Zero(getAmountOfInputs(), getOutputSize());
@@ -113,21 +112,7 @@ void ConvolveFilter::forwards() {
 	}
 
 	setForward(outputMatrix);
-//	std::cout<<"\nOutputMatrix:\n"<<getForward()<<std::endl;
-/*Eigen::MatrixXf test = getForward();
-//    test.transpose().eval();
-    test.resize(getOutputDim(),getOutputDim()*getAmountFilters());
-    std::cout<<"Output Convolve:\n"<< getForward()<<std::endl;
 
-    std::cout<<"Output Convolve:\n"<< test<<std::endl;
-    std::cout<<"Output Max:\n"<< getForward().array().maxCoeff()<<std::endl;
-    std::cout<<"Output Average:\n"<< getForward().mean()<<std::endl;
-    std::cout<<"B Max:\n"<< getInputB()->getForward().array().maxCoeff()<<std::endl;
-    std::cout<<"B Min:\n"<< getInputB()->getForward().array().minCoeff()<<std::endl;
-    std::cout<<"B Average:\n"<< getInputB()->getForward().mean()<<std::endl;
-
-
-	int x=2+3;*/
 
 
 };
@@ -138,7 +123,6 @@ void ConvolveFilter::backwards() {
     Eigen::MatrixXf gradientsKernel = Eigen::MatrixXf::Zero(getAmountFilters(), _filterSizeOneChannel * getInputChannels());
     Eigen::MatrixXf gradientsInput = Eigen::MatrixXf::Zero(getAmountOfInputs(), getImgSizeOneChannel() * getInputChannels());
 
-//    std::cout<<"Curr Grads:"<<getCurrentGradients()<<std::endl;
 
     //loop over all images :
 	for (int i = 0; i < getAmountOfInputs(); i++) {
@@ -147,7 +131,7 @@ void ConvolveFilter::backwards() {
              for (int j = 0; j < getAmountFilters(); j++) {
                  Eigen::MatrixXf currentGradients = getCurrentGradients().block(i,_outputSizeOneFilter*j,1,_outputSizeOneFilter);//.block(j,_filterSizeOneChannel*c,1,_filterSizeOneChannel);
                  currentGradients.resize(getOutputDim(),getOutputDim());
-//                 addStridePadding(currentGradients,_stride);
+                 addStridePadding(currentGradients,_stride);
 
                  Eigen::MatrixXf currentGradientPadded =currentGradients;
                  //APPLY pADDING
@@ -166,7 +150,6 @@ void ConvolveFilter::backwards() {
 
 
                 auto convolvedW = convolve(currentInputA,currentGradients,_stride,getInputDimW());
-//                     std::cout<<convolvedW<<std::endl;
 
                 //Transpose is necessary because of resize operation
                      convolvedW.transposeInPlace();
@@ -182,22 +165,9 @@ void ConvolveFilter::backwards() {
         }
 
 	}
-//    std::cout<<"gradientsKernel:\n"<< gradientsKernel<<std::endl;
 
-//    gradientsKernel/=getAmountOfInputs();
 	getInputB()->setCurrentGradients(gradientsKernel);
-//    std::cout<<"Gradients Filter:\n"<< gradientsKernel<<std::endl;
-//    std::cout<<"Input X:\n"<< getInputA()->getForward()<<std::endl;
-
-//    gradientsInput/=getAmountOfInputs();
     getInputA()->setCurrentGradients(gradientsInput);
-//    std::cout<<"getCurrentGradients:\n"<< getCurrentGradients()<<std::endl;
-
-//    std::cout<<"gradientsKernel:\n"<< gradientsKernel<<std::endl;
-//    std::cout<<"gradientsInput:\n"<< gradientsInput<<std::endl;
-//    std::cout<<"inputA:\n"<< getInputA()->getForward()<<std::endl;
-//    std::cout<<"inputB:\n"<< getInputB()->getForward()<<std::endl;
-//
 
 }
 
