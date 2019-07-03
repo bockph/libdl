@@ -36,8 +36,9 @@ void MUL::backwards() {
 //    std::cout<<"Gradient XXX MUL:\n"<< inputGradient<<std::endl;
 
     Eigen::MatrixXf weightGradient = (getInputA()->getForward().transpose()) * getCurrentGradients();
+    inputGradient/getCurrentGradients().rows();
 	getInputA()->setCurrentGradients(inputGradient);
-//    weightGradient/=getCurrentGradients().rows();
+    weightGradient/=getCurrentGradients().rows();
 
     getInputB()->setCurrentGradients(weightGradient);
 //    std::cout<<"Gradient WWW MUL:\n"<< weightGradient<<std::endl;

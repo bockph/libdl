@@ -54,6 +54,7 @@ void CrossEntropyLoss::backwards() {
 //	Eigen::MatrixXf p2 = getForward() ;
 //	Eigen::MatrixXf tmp = c.cwiseQuotient(p);
 	Eigen::MatrixXf tmp2 = p-c;
+	tmp2=tmp2/getInputA()->getForward().rows();
 //	tmp2.array()+=0.0000000000000000000000000000000001;
 
 

@@ -48,7 +48,8 @@ namespace Eigen{
 void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf>& training_data, std::vector<Eigen::MatrixXf>& label_data,bool trainData =true){
 
     mnist::MNIST_dataset<std::vector, std::vector<uint8_t>, uint8_t> dataset =
-            mnist::read_dataset<std::vector, std::vector, uint8_t, uint8_t>(MNIST_DATA_LOCATION,batch_size*amountBatches);
+            mnist::read_dataset<std::vector, std::vector, uint8_t, uint8_t>(MNIST_DATA_LOCATION,
+            		batch_size*amountBatches+1);
     mnist::normalize_dataset(dataset);
 
     training_data.clear();
@@ -62,9 +63,12 @@ void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf>&
                 Eigen::MatrixXf tmp2 = tmp.cast<float>();
                 img.block(i,0,1,784)=tmp2;
             }else{
-                Eigen::Matrix<unsigned char,1,784> tmp(dataset.test_images.at(i+j*batch_size).data());
-                Eigen::MatrixXf tmp2 = tmp.cast<float>();
-                img.block(i,0,1,784)=tmp2;
+            	if(i+j*batch_size<5000){
+					Eigen::Matrix<unsigned char,1,784> tmp(dataset.test_images.at(i+j*batch_size).data());
+					Eigen::MatrixXf tmp2 = tmp.cast<float>();
+					img.block(i,0,1,784)=tmp2;
+            	}
+
             }
 
         }
@@ -76,8 +80,12 @@ void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf>&
         for ( int i = 0;i< batch_size;i++){
             if(trainData)
                 C(i,dataset.training_labels.at(i+j*batch_size))=1;
-            else
-                C(i,dataset.test_labels.at(i+j*batch_size))=1;
+            else{
+				if(i+j*batch_size<5000){
+					C(i,dataset.test_labels.at(i+j*batch_size))=1;
+				}
+            }
+
 
         }
 
@@ -88,7 +96,7 @@ void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf>&
 
 
 }
-void train(std::vector<Eigen::MatrixXf>& params, bool train =true){
+void train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bool train =true){
     /*
      * params = [img,label,f1,f2,w3,w4,b1,b2,b3,b4]
      */
@@ -103,7 +111,7 @@ void train(std::vector<Eigen::MatrixXf>& params, bool train =true){
 
     auto conv1 = std::make_shared<ConvolveFilter>(X,F1,1);
     auto sum1 = std::make_shared<SUM>(conv1,B1);
-    auto relu1  = std::make_shared<ReLu>(sum1);
+    auto relu1  = std::make_shared<Sigmoid>(sum1);
 
 //convolutional Layer 2
     auto F2 = std::make_shared<Filter>(params[3],5,8);
@@ -122,9 +130,10 @@ void train(std::vector<Eigen::MatrixXf>& params, bool train =true){
     auto B3 = std::make_shared<Bias>(params[8]);
 
     auto mul1 = std::make_shared<MUL>(flattened, W1);
-    auto relu3 = std::make_shared<ReLu>(mul1);
+	auto sum3 = std::make_shared<SUM>(mul1, B3);
 
-    auto sum3 = std::make_shared<SUM>(relu3, B3);
+	auto relu3 = std::make_shared<ReLu>(sum3);
+
 //Dense Layer 2
     auto W2 = std::make_shared<Weight>(params[5]);
     auto B4 = std::make_shared<Bias>(params[9]);
@@ -141,16 +150,19 @@ void train(std::vector<Eigen::MatrixXf>& params, bool train =true){
 
 
     if(train){
-        for (int i = 0; i < 200; i++) {
-            session.run();
-            std::cout<<i<<". run achieved"<<std::endl;
-            std::cout << "LOSS:\n" << CE->getForward()(0,0) << std::endl;
+       /* for (int i = 0; i < 500; i++) {
+//            std::cout<<i<<". run achieved"<<std::endl;
+//            std::cout << "LOSS:\n" << CE->getForward()(0,0) << std::endl;
             if(CE->getForward()(0,0)<0.5)break;
 
-        }
+        }*/
+		session.run();
+
+		std::cout << "LOSS:\n" << CE->getForward()(0,0) << std::endl;
+
 //        std::cout << "\n Results of Last Run \n" << std::endl;
 //        std::cout << "Output:\n" << soft->getForward() << std::endl;
-        std::cout << "LOSS:\n" << CE->getForward()(0,0) << std::endl;
+//        std::cout << "LOSS:\n" << CE->getForward()(0,0) << std::endl;
 //        std::cout<<"\nExpected:\n\n\n"<<CN->getForward()<<std::endl;
         params[2] = F1->getForward();
         params[3] = F2->getForward();
@@ -171,8 +183,8 @@ void train(std::vector<Eigen::MatrixXf>& params, bool train =true){
     }else{
         session.run();
         Eigen::MatrixXf::Index maxRow, maxCol;
-        float correct=0;
-        float wrong=0;
+        /*float correct=0;
+        float wrong=0;*/
         for(int i =0;i<params[0].rows();i++){
             soft->getForward().block(i,0,1,10).maxCoeff(&maxRow,&maxCol);
             int p = maxCol;
@@ -180,12 +192,13 @@ void train(std::vector<Eigen::MatrixXf>& params, bool train =true){
             int A = maxCol;
 
             if(p==A)correct++;
-            else wrong++;
+            total++;
+//            else wrong++;
 
 
         }
 
-        std::cout<<"Amount Correct: "<<correct<<"Amount Wrong: "<<wrong<<"Percentage: "<<correct/(float)params[0].rows()<<std::endl;
+//        std::cout<<"Amount Correct: "<<correct<<"Amount Wrong: "<<wrong<<"Percentage: "<<correct/(float)params[0].rows()<<std::endl;
 //        std::cout<<"Amount Wrong:"<<wrong<<"Percentage :"<<wrong/(float)params[0].rows()<<std::endl;
     }
 
@@ -197,8 +210,10 @@ void train(std::vector<Eigen::MatrixXf>& params, bool train =true){
 
 
 int main() {
-	int batch_size = 32;
-	int amount_batches =1;
+	int batch_size = 8;
+	int epochs =50;
+	int amount_batches =200;
+	float correct,total;
     std::vector<Eigen::MatrixXf> training_data,training_label;
     std::vector<Eigen::MatrixXf> test_data,test_label;
 
@@ -212,45 +227,54 @@ int main() {
     auto out3DimSQ = std::pow(outputDim3,2)*8;
 
 
-    Eigen::MatrixXf filter1 = generateRandomMatrix(0,0.1,8,5*5);
-    Eigen::MatrixXf filter2 = generateRandomMatrix(0.,0.1,8,5*5*8);
+	/*Eigen::MatrixXf filter1 = initializeFilter(8,5*5);// generateRandomMatrix(0,.1,8,5*5);
+	Eigen::MatrixXf filter2 = initializeFilter(8,5*5*8);//generateRandomMatrix(0.,.1,8,5*5*8);*/
 
-    Eigen::MatrixXf W1 = generateRandomMatrix(0., 0.01, out3DimSQ, 128);
-    Eigen::MatrixXf W2 = generateRandomMatrix(0., 0.01,128, 10 );
+/*	Eigen::MatrixXf W1 = initializeWeights(out3DimSQ,128);//generateRandomMatrix(0., .1, out3DimSQ, 128);
+	Eigen::MatrixXf W2 = initializeWeights(128,10);//generateRandomMatrix(0., .1,128, 10 );*/
+	Eigen::MatrixXf filter1 = generateRandomMatrix(0,.1,8,5*5);
+	Eigen::MatrixXf filter2 = generateRandomMatrix(0.,.1,8,5*5*8);
 
-    Eigen::MatrixXf b1=Eigen::MatrixXf::Zero(1,outputDim*outputDim*8);
-    Eigen::MatrixXf b2=Eigen::MatrixXf::Zero(1,outputDim2*outputDim2*8);
+	Eigen::MatrixXf W1 = generateRandomMatrix(0., .1, out3DimSQ, 128);
+	Eigen::MatrixXf W2 = generateRandomMatrix(0., .1,128, 10 );
+
+    Eigen::MatrixXf b1=Eigen::MatrixXf::Zero(batch_size,outputDim*outputDim*8);
+    Eigen::MatrixXf b2=Eigen::MatrixXf::Zero(batch_size,outputDim2*outputDim2*8);
     Eigen::MatrixXf b3 = Eigen::MatrixXf::Zero(batch_size,128);
     Eigen::MatrixXf b4 = Eigen::MatrixXf::Zero(batch_size, 10);
     std::vector<Eigen::MatrixXf> params ={training_data[0],training_label[0],filter1,filter2,W1,W2,b1,b2,b3,b4};
-    /*read_binary("/home/pbo/Schreibtisch/StoredValues/f1.txt",params[2]);
+    read_binary("/home/pbo/Schreibtisch/StoredValues/f1.txt",params[2]);
     read_binary("/home/pbo/Schreibtisch/StoredValues/f2.txt",params[3]);
     read_binary("/home/pbo/Schreibtisch/StoredValues/w1.txt",params[4]);
     read_binary("/home/pbo/Schreibtisch/StoredValues/w2.txt",params[5]);
     read_binary("/home/pbo/Schreibtisch/StoredValues/b1.txt",params[6]);
     read_binary("/home/pbo/Schreibtisch/StoredValues/b2.txt",params[7]);
     read_binary("/home/pbo/Schreibtisch/StoredValues/b3.txt",params[8]);
-    read_binary("/home/pbo/Schreibtisch/StoredValues/b4.txt",params[9]);*/
-    for(int i = 0;i<amount_batches;i++){
-        params[0] = training_data[i];
-        params[1] = training_label[i];
-        /*if(i!=0){
+    read_binary("/home/pbo/Schreibtisch/StoredValues/b4.txt",params[9]);
+  /* for(int k = 0;k<epochs;k++){
+	   for(int i = 0;i<amount_batches;i++){
+		   params[0] = training_data[i];
+		   params[1] = training_label[i];
+		   *//*if(i!=0){
 
-        }*/
+		   }*//*
 
 
-        train(params);
-        std::cout<<"Left to go: "<<amount_batches-i<<std::endl;
+		   train(params,correct,total);
 
-    }
-    write_binary("/home/pbo/Schreibtisch/StoredValues/f1.txt",params[2]);
+	   }
+	   std::cout<<"Left to go: "<<epochs-k<<std::endl;
+
+   }*/
+
+   /* write_binary("/home/pbo/Schreibtisch/StoredValues/f1.txt",params[2]);
     write_binary("/home/pbo/Schreibtisch/StoredValues/f2.txt",params[3]);
     write_binary("/home/pbo/Schreibtisch/StoredValues/w1.txt",params[4]);
     write_binary("/home/pbo/Schreibtisch/StoredValues/w2.txt",params[5]);
     write_binary("/home/pbo/Schreibtisch/StoredValues/b1.txt",params[6]);
     write_binary("/home/pbo/Schreibtisch/StoredValues/b2.txt",params[7]);
     write_binary("/home/pbo/Schreibtisch/StoredValues/b3.txt",params[8]);
-    write_binary("/home/pbo/Schreibtisch/StoredValues/b4.txt",params[9]);
+    write_binary("/home/pbo/Schreibtisch/StoredValues/b4.txt",params[9]);*/
 //    write_binary("/home/pbo/Schreibtisch/StoredValues/b4.txt",params[9]);
 //    std::cout<<"Actual:\n"<<params[9]<<std::endl;
 //    params[9].setZero();
@@ -267,11 +291,14 @@ int main() {
         read_binary("/home/pbo/Schreibtisch/StoredValues/b2.txt",params[7]);
         read_binary("/home/pbo/Schreibtisch/StoredValues/b3.txt",params[8]);
         read_binary("/home/pbo/Schreibtisch/StoredValues/b4.txt",params[9]);*/
-        params[0] = training_data[i];
-        params[1] = training_label[i];
-        train(params,false);
+        params[0] = test_data[i];
+        params[1] = test_label[i];
+        train(params,correct,total,false);
 
     }
+	std::cout<<"Amount Correct: "<<correct<<"Amount Wrong: "<<total-correct<<"Percentage: "<<correct/(float)
+	total<<std::endl;
+
 
 
 }

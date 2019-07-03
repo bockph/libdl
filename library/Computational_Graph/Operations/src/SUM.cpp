@@ -21,11 +21,12 @@ void SUM::forwards() {
     int colsB = getInputB()->getForward().cols();
 //	std::cout<<"input:\n"<< getInputA()->getForward()<<std::endl;
 
-	if (rowsA != rowsB) {
-		setForward(getInputA()->getForward() + getInputB()->getForward().replicate(rowsA, 1));
-	} else {
+	if (rowsA != rowsB) std::cout<<"!!!!"<<std::endl;
+//		setForward(getInputA()->getForward() + getInputB()->getForward().replicate(rowsA, 1));
+//	} else {
+
 		setForward(getInputA()->getForward() + getInputB()->getForward());
-	}
+//	}
 
 
 }

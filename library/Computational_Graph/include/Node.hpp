@@ -5,10 +5,10 @@
 #include <vector>
 #include <memory>
 #include <Eigen/Dense>
-#define alpha 0.01
+#define lr 0.01
 #define beta1 0.95
 #define beta2 0.99
-#define BATCH_SIZE 16
+#define BATCH_SIZE 8
 class Node {
 
 public:

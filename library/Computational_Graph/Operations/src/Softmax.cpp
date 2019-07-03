@@ -58,9 +58,9 @@ void Softmax::forwards() {
 };
 //TODO Check if this implementation of Softmax is really correct
 void Softmax::backwards() {
-	auto tmp = getForward();
+	/*auto tmp = getForward();
 	tmp.setOnes();
-	auto dSoftMax = getForward().cwiseProduct(tmp - getForward());
+	auto dSoftMax = getForward().cwiseProduct(tmp - getForward());*/
 //	getInputA()->setCurrentGradients(getCurrentGradients().cwiseProduct(dSoftMax));
 	getInputA()->setCurrentGradients(getCurrentGradients());
 //

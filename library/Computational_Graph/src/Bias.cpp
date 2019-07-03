@@ -17,35 +17,45 @@ Bias::Bias(Eigen::MatrixXf m, int channel) {
 void Bias::backwards() {
 	int rowsG = getCurrentGradients().rows();
 	int rowsCurrent = getForward().rows();
+	bool adam(false);
 	//TODO: Implement Learning Rate
 	if (rowsCurrent != rowsG) {
-	    _v1 =_v1.replicate(rowsG,1);
-	    _s1 = _s1.replicate(rowsG,1);
-        Eigen::MatrixXf tmp = Eigen::MatrixXf::Zero(getCurrentGradients().rows(),getCurrentGradients().cols());
-        tmp =(getCurrentGradients()/BATCH_SIZE);
-        tmp = tmp.array().pow(2);
-        tmp *=(1-beta2);
-        _v1 = beta1*_v1 + (1-beta1)/BATCH_SIZE*getCurrentGradients();// # momentum update
-        _s1 = beta2*_s1 +tmp;//# RMSProp update
-        Eigen::MatrixXf f1 = getForward();
-        Eigen::MatrixXf div = (_s1.array()+1e-7).array().sqrt();
-        f1 =f1.replicate(rowsG,1)- alpha * _v1.cwiseQuotient(div);
+		if(adam){
+			_v1 =_v1.replicate(rowsG,1);
+			_s1 = _s1.replicate(rowsG,1);
+			Eigen::MatrixXf tmp = Eigen::MatrixXf::Zero(getCurrentGradients().rows(),getCurrentGradients().cols());
+			tmp =(getCurrentGradients()/BATCH_SIZE);
+			tmp = tmp.array().pow(2);
+			tmp *=(1-beta2);
+			_v1 = beta1*_v1 + (1-beta1)/BATCH_SIZE*getCurrentGradients();// # momentum update
+			_s1 = beta2*_s1 +tmp;//# RMSProp update
+			Eigen::MatrixXf f1 = getForward();
+			Eigen::MatrixXf div = (_s1.array()+1e-7).array().sqrt();
+			f1 =f1.replicate(rowsG,1)- lr * _v1.cwiseQuotient(div);
 
-        setForward(f1);
-//		setForward(getForward().replicate(rowsG, 1) - 0.01 * getCurrentGradients());
+			setForward(f1);
+		}else{
+			setForward(getForward().replicate(rowsG, 1) - lr* getCurrentGradients());
+
+		}
+
 	} else {
-        Eigen::MatrixXf tmp = Eigen::MatrixXf::Zero(getCurrentGradients().rows(),getCurrentGradients().cols());
-        tmp =(getCurrentGradients()/BATCH_SIZE);
-        tmp = tmp.array().pow(2);
-        tmp *=(1-beta2);
-        _v1 = beta1*_v1 + (1-beta1)/BATCH_SIZE*getCurrentGradients();// # momentum update
-        _s1 = beta2*_s1 +tmp;//# RMSProp update
-        Eigen::MatrixXf f1 = getForward();
-        Eigen::MatrixXf div = (_s1.array()+1e-7).array().sqrt();
-        f1 -= alpha * _v1.cwiseQuotient(div);
+		if(adam){
+			Eigen::MatrixXf tmp = Eigen::MatrixXf::Zero(getCurrentGradients().rows(),getCurrentGradients().cols());
+			tmp =(getCurrentGradients()/BATCH_SIZE);
+			tmp = tmp.array().pow(2);
+			tmp *=(1-beta2);
+			_v1 = beta1*_v1 + (1-beta1)/BATCH_SIZE*getCurrentGradients();// # momentum update
+			_s1 = beta2*_s1 +tmp;//# RMSProp update
+			Eigen::MatrixXf f1 = getForward();
+			Eigen::MatrixXf div = (_s1.array()+1e-7).array().sqrt();
+			f1 -= lr * _v1.cwiseQuotient(div);
 
-        setForward(f1);
-//		setForward(getForward() - 0.001 * getCurrentGradients());
+			setForward(f1);
+		}else{
+			setForward(getForward() - lr * getCurrentGradients());
+		}
+
 	}
 
 }

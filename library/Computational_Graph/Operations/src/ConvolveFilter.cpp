@@ -184,7 +184,7 @@ void ConvolveFilter::backwards() {
 	}
 //    std::cout<<"gradientsKernel:\n"<< gradientsKernel<<std::endl;
 
-    gradientsKernel/=getAmountOfInputs();
+//    gradientsKernel/=getAmountOfInputs();
 	getInputB()->setCurrentGradients(gradientsKernel);
 //    std::cout<<"Gradients Filter:\n"<< gradientsKernel<<std::endl;
 //    std::cout<<"Input X:\n"<< getInputA()->getForward()<<std::endl;
