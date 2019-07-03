@@ -25,4 +25,5 @@ Second, it gives the result and Loss after 5000x forward pass & backprop.\
 # MNIST
 The MNIST problem is simulated in the build File Example_MNIST, which is build from the Code in Example_MNIST.cpp\
 The settings are predefined so that pre-learned weights are read from the WeightDeposit and are then used to predict a subset of the MNIST testset.
-At the beginning of the main method of Example_MNIST.cpp these settings can be changed (as explained there), in order to train ones own weights.
+
+In order to train the Model, the settings at the beginning of the main method (in Example_MNIST.cpp) have to be changed. See inline Comments.

@@ -187,13 +187,13 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
 
 int main() {
     /*
-     * batch_size: Don't change this unless one changes as well #define BATCH_SIZE in Node.hpp
-     * epochs: self explanatory, but to big values in combination with amount_batches can lead to OutOfMemory
-     * amount_batches: batch_size*amount_batches gives the total amount of samples
-     * trainModel: if training should be done with TRAINING data
-     * testModel: if prediction should be done with TEST data
-     * writeWeights: writes the trained Weights to Source_Directory/WeightDeposit
-     * readWeights: if Weights have already been Written once (check WeightDeposit Folder), this can be set to true --> no random initialization
+     * batch_size: if this is changed '#define BATCH_SIZE' in Node.hpp has to be changed as well
+     * epochs: sets the amount of epochs for training, to big values in combination with a big 'amount_batches' can lead to OutOfMemory Error
+     * amount_batches: 'batch_size*amount_batches' gives the total amount of samples
+     * trainModel: defines if the model should be trained with the aboved set parameters
+     * testModel: defines if the model should be tested (using the MNIST test_data)
+     * writeWeights: if set the trained Weights  are written to Source_Directory/WeightDeposit
+     * readWeights: if set (and Weights have already been Written once) weights are initialized with weights from Source_Directory/WeightDeposit
      */
 	int batch_size = 8;
 	int epochs =10;
