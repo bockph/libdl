@@ -1,0 +1,9 @@
+include_directories(include)
+set(UTILS_NAME utils)
+set(UTILS_SOURCES
+        src/EigenMatrixIO.cpp)
+
+add_library(${UTILS_NAME}  ${UTILS_SOURCES})
+target_include_directories(${UTILS_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
+target_link_libraries(${UTILS_NAME} eigenI )
+set_target_properties(${UTILS_NAME} PROPERTIES POSITION_INDEPENDENT_CODE TRUE)

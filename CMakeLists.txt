@@ -18,7 +18,7 @@ target_compile_features(${TEST_TARGET_ONE} PUBLIC cxx_std_17)
 set(TEST_TARGET_TWO Example_MNIST)
 add_executable(${TEST_TARGET_TWO} Example_MNIST.cpp)
 #target_link_libraries (${TEST_TARGET_TWO} graph Eigen3::Eigen )# libdl)# pybind11)
-target_link_libraries (${TEST_TARGET_TWO} graph mnist )# libdl)# pybind11)
+target_link_libraries (${TEST_TARGET_TWO} graph mnist utils )# libdl)# pybind11)
 target_compile_definitions(${TEST_TARGET_TWO} PRIVATE MNIST_DATA_LOCATION="${CMAKE_SOURCE_DIR}/extern/mnist" WEIGHT_DEPOSIT="${CMAKE_SOURCE_DIR}/WeightDeposit")
 
 target_compile_features(${TEST_TARGET_TWO} PUBLIC cxx_std_17)

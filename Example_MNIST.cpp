@@ -21,27 +21,10 @@
 #include <CrossEntropyLoss.hpp>
 #include "mnist/mnist_reader.hpp"
 #include <mnist/mnist_utils.hpp>
+#
+#include <EigenMatrixIO.hpp>
 #include <Sigmoid.hpp>
 
-namespace Eigen{
-    void write_binary(const char* filename, const MatrixXf& matrix){
-        std::ofstream out(filename, std::ios::out | std::ios::binary | std::ios::trunc);
-        typename MatrixXf::Index rows=matrix.rows(), cols=matrix.cols();
-        out.write((char*) (&rows), sizeof(typename MatrixXf::Index));
-        out.write((char*) (&cols), sizeof(typename MatrixXf::Index));
-        out.write((char*) matrix.data(), rows*cols*sizeof(typename MatrixXf::Scalar) );
-        out.close();
-    }
-    void read_binary(const char* filename, MatrixXf& matrix){
-        std::ifstream in(filename, std::ios::in | std::ios::binary);
-        typename MatrixXf::Index rows=0, cols=0;
-        in.read((char*) (&rows),sizeof(typename MatrixXf::Index));
-        in.read((char*) (&cols),sizeof(typename MatrixXf::Index));
-        matrix.resize(rows, cols);
-        in.read( (char *) matrix.data() , rows*cols*sizeof(typename MatrixXf::Scalar) );
-        in.close();
-    }
-} // Eigen::
 
 void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf>& training_data, std::vector<Eigen::MatrixXf>& label_data,bool trainData =true){
 
