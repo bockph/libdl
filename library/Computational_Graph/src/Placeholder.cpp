@@ -5,7 +5,7 @@
 #include "Placeholder.hpp"
 
 
-Placeholder::Placeholder(Eigen::MatrixXf m,int dim,int channel) {
+Placeholder::Placeholder(Eigen::MatrixXf& m,int dim,int channel) {
 	setForward(m);
 	setOutputDim(dim);
     setOutputChannels(channel);

@@ -6,7 +6,7 @@
 #include "Filter.hpp"
 
 
-Filter::Filter(Eigen::MatrixXf m,int dim, int channel) {
+Filter::Filter(Eigen::MatrixXf& m,int dim, int channel) {
 	setForward(m);
     setOutputDim(dim);
     setOutputChannels(channel);

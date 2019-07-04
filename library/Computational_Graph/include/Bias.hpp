@@ -11,7 +11,7 @@
 class Bias : public Node {
 
 public:
-	Bias(Eigen::MatrixXf t, int channels =0);
+	Bias(Eigen::MatrixXf& t, int channels =0);
 
 	void backwards() override;
 private:

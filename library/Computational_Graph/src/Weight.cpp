@@ -6,7 +6,7 @@
 #include "Weight.hpp"
 
 
-Weight::Weight(Eigen::MatrixXf m) {
+Weight::Weight(Eigen::MatrixXf& m) {
 	setForward(m);
     _v1 = Eigen::MatrixXf::Zero(m.rows(),m.cols());
     _s1 = Eigen::MatrixXf::Zero(m.rows(),m.cols());

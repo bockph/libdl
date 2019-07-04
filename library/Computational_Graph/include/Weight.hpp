@@ -9,7 +9,7 @@
 class Weight : public Node {
 
 public:
-	Weight(Eigen::MatrixXf t);
+	Weight(Eigen::MatrixXf& t);
 
 	~Weight() = default;
 
