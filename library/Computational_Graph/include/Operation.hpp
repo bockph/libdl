@@ -6,7 +6,8 @@
 #include "Node.hpp"
 #include <vector>
 #include <memory>
-
+#include <chrono>
+#include <ctime>
 
 class Operation : public Node {
 
@@ -31,11 +32,20 @@ public:
 
     void setAmountOfInputs(int amountOfInputs);
 
+    int getForwardTime() const;
+
+    int getBackwardsTime() const;
+    void startTimeMeasurement();
+    void stopTimeMeasurement(char function);
+
 private:
 	std::vector<std::shared_ptr<Node>> _inputNodes;
     int _amountOfInputs;
     int _inputDimX;
     int _inputDimW;
+
+    int _forwardTime, _backwardsTime;
+    std::chrono::time_point<std::chrono::system_clock> _start,_end;
 
 };
 

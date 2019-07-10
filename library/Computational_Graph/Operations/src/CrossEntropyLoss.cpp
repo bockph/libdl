@@ -6,7 +6,9 @@
 #include "CrossEntropyLoss.hpp"
 
 void CrossEntropyLoss::forwards() {
-	/*
+    startTimeMeasurement();
+
+    /*
  * GENERALL STUFF
  */
 //    setOutputChannels(getInputA()->getOutputChannels());
@@ -44,11 +46,15 @@ void CrossEntropyLoss::forwards() {
 //	Eigen::MatrixXf result = (-1)*(getInputB()->getForward().dot(log.transpose().eval())).sum();
 //result/=log.rows();
 	setForward(result);
+    stopTimeMeasurement(0);
+
 }
 
 
 void CrossEntropyLoss::backwards() {
-	//– ci / pi + (1 – ci)/ (1 – pi)
+    startTimeMeasurement();
+
+    //– ci / pi + (1 – ci)/ (1 – pi)
 	Eigen::MatrixXf c = getInputB()->getForward()  ;
 	Eigen::MatrixXf p = getInputA()->getForward() ;
 //	Eigen::MatrixXf p2 = getForward() ;
@@ -59,6 +65,8 @@ void CrossEntropyLoss::backwards() {
 
 
 	getInputA()->setCurrentGradients(tmp2);
+    stopTimeMeasurement(1);
+
 }
 std::string CrossEntropyLoss::printForward() {
 	return "MSE:0";

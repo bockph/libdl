@@ -22,7 +22,7 @@
 #include "mnist/mnist_reader.hpp"
 #include <mnist/mnist_utils.hpp>
 #
-#include <EigenMatrixIO.hpp>
+#include <IO.hpp>
 #include <Sigmoid.hpp>
 
 
@@ -130,10 +130,23 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
     Session session(CE, std::move(graph));
 
 
+
+
+
     if(train){
 
 		session.run();
+        std::cout << "Total forward" << session.getForwardTime()<<std::endl;
+        std::cout << "Total backwards" << session.getBackwardsTime()<<std::endl;
 
+        std::cout << "Convolution 1: Total forward: " << conv1->getForwardTime()<<"Percentage: "<<(float)conv1->getForwardTime()/(float)session.getForwardTime()<<std::endl;
+        std::cout << "Convolution 1: Total backwards: " << conv1->getBackwardsTime()<<"Percentage: "<<(float)conv1->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
+
+        std::cout << "Convolution 2 Total forward: " << conv2->getForwardTime()<<"Percentage: "<<(float)conv2->getForwardTime()/(float)session.getForwardTime()<<std::endl;
+        std::cout << "Convolution 2: Total backwards: " << conv2->getBackwardsTime()<<"Percentage: "<<(float)conv2->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
+
+        std::cout << "Maxpool: Total forward: " << maxPool->getForwardTime()<<"Percentage: "<<(float)maxPool->getForwardTime()/(float)session.getForwardTime()<<std::endl;
+        std::cout << "MaxPool: Total backwards: " << maxPool->getBackwardsTime()<<"Percentage: "<<(float)maxPool->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
         params[2] = F1->getForward();
         params[3] = F2->getForward();
         params[4] = W1->getForward();
@@ -179,12 +192,12 @@ int main() {
      * readWeights: if set (and Weights have already been Written once) weights are initialized with weights from Source_Directory/WeightDeposit
      */
 	int batch_size = 8;
-	int epochs =10;
-	int amount_batches =100;
-	bool trainModel = false;
-	bool testModel =true;
+	int epochs =1;
+	int amount_batches =1;
+	bool trainModel = true;
+	bool testModel =false;
     bool writeWeights = false;
-    bool readWeights =true;
+    bool readWeights =false;
 
 
 

@@ -48,20 +48,48 @@ void Session::backProp(std::shared_ptr<Node> &endNode) {
 		backProp(tmp.at(i));
 
 	}
+
 }
 
 void Session::run(std::vector<float> feed) {
 
 	//TODO: write method to fill placeholders with the feed,
 	//maybe some vector of pairs with <Node,float>??
+    _start = std::chrono::system_clock::now();
 
 	for (std::shared_ptr<Node> operation: _postOrderTraversedList) {
 		operation->forwards();
 	}
-	Eigen::MatrixXf tmp = _endNode->getForward();
+    _end = std::chrono::system_clock::now();
+
+    int elapsed_seconds = std::chrono::duration_cast<std::chrono::microseconds>
+            (_end-_start).count();
+
+   _forwardTime=elapsed_seconds;
+
+
+
+    _start = std::chrono::system_clock::now();
+
+    Eigen::MatrixXf tmp = _endNode->getForward();
 	tmp.setOnes();
 	_endNode->setCurrentGradients(tmp);
 	backProp(_endNode);
+    _end = std::chrono::system_clock::now();
 
+     elapsed_seconds = std::chrono::duration_cast<std::chrono::microseconds>
+            (_end-_start).count();
+
+    _backwardsTime=elapsed_seconds;
+
+
+}
+
+int Session::getForwardTime() const {
+    return _forwardTime;
+}
+
+int Session::getBackwardsTime() const {
+    return _backwardsTime;
 }
 

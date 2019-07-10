@@ -6,6 +6,8 @@
 #include "MUL.hpp"
 
 void MUL::forwards() {
+    startTimeMeasurement();
+
     /*
  * GENERALL STUFF
  */
@@ -16,13 +18,16 @@ void MUL::forwards() {
 	//this results in a Vector containing in each row the result for a different input of the Batch
 	setForward(getInputA()->getForward() * getInputB()->getForward());
 
+    stopTimeMeasurement(0);
 
 };
 
 void MUL::backwards() {
+    startTimeMeasurement();
 
 
-	Eigen::MatrixXf inputGradient = getCurrentGradients() * (getInputB()->getForward().transpose());
+
+    Eigen::MatrixXf inputGradient = getCurrentGradients() * (getInputB()->getForward().transpose());
     Eigen::MatrixXf weightGradient = (getInputA()->getForward().transpose()) * getCurrentGradients();
 
     //TODO is this correct?
@@ -33,6 +38,8 @@ void MUL::backwards() {
 
     getInputA()->setCurrentGradients(inputGradient);
     getInputB()->setCurrentGradients(weightGradient);
+    stopTimeMeasurement(1);
+
 
 
 }

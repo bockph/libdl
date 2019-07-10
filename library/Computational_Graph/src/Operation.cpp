@@ -87,5 +87,35 @@ void Operation::setInputDimW(int inputDimW) {
     _inputDimW = inputDimW;
 }
 
+int Operation::getForwardTime() const {
+    return _forwardTime;
+}
+
+int Operation::getBackwardsTime() const {
+    return _backwardsTime;
+}
+
+void Operation::startTimeMeasurement() {
+    _start = std::chrono::system_clock::now();
+
+}
+
+void Operation::stopTimeMeasurement(char function) {
+    _end = std::chrono::system_clock::now();
+
+    int elapsed_seconds = std::chrono::duration_cast<std::chrono::microseconds>
+            (_end-_start).count();
+
+    switch (function){
+        case 0: _forwardTime=elapsed_seconds;
+            break;
+        case 1: _backwardsTime=elapsed_seconds;
+            break;
+        default:break;
+    }
+
+
+}
+
 
 

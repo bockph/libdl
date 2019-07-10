@@ -11,6 +11,10 @@ public:
 
 	void run(std::vector<float> feed = {});
 
+    int getForwardTime() const;
+
+    int getBackwardsTime() const;
+
 private:
 	std::vector<std::shared_ptr<Node>> postOrderTraversal(const std::shared_ptr<Node> &endNode);
 
@@ -22,6 +26,9 @@ private:
 	std::vector<std::shared_ptr<Node>> _preOrderTraversedList;
 	std::unique_ptr<Graph> _graph;
 	std::shared_ptr<Node> _endNode;
+
+    int _forwardTime, _backwardsTime;
+    std::chrono::time_point<std::chrono::system_clock> _start,_end;
 
 };
 

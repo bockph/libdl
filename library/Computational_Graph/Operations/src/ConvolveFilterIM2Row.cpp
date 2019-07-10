@@ -61,7 +61,19 @@ Eigen::MatrixXf ConvolveFilter::convolve(const Eigen::MatrixXf &input, const Eig
 
 
 
+
 }
+void im2Row(Eigen::MatrixXf& input, Eigen::MatrixXf& filter, int output,int stride,int inputDim,int sizeOneChannel,int channel){
+
+    Eigen::MatrixXf inputTransformed(filter.cols(),std:pow(output,2));
+
+    input.resize(inputDim*channel,inputDim);
+    for(int i = 0;i<output)
+
+
+
+}
+
 void ConvolveFilter::forwards() {
     startTimeMeasurement();
 

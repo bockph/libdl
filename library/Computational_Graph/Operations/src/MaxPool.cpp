@@ -10,10 +10,13 @@ int getChannels() {
 }
 
 void MaxPool::forwards() {
+    startTimeMeasurement();
+    double convolutionCounter=0;
 
-	/*
-	* GENERALL STUFF
-	*/
+
+    /*
+    * GENERALL STUFF
+    */
 	//    setOutputChannels(getInputA()->getOutputChannels());
 	beforeForward();
 	/*
@@ -51,7 +54,7 @@ void MaxPool::forwards() {
 
 
 
-
+            convolutionCounter++;
 			//2.2 loop over amount of possible convolutions and apply filter to img
 			for (int x = 0; x < outputDim; x++) {
 				for (int y = 0; y < outputDim; y++) {
@@ -85,11 +88,16 @@ void MaxPool::forwards() {
     std::cout<<"Output Max:\n"<< getForward().array().maxCoeff()<<std::endl;
     std::cout<<"Output Average:\n"<< getForward().mean()<<std::endl;
     int x=2+3;*/
+    stopTimeMeasurement(0);
+    std::cout<<"Amount of Maxpool forward convolutions:"<<convolutionCounter<<std::endl;
 
 };
 
 void MaxPool::backwards() {
-	int imgN = getInputA()->getForward().rows();
+    startTimeMeasurement();
+    double convolutionCounter=0;
+
+    int imgN = getInputA()->getForward().rows();
 	int imgDim = getInputA()->getOutputDim();
 	int outputDim = std::floor((imgDim - _windowSize) / _stride) + 1;
 	int imgSizeOneChannel = std::pow(imgDim, 2);
@@ -107,7 +115,7 @@ void MaxPool::backwards() {
 			Eigen::MatrixXf tmpIMG = getMaxIndexMatrix().block(i, imgSizeOneChannel * c, 1, imgSizeOneChannel);
 			tmpIMG.resize(imgDim, imgDim);
 			tmpIMG.transposeInPlace();
-
+			convolutionCounter++;
 			//2.2 loop over amount of possible convolutions and apply filter to img
 			for (int x = 0; x < outputDim; x++) {
 				for (int y = 0; y < outputDim; y++) {
@@ -129,6 +137,8 @@ void MaxPool::backwards() {
 	}
 	getInputA()->setCurrentGradients(indexMatrix);
 
+    stopTimeMeasurement(1);
+    std::cout<<"Amount of Maxpool backwards convolutions:"<<convolutionCounter<<std::endl;
 
 }
 

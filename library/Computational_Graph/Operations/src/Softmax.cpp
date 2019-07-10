@@ -10,7 +10,9 @@
 
 
 void Softmax::forwards() {
-	/*
+    startTimeMeasurement();
+
+    /*
  * GENERALL STUFF
  */
 //    setOutputChannels(getInputA()->getOutputChannels());
@@ -53,20 +55,24 @@ void Softmax::forwards() {
 	}
 		setForward(tmp);
 //	std::cout<<"output:\n"<<getForward()<<std::endl;
+    stopTimeMeasurement(0);
 
 
 };
 //TODO Check if this implementation of Softmax is really correct
 void Softmax::backwards() {
-	/*auto tmp = getForward();
-	tmp.setOnes();
-	auto dSoftMax = getForward().cwiseProduct(tmp - getForward());*/
+    startTimeMeasurement();
+
+    /*auto tmp = getForward();
+    tmp.setOnes();
+    auto dSoftMax = getForward().cwiseProduct(tmp - getForward());*/
 //	getInputA()->setCurrentGradients(getCurrentGradients().cwiseProduct(dSoftMax));
 	getInputA()->setCurrentGradients(getCurrentGradients());
 //
 //	std::cout<<"grads:\n"<<getInputA()->getCurrentGradients()<<std::endl;
 //	std::cout<<"grads:\n"<<getCurrentGradients()<<std::endl;
 
+    stopTimeMeasurement(1);
 
 }
 

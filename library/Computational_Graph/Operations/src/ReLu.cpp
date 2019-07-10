@@ -10,6 +10,8 @@
 
 
 void ReLu::forwards() {
+    startTimeMeasurement();
+
     /*
  * GENERALL STUFF
  */
@@ -27,6 +29,7 @@ void ReLu::forwards() {
     std::cout<<"Output RLU Max:\n"<< getForward().array().maxCoeff()<<std::endl;
     std::cout<<"Output RELU Average:\n"<< getForward().mean()<<std::endl;
     int x=2+3;*/
+    stopTimeMeasurement(0);
 
 };
  float ReLu::deriveReLu (const float element) {
@@ -34,9 +37,13 @@ void ReLu::forwards() {
     else return 1;
 }
 void ReLu::backwards() {
+    startTimeMeasurement();
+
     std::function<float(float)> deriveReLu_WRAP = deriveReLu;
     Eigen::MatrixXf dReLu = getForward().unaryExpr(deriveReLu_WRAP);
     getInputA()->setCurrentGradients(getCurrentGradients().cwiseProduct(dReLu));
+    stopTimeMeasurement(1);
+
 }
 
 std::string ReLu::printForward() {

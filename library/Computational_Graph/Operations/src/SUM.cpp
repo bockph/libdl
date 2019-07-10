@@ -6,6 +6,8 @@
 #include "SUM.hpp"
 
 void SUM::forwards() {
+    startTimeMeasurement();
+
 /*
  * GENERALL STUFF
  */
@@ -28,12 +30,16 @@ void SUM::forwards() {
 		setForward(getInputA()->getForward() + getInputB()->getForward());
 //	}
 
+    stopTimeMeasurement(0);
 
 }
 
 void SUM::backwards() {
-	getInputB()->setCurrentGradients(getCurrentGradients());
+    startTimeMeasurement();
+
+    getInputB()->setCurrentGradients(getCurrentGradients());
 	getInputA()->setCurrentGradients(getCurrentGradients());
+    stopTimeMeasurement(1);
 
 }
 

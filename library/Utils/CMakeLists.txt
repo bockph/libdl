@@ -1,7 +1,7 @@
 include_directories(include)
 set(UTILS_NAME utils)
 set(UTILS_SOURCES
-        src/EigenMatrixIO.cpp)
+        src/IO.cpp)
 
 add_library(${UTILS_NAME}  ${UTILS_SOURCES})
 target_include_directories(${UTILS_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)

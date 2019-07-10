@@ -2,7 +2,7 @@
 // Created by pbo on 04.07.19.
 //
 
-#include "../include/EigenMatrixIO.hpp"
+#include "IO.hpp"
 #include <fstream>
 
     void write_binary(const char* filename, const Eigen::MatrixXf& matrix){
