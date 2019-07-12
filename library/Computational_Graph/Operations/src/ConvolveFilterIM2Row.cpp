@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "ConvolveFilter.hpp"
+#include "ConvolveFilterIM2COL.hpp"
 
 std::time_t compute_ConvolveFilter ;
 std::time_t backwards_ConvolveFilter ;
@@ -63,19 +63,69 @@ Eigen::MatrixXf ConvolveFilter::convolve(const Eigen::MatrixXf &input, const Eig
 
 
 }
-void im2Row(Eigen::MatrixXf& input, Eigen::MatrixXf& filter, int output,int stride,int inputDim,int sizeOneChannel,int channel){
+Eigen::MatrixXf im2ColConvolution(Eigen::MatrixXf& input, const Eigen::MatrixXf& filter,int stride,int sizeOneChannel,int channel){
+    int filterSize =filter.cols()/channel;
+    int filterDim = std::sqrt(filterSize);
+    int inputSize = input.cols()/channel;
+    int inputDim = std::sqrt(inputSize);
+    int outputDim = std::floor((inputDim-filterDim)/stride)+1;
+    int outputSize =std::pow(outputDim,2);
+    auto start = std::chrono::system_clock::now();
 
-    Eigen::MatrixXf inputTransformed(filter.cols(),std:pow(output,2));
+    Eigen::MatrixXf inputTransformed(filter.cols(),outputSize);
+//    Eigen::MatrixXf resizedInput(inputDim*channel,inputDim);
+    // no preinitialization because of performance issues
+//    Eigen::MatrixXf col (filterDim,filterDim);
+//    Eigen::MatrixXf tmp(1,inputSize);
+    for(int c = 0; c<channel;c++){
+        Eigen::MatrixXf tmp =input.block(0,inputSize*c,1,inputSize);
+        tmp.resize(inputDim,inputDim);
+//        resizedInput.block(c*inputDim,0,inputDim,inputDim)=tmp;
+    for(int i = 0;i+filterDim<=sizeOneChannel;i+=stride){
+        for(int j =0;j+filterDim<=sizeOneChannel;j+=stride){
 
-    input.resize(inputDim*channel,inputDim);
-    for(int i = 0;i<output)
+            Eigen::MatrixXf col = tmp.block(i,j,filterDim,filterDim);
+//                std::cout<< "i:"<<i<< "j:"<<j<<"c:"<<c<< "\ncol:\n"<<col<<std::endl;
+
+                col.resize(filterSize,1);
+                inputTransformed.block(c*filterSize,i/stride+j/stride*outputDim,filterSize,1)=col;
+
+            }
 
 
+
+        }
+    }
+    Eigen::MatrixXf conv = filter*inputTransformed;
+//    return conv;
+//    auto result = Eigen::MatrixXf(1,conv.rows()*conv.cols());
+//    auto result = Eigen::MatrixXf(1,filter.rows()*inputTransformed.cols());
+
+
+
+//    for(int i = 0;i<conv.rows();i++){
+//        result.block(0,i*conv.cols(),1,conv.cols()) = conv.block(i,0,1,conv.cols());//conv.row(i);
+//    }
+    conv.transposeInPlace();
+    conv.resize(1,conv.size());
+    auto end = std::chrono::system_clock::now();
+
+    int elapsed_seconds = std::chrono::duration_cast<std::chrono::microseconds>
+            (end-start).count();
+//    std::cout<<"result copying:"<<elapsed_seconds<<std::endl;
+//    std::cout<<"Conv Before:"<<"rows:"<<conv.rows()<<"\n"<<conv<<std::endl;
+    int size = conv.size();
+//    conv.eval();
+
+//std::cout<<"Conv:"<<"rows:"<<conv.rows()<<"\n"<<conv<<std::endl;
+//    std::cout<<"result:\n"<<result<<std::endl;
+
+    return conv;
 
 }
 
 void ConvolveFilter::forwards() {
-    startTimeMeasurement();
+//    std::cout<<"im2cols"<<std::endl;
 
 
 /*
@@ -97,12 +147,24 @@ void ConvolveFilter::forwards() {
 	// other operations ( as long as each input is a row)
 
 	double convolutionCounter=0;
-
+//    std::cout<<"GOOOOOOOOOOOOOOOOOOOOOOOOOOO"<<std::endl;
 	Eigen::MatrixXf outputMatrix = Eigen::MatrixXf::Zero(getAmountOfInputs(), getOutputSize());
 	//loop over all images :
-	for (int i = 0; i < getAmountOfInputs(); i++) {
-	    //DO convolution for image i
-		for(int c =0;c< getInputChannels();c++){
+    startTimeMeasurement();
+
+    for (int i = 0; i < getAmountOfInputs(); i++) {
+	    Eigen::MatrixXf sample = getInputA()->getForward().row(i);
+
+
+//	    Eigen::MatrixXf tmp =im2ColConvolution(sample,getInputB()->getForward(),_stride,getInputDimX(),getInputChannels());
+//	            int rows = tmp.rows();
+//	            int cols = tmp.cols();
+//	            int outputt = getOutputSize();
+//	            int colI = getAmountOfInputs();
+        outputMatrix.block(i,0,1,getOutputSize())=im2ColConvolution(sample,getInputB()->getForward(),_stride,getInputDimX(),getInputChannels());
+
+        //DO convolution for image i
+		/*for(int c =0;c< getInputChannels();c++){
 		    //get the channel at c
             Eigen::MatrixXf currentChannel = getInputA()->getForward().block(i,_imgSizeOneChannel*c,1,_imgSizeOneChannel);
             currentChannel.resize(getInputDimX(),getInputDimX());
@@ -122,14 +184,14 @@ void ConvolveFilter::forwards() {
 
             }
 
-        }
+        }*/
 
 	}
+    stopTimeMeasurement(0);
 
 	setForward(outputMatrix);
 
 
-    stopTimeMeasurement(0);
     std::cout<<"Amount of forward convolutions:"<<convolutionCounter<<std::endl;
 
 };

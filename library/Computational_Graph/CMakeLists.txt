@@ -14,12 +14,14 @@ set(GRAPH_SOURCES
         src/Weight.cpp
         src/Bias.cpp
         src/Filter.cpp
-        Operations/src/ConvolveFilter.cpp
+#        Operations/src/ConvolveFilter.cpp
         Operations/src/MaxPool.cpp
         Operations/src/ReLu.cpp
         Operations/src/Flatten.cpp
         Operations/src/Softmax.cpp
-        Operations/src/CrossEntropyLoss.cpp)
+        Operations/src/CrossEntropyLoss.cpp
+        Operations/src/ConvolveFilterIM2Row.cpp
+        )
 include_directories(${PROJECT_SOURCE_DIR}/extern/eigen/Eigen)
 
 add_library(${GRAPH_NAME}  ${GRAPH_SOURCES})

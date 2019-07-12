@@ -13,7 +13,7 @@
 #include <MUL.hpp>
 #include <Utils.hpp>
 #include <Filter.hpp>
-#include <ConvolveFilter.hpp>
+#include <ConvolveFilterIM2COL.hpp>
 #include <ReLu.hpp>
 #include <MaxPool.hpp>
 #include <Flatten.hpp>
