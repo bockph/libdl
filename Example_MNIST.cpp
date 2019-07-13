@@ -92,7 +92,7 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
 
     auto conv1 = std::make_shared<ConvolveFilter>(X,F1,1);
     auto sum1 = std::make_shared<SUM>(conv1,B1);
-    auto relu1  = std::make_shared<Sigmoid>(sum1);
+    auto relu1  = std::make_shared<ReLu>(sum1);
 
 //convolutional Layer 2
     auto F2 = std::make_shared<Filter>(params[3],5,8);
@@ -136,7 +136,7 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
     if(train){
 
 		session.run();
-        std::cout << "Total forward" << session.getForwardTime()<<std::endl;
+        /*std::cout << "Total forward" << session.getForwardTime()<<std::endl;
         std::cout << "Total backwards" << session.getBackwardsTime()<<std::endl;
 
         std::cout << "Convolution 1: Total forward: " << conv1->getForwardTime()<<"Percentage: "<<(float)conv1->getForwardTime()/(float)session.getForwardTime()<<std::endl;
@@ -146,7 +146,7 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
         std::cout << "Convolution 2: Total backwards: " << conv2->getBackwardsTime()<<"Percentage: "<<(float)conv2->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
 
         std::cout << "Maxpool: Total forward: " << maxPool->getForwardTime()<<"Percentage: "<<(float)maxPool->getForwardTime()/(float)session.getForwardTime()<<std::endl;
-        std::cout << "MaxPool: Total backwards: " << maxPool->getBackwardsTime()<<"Percentage: "<<(float)maxPool->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
+        std::cout << "MaxPool: Total backwards: " << maxPool->getBackwardsTime()<<"Percentage: "<<(float)maxPool->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;*/
         params[2] = F1->getForward();
         params[3] = F2->getForward();
         params[4] = W1->getForward();
@@ -192,10 +192,10 @@ int main() {
      * readWeights: if set (and Weights have already been Written once) weights are initialized with weights from Source_Directory/WeightDeposit
      */
 	int batch_size = 8;
-	int epochs =1;
-	int amount_batches =1;
+	int epochs =50;
+	int amount_batches = 100;
 	bool trainModel = true;
-	bool testModel =false;
+	bool testModel =true;
     bool writeWeights = false;
     bool readWeights =false;
 

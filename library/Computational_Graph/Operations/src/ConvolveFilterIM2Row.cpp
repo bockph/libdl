@@ -63,7 +63,7 @@ Eigen::MatrixXf ConvolveFilter::convolve(const Eigen::MatrixXf &input, const Eig
 
 
 }
-Eigen::MatrixXf im2ColConvolution(Eigen::MatrixXf& input, const Eigen::MatrixXf& filter,int stride,int sizeOneChannel,int channel){
+Eigen::MatrixXf im2ColConvolution(Eigen::MatrixXf& input, const Eigen::MatrixXf& filter,int stride,int channel){
     int filterSize =filter.cols()/channel;
     int filterDim = std::sqrt(filterSize);
     int inputSize = input.cols()/channel;
@@ -81,8 +81,8 @@ Eigen::MatrixXf im2ColConvolution(Eigen::MatrixXf& input, const Eigen::MatrixXf&
         Eigen::MatrixXf tmp =input.block(0,inputSize*c,1,inputSize);
         tmp.resize(inputDim,inputDim);
 //        resizedInput.block(c*inputDim,0,inputDim,inputDim)=tmp;
-    for(int i = 0;i+filterDim<=sizeOneChannel;i+=stride){
-        for(int j =0;j+filterDim<=sizeOneChannel;j+=stride){
+    for(int i = 0;i+filterDim<=inputDim;i+=stride){
+        for(int j =0;j+filterDim<=inputDim;j+=stride){
 
             Eigen::MatrixXf col = tmp.block(i,j,filterDim,filterDim);
 //                std::cout<< "i:"<<i<< "j:"<<j<<"c:"<<c<< "\ncol:\n"<<col<<std::endl;
@@ -161,7 +161,7 @@ void ConvolveFilter::forwards() {
 //	            int cols = tmp.cols();
 //	            int outputt = getOutputSize();
 //	            int colI = getAmountOfInputs();
-        outputMatrix.block(i,0,1,getOutputSize())=im2ColConvolution(sample,getInputB()->getForward(),_stride,getInputDimX(),getInputChannels());
+        outputMatrix.block(i,0,1,getOutputSize())=im2ColConvolution(sample,getInputB()->getForward(),_stride,getInputChannels());
 
         //DO convolution for image i
 		/*for(int c =0;c< getInputChannels();c++){
@@ -208,7 +208,28 @@ void ConvolveFilter::backwards() {
     //loop over all images :
 	for (int i = 0; i < getAmountOfInputs(); i++) {
 	    //DO convolution for image i
+            /*
+             * For X :
+             * 1. get Current Gradient and apply padding and stride padding to each channel, channel = amountFilters
+             * 2. convolve with filter to according channel and use reduce_sum to make one row
+             * |inputchannel| =|initialfilters| , filter = input B reversed whereas channel and filteramount switch
+             * doDilationPerChannel()
+             * doPaddingPerChannel()
+             *                      currentInputB.reverse().eval();
 
+             * im2cOL(dilAndPadedGradient,getInputB()->getForward(), _stride?,getAmountOfFilters());
+             *
+             * improve reverse of filter before loop
+             * For W:
+             * 1.get Curent Gradient and apply only stride padding to each channel
+             * 2. |channel| * convolve the cGradient over A
+             *
+             * doDilationPerChannel()
+             *
+             * im2col(currentInputA,currentGradient,
+             *
+             * every gradient channel contributes to one filter, and every inputA channel contributes to one filter channel
+             */
              for (int j = 0; j < getAmountFilters(); j++) {
                  Eigen::MatrixXf currentGradients = getCurrentGradients().block(i,_outputSizeOneFilter*j,1,_outputSizeOneFilter);//.block(j,_filterSizeOneChannel*c,1,_filterSizeOneChannel);
                  currentGradients.resize(getOutputDim(),getOutputDim());
@@ -230,7 +251,7 @@ void ConvolveFilter::backwards() {
                      auto convolvedX = convolve(currentGradientPadded,currentInputB,1,getInputDimW());
                      convolutionCounter++;
 
-
+                    //TODO: the convolution stride should be one and not the original stride?
                      auto convolvedW = convolve(currentInputA,currentGradients,_stride,getInputDimW());
                      convolutionCounter++;
 
