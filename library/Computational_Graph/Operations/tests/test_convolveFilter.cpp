@@ -500,6 +500,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 				0,0,0,
 				2,0,2;
 
+		std::cout<<X->getCurrentGradients()<<std::endl;
 		REQUIRE(X->getCurrentGradients().isApprox(test));
 
 		auto conv2 = std::make_shared<ConvolveFilter>(X, W2, 3);
