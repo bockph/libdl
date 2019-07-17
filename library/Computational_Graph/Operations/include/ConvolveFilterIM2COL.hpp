@@ -42,12 +42,14 @@ public:
     int getOutputSize() const;
 
     void setOutputSize(int outputSize);
-    static Eigen::MatrixXf im2col(Eigen::MatrixXf &input, const Eigen::MatrixXf &filter, int stride, int channel);
-    static Eigen::MatrixXf col2im(Eigen::MatrixXf &input, const Eigen::MatrixXf &filter,int origDim, int stride, int channel);
+    static Eigen::MatrixXf im2col(const Eigen::MatrixXf &input, const Eigen::MatrixXf &filter, int stride, int channel,int batchSize);
+    static Eigen::MatrixXf col2im(const Eigen::MatrixXf &input, const Eigen::MatrixXf &filter,int origDim, int stride, int channel,int batchSize);
+
 
     const Eigen::MatrixXf &getIm2Col() const;
 
     void setIm2Col(const Eigen::MatrixXf &im2Col);
+    std::vector<Matrix> _im2Cols;
 
 private:
 	int _stride;
