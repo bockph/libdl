@@ -9,25 +9,19 @@
 #include <Filter.hpp>
 #include <Placeholder.hpp>
 
-class ConvolveFilter : public Operation {
+class ConvolveFilterIM2COL : public Operation {
 public:
-	ConvolveFilter(std::shared_ptr<Node> X, std::shared_ptr<Filter> W,int stride =1);
+    ConvolveFilterIM2COL(std::shared_ptr<Node> X, std::shared_ptr<Filter> W,int stride =1);
 
-	~ConvolveFilter() = default;
+	~ConvolveFilterIM2COL() = default;
 
 
     void addPadding(Eigen::MatrixXf& m, int rowPadding, int colPadding);
-    void addStridePadding(Eigen::MatrixXf& m, int stride);
 
-    int getStride() const;
-
-    void setStride(int stride);
 
     int getAmountFilters() const;
 
-    void setAmountFilters(int amountFilters);
 
-    Eigen::MatrixXf convolve(const Eigen::MatrixXf& input, const Eigen::MatrixXf& filter,int stride,int outputDim);
 	void forwards() override;
 
 	void backwards() override;
@@ -38,7 +32,6 @@ public:
 
     void setImgSizeOneChannel(int imgSizeOneChannel);
 
-    int getFilterSizeOneChannel() const;
 
     void setFilterSizeOneChannel(int filterSizeOneChannel);
 
@@ -49,6 +42,12 @@ public:
     int getOutputSize() const;
 
     void setOutputSize(int outputSize);
+    static Eigen::MatrixXf im2col(Eigen::MatrixXf &input, const Eigen::MatrixXf &filter, int stride, int channel);
+    static Eigen::MatrixXf col2im(Eigen::MatrixXf &input, const Eigen::MatrixXf &filter,int origDim, int stride, int channel);
+
+    const Eigen::MatrixXf &getIm2Col() const;
+
+    void setIm2Col(const Eigen::MatrixXf &im2Col);
 
 private:
 	int _stride;
@@ -57,5 +56,6 @@ private:
     int _filterSizeOneChannel;
     int _outputSizeOneFilter;
     int _outputSize;
+    Eigen::MatrixXf _im2Col;
 
 };

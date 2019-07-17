@@ -17,7 +17,7 @@ public:
 
 
     void addPadding(Eigen::MatrixXf& m, int rowPadding, int colPadding);
-    void addStridePadding(Eigen::MatrixXf& m, int stride);
+    void addStrideDilation(Eigen::MatrixXf &m, int stride);
 
     int getStride() const;
 

@@ -28,7 +28,7 @@ void ConvolveFilter::addPadding(Eigen::MatrixXf& m, int rowPadding, int colPaddi
     m= paddedMatrix;
 }
 //TODO hier ungewollte transponierung?
-void ConvolveFilter::addStridePadding(Eigen::MatrixXf& m, int stride){
+void ConvolveFilter::addStrideDilation(Eigen::MatrixXf& m, int stride){
     if(stride==1) return;
 //    stride-=1;
     int pRows = m.rows()+(stride-1)*(m.rows()-1) ;
@@ -88,7 +88,8 @@ void ConvolveFilter::forwards() {
 
 	Eigen::MatrixXf outputMatrix = Eigen::MatrixXf::Zero(getAmountOfInputs(), getOutputSize());
 	//loop over all images :
-	for (int i = 0; i < getAmountOfInputs(); i++) {
+
+    for (int i = 0; i < getAmountOfInputs(); i++) {
 	    //DO convolution for image i
 		for(int c =0;c< getInputChannels();c++){
 		    //get the channel at c
@@ -118,7 +119,7 @@ void ConvolveFilter::forwards() {
 
 
     stopTimeMeasurement(0);
-    std::cout<<"Amount of forward convolutions:"<<convolutionCounter<<std::endl;
+//    std::cout<<"Amount of forward convolutions:"<<convolutionCounter<<std::endl;
 
 };
 
@@ -130,6 +131,7 @@ void ConvolveFilter::backwards() {
     Eigen::MatrixXf gradientsKernel = Eigen::MatrixXf::Zero(getAmountFilters(), _filterSizeOneChannel * getInputChannels());
     Eigen::MatrixXf gradientsInput = Eigen::MatrixXf::Zero(getAmountOfInputs(), getImgSizeOneChannel() * getInputChannels());
 
+#pragma parallel for num_threads(8)
 
     //loop over all images :
 	for (int i = 0; i < getAmountOfInputs(); i++) {
@@ -138,7 +140,7 @@ void ConvolveFilter::backwards() {
              for (int j = 0; j < getAmountFilters(); j++) {
                  Eigen::MatrixXf currentGradients = getCurrentGradients().block(i,_outputSizeOneFilter*j,1,_outputSizeOneFilter);//.block(j,_filterSizeOneChannel*c,1,_filterSizeOneChannel);
                  currentGradients.resize(getOutputDim(),getOutputDim());
-                 addStridePadding(currentGradients,_stride);
+                 addStrideDilation(currentGradients,_stride);
 
                  Eigen::MatrixXf currentGradientPadded =currentGradients;
                  //APPLY pADDING
@@ -180,7 +182,7 @@ void ConvolveFilter::backwards() {
     getInputA()->setCurrentGradients(gradientsInput);
 
     stopTimeMeasurement(1);
-    std::cout<<"Amount of forward convolutions:"<<convolutionCounter<<std::endl;
+//    std::cout<<"Amount of forward convolutions:"<<convolutionCounter<<std::endl;
 
 
 }

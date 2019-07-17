@@ -1,5 +1,6 @@
 LIBDL_TEST(Sum graph)
 LIBDL_TEST(Mul graph)
 LIBDL_TEST(convolveFilter graph)
+LIBDL_TEST(convolveFilterIm2Col graph)
 LIBDL_TEST(MAXPool graph)
 LIBDL_TEST(RELU graph)

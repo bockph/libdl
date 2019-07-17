@@ -17,7 +17,7 @@ Bias::Bias(Eigen::MatrixXf& m, int channel) {
 void Bias::backwards() {
 	int rowsG = getCurrentGradients().rows();
 	int rowsCurrent = getForward().rows();
-	bool adam(false);
+	bool adam(true);
 	//TODO: Implement Learning Rate
 	if (rowsCurrent != rowsG) {
 		if(adam){

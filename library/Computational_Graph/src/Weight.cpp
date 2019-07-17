@@ -14,7 +14,7 @@ Weight::Weight(Eigen::MatrixXf& m) {
 
 void Weight::backwards() {
 
-	bool adam(false);
+	bool adam(true);
 	if(adam){
 		Eigen::MatrixXf tmp = Eigen::MatrixXf::Zero(getCurrentGradients().rows(),getCurrentGradients().cols());
 		tmp =(getCurrentGradients() /BATCH_SIZE);
