@@ -9,8 +9,6 @@
 
 
 void Softmax::forwards() {
-    //General Stuff for Operations
-    beforeForward();
 
     startTimeMeasurement();
     Eigen::MatrixXf tmp = getInputA()->getForward();

@@ -21,7 +21,7 @@ public:
     ~Node() = default;
 
 
-    virtual void addOutputNode(std::shared_ptr<Node> n);
+//    virtual void addOutputNode(std::shared_ptr<Node> n);
     virtual const std::vector<std::shared_ptr<Node>> &getInputNodes() { return _inputNodes; };
 
 
@@ -63,7 +63,7 @@ public:
 
 private:
     std::vector<std::shared_ptr<Node>> _inputNodes;
-    std::vector<std::shared_ptr<Node>> _outputNodes;
+//    std::vector<std::shared_ptr<Node>> _outputNodes;
     std::shared_ptr<Node> inputA;
     std::shared_ptr<Node> inputB;
     int _outputChannels;

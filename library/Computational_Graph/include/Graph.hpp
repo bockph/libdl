@@ -13,6 +13,7 @@
 class Graph {
 
 public:
+    ~Graph() = default;
 	const std::vector<std::shared_ptr<Placeholder>> &getPlaceholder() const;
 //
 	void addPlaceholder(std::shared_ptr<Placeholder> placeholder);

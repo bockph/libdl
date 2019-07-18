@@ -9,8 +9,6 @@
 
 
 void ReLu::forwards() {
-    //General Stuff for Operations
-    beforeForward();
     startTimeMeasurement();
 
     setForward(getInputA()->getForward().cwiseMax(0));

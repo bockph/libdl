@@ -7,8 +7,7 @@
 
 
 void Sigmoid::forwards() {
-    //General Stuff for Operations
-    beforeForward();
+
 
     startTimeMeasurement();
 

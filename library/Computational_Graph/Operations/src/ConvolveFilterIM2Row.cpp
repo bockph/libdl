@@ -11,7 +11,11 @@
 ConvolveFilterIM2COL::ConvolveFilterIM2COL(std::shared_ptr<Node> X, std::shared_ptr<Filter> W, int stride)
         :
         Operation(X, W), _stride(stride) {
+    if(X->getOutputChannels()!= W->getOutputChannels()){
+        throw std::invalid_argument("Input X and W should have the same amount of Channels");
+    }
     setOutputChannels(W->getForward().rows());
+
 }
 
 

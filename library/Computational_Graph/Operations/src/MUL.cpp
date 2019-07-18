@@ -6,8 +6,7 @@
 #include "MUL.hpp"
 
 void MUL::forwards() {
-    //General Stuff for Operations
-    beforeForward();
+
     startTimeMeasurement();
 
     //this results in a Vector containing in each row the result for a different input of the Batch

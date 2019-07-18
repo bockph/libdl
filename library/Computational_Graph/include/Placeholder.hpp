@@ -10,7 +10,7 @@ class Placeholder : public Node {
 
 public:
 	Placeholder(Eigen::MatrixXf&,int dim =1,int channel =1);
-
+    ~Placeholder() = default;
 	void backwards() override;
 };
 

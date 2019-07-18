@@ -8,7 +8,7 @@
 class Session {
 public:
 	Session(const std::shared_ptr<Node> &endNode, std::unique_ptr<Graph> graph);
-
+    ~Session() = default;
 	void run(std::vector<float> feed = {});
 
     int getForwardTime() const;

@@ -10,8 +10,6 @@
 
 
 void Flatten::forwards() {
-    //General Stuff for Operations
-    beforeForward();
 	setForward(getInputA()->getForward());
 
 };

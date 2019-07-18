@@ -15,11 +15,10 @@ public:
 	Operation(std::shared_ptr<Node> X, std::shared_ptr<Node> W);
 
 	Operation(std::shared_ptr<Node> X);
-
+    ~Operation() = default;
 
 
     const std::vector<std::shared_ptr<Node>> &getInputNodes() override;
-    void beforeForward();
 
     int getForwardTime() const;
 

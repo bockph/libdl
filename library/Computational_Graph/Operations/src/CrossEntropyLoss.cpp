@@ -6,8 +6,6 @@
 #include "CrossEntropyLoss.hpp"
 
 void CrossEntropyLoss::forwards() {
-    //General Stuff for Operations
-    beforeForward();
     startTimeMeasurement();
     Eigen::MatrixXf log = Eigen::log(getInputA()->getForward().array());
     Eigen::MatrixXf multiply = log.cwiseProduct(getInputB()->getForward());

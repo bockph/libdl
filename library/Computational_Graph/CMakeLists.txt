@@ -1,6 +1,4 @@
 
-message(STATUS "Checking OpenMP")
-#find_package(OpenMP)
 
 
 include_directories(include)
@@ -19,14 +17,12 @@ set(GRAPH_SOURCES
         src/Weight.cpp
         src/Bias.cpp
         src/Filter.cpp
-#        Operations/src/ConvolveFilter.cpp
         Operations/src/MaxPool.cpp
         Operations/src/ReLu.cpp
         Operations/src/Flatten.cpp
         Operations/src/Softmax.cpp
         Operations/src/CrossEntropyLoss.cpp
         Operations/src/ConvolveFilterIM2Row.cpp
-#        Operations/src/MaxPoolIM2COL.cpp
         )
 include_directories(${PROJECT_SOURCE_DIR}/extern/eigen/Eigen)
 

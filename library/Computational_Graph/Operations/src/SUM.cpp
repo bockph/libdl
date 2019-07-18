@@ -6,8 +6,7 @@
 #include "SUM.hpp"
 
 void SUM::forwards() {
-    //General Stuff for Operations
-    beforeForward();
+
 
     startTimeMeasurement();
 

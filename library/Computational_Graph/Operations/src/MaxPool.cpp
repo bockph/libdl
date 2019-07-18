@@ -6,8 +6,6 @@
 #include "MaxPool.hpp"
 
 void MaxPool::forwards() {
-    //General Stuff for Operations
-    beforeForward();
 
     startTimeMeasurement();
 

@@ -12,18 +12,7 @@ Operation::Operation(std::shared_ptr<Node> X, std::shared_ptr<Node> W){
 
 	_inputNodes.push_back(X);
 	_inputNodes.push_back(W);
-	//add this Node as a Output Node for all reference inputNodes
-	auto tmp(std::make_shared<Operation>(*this));
-	X->addOutputNode(tmp);
-	W->addOutputNode(tmp);
 
-    if(getInputA()->getOutputChannels()!= getInputB()->getOutputChannels()){
-    	auto AChannels =getInputA()->getOutputChannels();
-    	auto BChannels =getInputB()->getOutputChannels();
-    	//TODO uncomment the exception
-//		throw std::invalid_argument("Input X and W should have the same amount of Channels");
-
-	}
     setInputChannels(getInputA()->getOutputChannels());
     setOutputChannels(getInputChannels());
 }
@@ -31,22 +20,8 @@ Operation::Operation(std::shared_ptr<Node> X, std::shared_ptr<Node> W){
 Operation::Operation(std::shared_ptr<Node> X){
     setInputA(X);
 	_inputNodes.push_back(X);
-
-	//add this Node as a Output Node for all reference inputNodes
-	auto tmp(std::make_shared<Operation>(*this));
-	X->addOutputNode(tmp);
     setInputChannels(getInputA()->getOutputChannels());
-
 	setOutputChannels(getInputChannels());
-
-
-
-}
-//This can not be applied to all, this needs to be changed
-void Operation::beforeForward(){
-
-//    setOutputChannels(getInputA()->getOutputChannels());
-
 }
 
 const std::vector<std::shared_ptr<Node>> &Operation::getInputNodes() {
