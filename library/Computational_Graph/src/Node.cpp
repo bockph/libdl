@@ -52,25 +52,6 @@ int Node::getOutputChannels() const {
     return _outputChannels;
 }
 
-int Node::getOutputDim() const {
-    return _outputDim;
-}
-
-void Node::setOutputChannels(int channels) {
-    _outputChannels = channels;
-}
-
-void Node::setOutputDim(int outputDim) {
-    _outputDim = outputDim;
-}
-
-int Node::getInputDim() const {
-    return _inputDim;
-}
-
-void Node::setInputDim(int inputDim) {
-    _inputDim = inputDim;
-}
 
 int Node::getInputChannels() const {
     return _inputChannels;
@@ -80,13 +61,5 @@ void Node::setInputChannels(int inputChannels) {
     _inputChannels = inputChannels;
 }
 
-void Node::generalForward() {
-    //DO some general stuff
-
-    //then call specific forwards
-    forwards();
-
-
-}
 
 
