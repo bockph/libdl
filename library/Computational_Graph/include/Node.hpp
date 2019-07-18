@@ -42,8 +42,7 @@ public:
 
     void setCurrentGradients(const Eigen::MatrixXf &currentGradients);
 
-    void setOutputChannels(int channels);
-
+    void setOutputChannels(int outputChannels);
 
     int getOutputChannels() const;
 

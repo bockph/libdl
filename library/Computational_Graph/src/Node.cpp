@@ -61,5 +61,9 @@ void Node::setInputChannels(int inputChannels) {
     _inputChannels = inputChannels;
 }
 
+void Node::setOutputChannels(int outputChannels) {
+    _outputChannels = outputChannels;
+}
+
 
 
