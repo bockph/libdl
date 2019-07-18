@@ -137,17 +137,17 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
     if(train){
 
 		session.run();
-        std::cout << "Total forward" << session.getForwardTime()<<std::endl;
-        std::cout << "Total backwards" << session.getBackwardsTime()<<std::endl;
-
-        std::cout << "Convolution 1: Total forward: " << conv1->getForwardTime()<<"Percentage: "<<(float)conv1->getForwardTime()/(float)session.getForwardTime()<<std::endl;
-        std::cout << "Convolution 1: Total backwards: " << conv1->getBackwardsTime()<<"Percentage: "<<(float)conv1->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
-
-        std::cout << "Convolution 2 Total forward: " << conv2->getForwardTime()<<"Percentage: "<<(float)conv2->getForwardTime()/(float)session.getForwardTime()<<std::endl;
-        std::cout << "Convolution 2: Total backwards: " << conv2->getBackwardsTime()<<"Percentage: "<<(float)conv2->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
-
-        std::cout << "Maxpool: Total forward: " << maxPool->getForwardTime()<<"Percentage: "<<(float)maxPool->getForwardTime()/(float)session.getForwardTime()<<std::endl;
-        std::cout << "MaxPool: Total backwards: " << maxPool->getBackwardsTime()<<"Percentage: "<<(float)maxPool->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
+//        std::cout << "Total forward" << session.getForwardTime()<<std::endl;
+//        std::cout << "Total backwards" << session.getBackwardsTime()<<std::endl;
+//
+//        std::cout << "Convolution 1: Total forward: " << conv1->getForwardTime()<<"Percentage: "<<(float)conv1->getForwardTime()/(float)session.getForwardTime()<<std::endl;
+//        std::cout << "Convolution 1: Total backwards: " << conv1->getBackwardsTime()<<"Percentage: "<<(float)conv1->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
+//
+//        std::cout << "Convolution 2 Total forward: " << conv2->getForwardTime()<<"Percentage: "<<(float)conv2->getForwardTime()/(float)session.getForwardTime()<<std::endl;
+//        std::cout << "Convolution 2: Total backwards: " << conv2->getBackwardsTime()<<"Percentage: "<<(float)conv2->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
+//
+//        std::cout << "Maxpool: Total forward: " << maxPool->getForwardTime()<<"Percentage: "<<(float)maxPool->getForwardTime()/(float)session.getForwardTime()<<std::endl;
+//        std::cout << "MaxPool: Total backwards: " << maxPool->getBackwardsTime()<<"Percentage: "<<(float)maxPool->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
         params[2] = F1->getForward();
         params[3] = F2->getForward();
         params[4] = W1->getForward();

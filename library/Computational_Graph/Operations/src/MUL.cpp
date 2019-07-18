@@ -6,17 +6,12 @@
 #include "MUL.hpp"
 
 void MUL::forwards() {
+    //General Stuff for Operations
+    beforeForward();
     startTimeMeasurement();
 
-    /*
- * GENERALL STUFF
- */
-    beforeForward();/*
- *
- */
-
-	//this results in a Vector containing in each row the result for a different input of the Batch
-	setForward(getInputA()->getForward() * getInputB()->getForward());
+    //this results in a Vector containing in each row the result for a different input of the Batch
+    setForward(getInputA()->getForward() * getInputB()->getForward());
 
     stopTimeMeasurement(0);
 
@@ -25,21 +20,11 @@ void MUL::forwards() {
 void MUL::backwards() {
     startTimeMeasurement();
 
+//    Eigen::MatrixXf dX = getCurrentGradients() * (getInputB()->getForward().transpose());
+//    Eigen::MatrixXf dW = (getInputA()->getForward().transpose()) * getCurrentGradients();
 
-
-    Eigen::MatrixXf inputGradient = getCurrentGradients() * (getInputB()->getForward().transpose());
-    Eigen::MatrixXf weightGradient = (getInputA()->getForward().transpose()) * getCurrentGradients();
-
-    //TODO is this correct?
-//    inputGradient/getCurrentGradients().rows();
-	//TODO is this correct?
-//    weightGradient/=getCurrentGradients().rows();
-
-
-    getInputA()->setCurrentGradients(inputGradient);
-    getInputB()->setCurrentGradients(weightGradient);
+    getInputA()->setCurrentGradients(getCurrentGradients() * (getInputB()->getForward().transpose()));
+    getInputB()->setCurrentGradients((getInputA()->getForward().transpose()) * getCurrentGradients());
     stopTimeMeasurement(1);
-
-
 
 }

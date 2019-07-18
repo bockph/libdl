@@ -3,30 +3,20 @@
 //
 
 #include "Flatten.hpp"
-//
-// Created by pbo on 18.06.19.
-//
 
-#include "ReLu.hpp"
 
 
 #include <iostream>
 
 
 void Flatten::forwards() {
-	/*
- * GENERALL STUFF
- */
-//    setOutputChannels(getInputA()->getOutputChannels());
-/*
-	*
- */
+    //General Stuff for Operations
+    beforeForward();
 	setForward(getInputA()->getForward());
 
 };
 
 void Flatten::backwards() {
-
 	getInputA()->setCurrentGradients(getCurrentGradients());
 }
 

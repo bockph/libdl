@@ -5,8 +5,7 @@
 #include <iostream>
 #include "ConvolveFilterIM2COL.hpp"
 
-std::time_t compute_ConvolveFilter;
-std::time_t backwards_ConvolveFilter;
+
 
 //THis need to be moved to the forward class
 ConvolveFilterIM2COL::ConvolveFilterIM2COL(std::shared_ptr<Node> X, std::shared_ptr<Filter> W, int stride)
@@ -91,10 +90,13 @@ void ConvolveFilterIM2COL::forwardsConvolution(const Matrix &miniBatch, const Ma
 
     int outputDim = std::floor(sampleDim - kernelDim) / stride + 1;
     int outputSize = std::pow(outputDim, 2);
+    auto start = std::chrono::system_clock::now();
 
     im2col(im2ColM, miniBatch, kernelSizeOneChannel, stride, channels, amountSamples);
+    auto im2t = std::chrono::system_clock::now();
 
     Eigen::MatrixXf conv = filter * im2ColM;
+    auto mult = std::chrono::system_clock::now();
 
 //Reshape extract method
     //TODO change outputForm
@@ -106,6 +108,18 @@ void ConvolveFilterIM2COL::forwardsConvolution(const Matrix &miniBatch, const Ma
         }
     }
 
+    auto end2 = std::chrono::system_clock::now();
+
+    int im2 = std::chrono::duration_cast<std::chrono::microseconds>
+            (im2t-start).count();
+    int mul = std::chrono::duration_cast<std::chrono::microseconds>
+            (mult-im2t).count();
+    int reshape = std::chrono::duration_cast<std::chrono::microseconds>
+            (end2-mult).count();
+    int total = std::chrono::duration_cast<std::chrono::microseconds>
+            (end2-start).count();
+//    std::cout<<"im2:"<<im2<<"mul:"<<mul<<"reshape:"<<reshape<<"total:"<<total<<std::endl;
+//    std::cout<<"Percentage im2:"<<im2/(float)total<<"Percentage mul:"<<mul/(float)total<<"Percentage reshape:"<<reshape/(float)total<<std::endl;
 }
 
 
