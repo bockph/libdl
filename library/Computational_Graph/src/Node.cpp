@@ -4,6 +4,7 @@
 
 #include <memory>
 #include "Node.hpp"
+
 Node::Node():_outputChannels(0){}
 
 void Node::addOutputNode(std::shared_ptr<Node> n){
@@ -77,6 +78,15 @@ int Node::getInputChannels() const {
 
 void Node::setInputChannels(int inputChannels) {
     _inputChannels = inputChannels;
+}
+
+void Node::generalForward() {
+    //DO some general stuff
+
+    //then call specific forwards
+    forwards();
+
+
 }
 
 

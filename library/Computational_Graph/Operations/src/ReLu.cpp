@@ -45,14 +45,3 @@ void ReLu::backwards() {
     stopTimeMeasurement(1);
 
 }
-
-std::string ReLu::printForward() {
-    std::stringstream outStream;
-    for (int i = 0; i < getForward().rows(); i++) {
-        for (int j = 0; j < getForward().cols(); j++) {
-            outStream << getForward()(i, j) << "\t";
-        }
-        outStream << std::endl;
-    }
-    return outStream.str();
-}

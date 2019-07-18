@@ -16,7 +16,6 @@ public:
     void forwards() override;
 
     void backwards() override;
-    std::string printForward() override;
 
     static float deriveReLu(const float element) ;
 };

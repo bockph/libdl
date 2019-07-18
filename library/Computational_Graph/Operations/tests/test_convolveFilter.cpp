@@ -34,12 +34,13 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 1);
 		auto W = std::make_shared<Filter>(filter, 1, 1);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 4);
 		test << 2, 4, 6, 8;
+		std::cout<<conv->getForward()<<std::endl;
 		REQUIRE(conv->getForward().isApprox(test));
 	}
 	SECTION("One dimensional filter, miniBatch as input", "[One_Channel_Image]") {
@@ -55,14 +56,14 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 1);
 		auto W = std::make_shared<Filter>(filter, 1, 1);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(2, 4);
 		test << 2, 4, 6, 8
 				, 2, 4, 6, 8;
-
+        std::cout<<conv->getForward()<<std::endl;
 		REQUIRE(conv->getForward().isApprox(test));
 	}
     SECTION("One dimensional filter, stride 2", "[One_Channel_Image]") {
@@ -81,7 +82,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
         auto W = std::make_shared<Filter>(filter, 1, 1);
         auto W2 = std::make_shared<Filter>(filter2, 1, 1);
 
-        auto conv = std::make_shared<ConvolveFilter>(X, W, 2);
+        auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W, 2);
 
         Session session(conv, std::move(graph));
         session.run();
@@ -107,7 +108,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 
 
 
-        auto conv = std::make_shared<ConvolveFilter>(X, W, 3);
+        auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W, 3);
 
         Session session2(conv, std::move(graph));
         session2.run();
@@ -135,7 +136,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 5, 1);
 		auto W = std::make_shared<Filter>(filter, 3, 1);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -157,7 +158,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
 		auto W = std::make_shared<Filter>(filter, 1, 2);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -179,7 +180,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
 		auto W = std::make_shared<Filter>(filter, 1, 2);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -204,9 +205,9 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
 		auto W = std::make_shared<Filter>(filter, 1, 2);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 		auto W2 = std::make_shared<Filter>(filter2, 1, 2);
-		auto conv2 = std::make_shared<ConvolveFilter>(conv, W2);
+		auto conv2 = std::make_shared<ConvolveFilterIM2COL>(conv, W2);
 
 
 //		Session session(conv, std::move(graph));
@@ -275,7 +276,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 1);
 		auto W = std::make_shared<Filter>(filter, 1, 1);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -298,14 +299,14 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 1);
 		auto W = std::make_shared<Filter>(filter, 1, 1);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 1);
-		test << 10;
-
-//		REQUIRE(W->getCurrentGradients().isApprox(test));
+		test << 20;
+        std::cout<<W->getCurrentGradients()<<std::endl;
+		REQUIRE(W->getCurrentGradients().isApprox(test));
 	}
 	SECTION("One dimensional filter, stride >1", "[One_Channel_Image]") {
 
@@ -324,7 +325,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 		auto W = std::make_shared<Filter>(filter, 1, 1);
         auto W2 = std::make_shared<Filter>(filter2, 1, 1);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W, 2);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W, 2);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -333,7 +334,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 
 		REQUIRE(W->getCurrentGradients().isApprox(test));
 
-		auto conv2 = std::make_shared<ConvolveFilter>(X, W2, 3);
+		auto conv2 = std::make_shared<ConvolveFilterIM2COL>(X, W2, 3);
 
 		Session session2(conv2, std::move(graph));
 		session2.run();
@@ -361,7 +362,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 5, 1);
 		auto W = std::make_shared<Filter>(filter, 3, 1);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -383,7 +384,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
 		auto W = std::make_shared<Filter>(filter, 1, 2);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -405,13 +406,13 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
 		auto W = std::make_shared<Filter>(filter, 1, 2);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 2);
-		test << 10, 10;
-//		REQUIRE(W->getCurrentGradients().isApprox(test));
+		test << 20, 20;
+		REQUIRE(W->getCurrentGradients().isApprox(test));
 	}
 	SECTION("Two Filters and Two Convolutional Layers", "[Multi_Channel_Image]") {
 
@@ -427,9 +428,9 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
 		auto W = std::make_shared<Filter>(filter, 1, 2);
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 		auto W2 = std::make_shared<Filter>(filter2, 1, 2);
-		auto conv2 = std::make_shared<ConvolveFilter>(conv, W2);
+		auto conv2 = std::make_shared<ConvolveFilterIM2COL>(conv, W2);
 
 		Session session2(conv2, std::move(graph));
 		session2.run();
@@ -457,7 +458,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 1);
 		auto W = std::make_shared<Filter>(filter, 1, 1);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -479,7 +480,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 1);
 		auto W = std::make_shared<Filter>(filter, 1, 1);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -508,7 +509,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 3, 1);
 		auto W = std::make_shared<Filter>(filter, 1, 1);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W, 2);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W, 2);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -522,7 +523,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
         REQUIRE(X->getCurrentGradients().isApprox(test));
 
-		auto conv2 = std::make_shared<ConvolveFilter>(X, W2, 3);
+		auto conv2 = std::make_shared<ConvolveFilterIM2COL>(X, W2, 3);
 
 		Session session2(conv2, std::move(graph));
 		session2.run();
@@ -550,7 +551,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 5, 1);
 		auto W = std::make_shared<Filter>(filter, 3, 1);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -574,7 +575,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
 		auto W = std::make_shared<Filter>(filter, 1, 2);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -597,7 +598,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
 		auto W = std::make_shared<Filter>(filter, 1, 2);
 
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
 		Session session(conv, std::move(graph));
 		session.run();
@@ -620,9 +621,9 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
 		auto W = std::make_shared<Filter>(filter, 1, 2);
-		auto conv = std::make_shared<ConvolveFilter>(X, W);
+		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 		auto W2 = std::make_shared<Filter>(filter2, 1, 2);
-		auto conv2 = std::make_shared<ConvolveFilter>(conv, W2);
+		auto conv2 = std::make_shared<ConvolveFilterIM2COL>(conv, W2);
 
 		Session session2(conv2, std::move(graph));
 		session2.run();

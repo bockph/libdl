@@ -16,48 +16,30 @@ public:
 	~ConvolveFilterIM2COL() = default;
 
 
-    void addPadding(Eigen::MatrixXf& m, int rowPadding, int colPadding);
 
 
-    int getAmountFilters() const;
 
 
 	void forwards() override;
 
 	void backwards() override;
-	std::string printForward() override;
 
 
-    int getImgSizeOneChannel() const;
 
-    void setImgSizeOneChannel(int imgSizeOneChannel);
+    static void im2col(Matrix& output,const Eigen::MatrixXf &input, int filterSize, int stride, int channel,int batchSize);
+    static void col2im(Matrix& output,const Eigen::MatrixXf &input,  int filterSize, int origDim, int stride, int channel,int batchSize);
 
+    static void backwardsConvolution(Matrix& dX,Matrix& dW,const Matrix& filter,const Matrix& dout, const Matrix& im2ColM,int batchSize,int inputDimX, int stride,int channels);
+    static void forwardsConvolution(const Matrix& miniBatch,const Matrix& filter, Matrix& im2Col, Matrix& outputMatrix, const int stride, const int channels);
 
-    void setFilterSizeOneChannel(int filterSizeOneChannel);
-
-    int getOutputSizePerChannel() const;
-
-    void setOutputSizeOneFilter(int outputSizeOneFilter);
-
-    int getOutputSize() const;
-
-    void setOutputSize(int outputSize);
-    static Eigen::MatrixXf im2col(const Eigen::MatrixXf &input, const Eigen::MatrixXf &filter, int stride, int channel,int batchSize);
-    static Eigen::MatrixXf col2im(const Eigen::MatrixXf &input, const Eigen::MatrixXf &filter,int origDim, int stride, int channel,int batchSize);
-
-
-    const Eigen::MatrixXf &getIm2Col() const;
+        const Eigen::MatrixXf &getIm2Col() const;
 
     void setIm2Col(const Eigen::MatrixXf &im2Col);
-    std::vector<Matrix> _im2Cols;
 
 private:
 	int _stride;
-	int _amountFilters;
-    int _imgSizeOneChannel;
-    int _filterSizeOneChannel;
-    int _outputSizeOneFilter;
-    int _outputSize;
+
+
     Eigen::MatrixXf _im2Col;
 
 };

@@ -18,6 +18,5 @@ public:
 	static float sigmoid(float a);
 
 	void backwards() override;
-	std::string printForward() override;
 
 };

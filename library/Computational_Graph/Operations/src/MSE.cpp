@@ -40,6 +40,4 @@ void MSE::forwards() {
 void MSE::backwards() {
 	getInputA()->setCurrentGradients(2 * (getForward() - getInputB()->getForward()));
 }
-std::string MSE::printForward() {
-	return "MSE:0";
-}
+

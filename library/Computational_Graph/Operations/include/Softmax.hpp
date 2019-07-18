@@ -19,7 +19,6 @@ public:
 
 
 	void backwards() override;
-	std::string printForward() override;
 
 private:
 	int _amountClasses;

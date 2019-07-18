@@ -19,7 +19,6 @@ public:
     void forwards() override;
 
     void backwards() override;
-    std::string printForward() override;
 
     const Eigen::MatrixXf &getMaxIndexMatrix() const;
 

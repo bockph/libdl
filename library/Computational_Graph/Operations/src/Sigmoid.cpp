@@ -37,6 +37,3 @@ void Sigmoid::backwards() {
 float Sigmoid::sigmoid(float a) {
 	return 1 / (1 + std::exp(-a));
 }
-std::string Sigmoid::printForward() {
-	return "Sigmoid:0";
-}

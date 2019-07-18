@@ -15,7 +15,6 @@ public:
 	void forwards() override;
 
 	void backwards() override;
-	std::string printForward() override;
 
 };
 

@@ -43,6 +43,3 @@ void SUM::backwards() {
 
 }
 
-std::string SUM::printForward() {
-	return "SUM:0";
-}

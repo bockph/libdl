@@ -68,6 +68,4 @@ void CrossEntropyLoss::backwards() {
     stopTimeMeasurement(1);
 
 }
-std::string CrossEntropyLoss::printForward() {
-	return "MSE:0";
-}
+

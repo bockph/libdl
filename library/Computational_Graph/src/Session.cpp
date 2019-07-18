@@ -58,7 +58,7 @@ void Session::run(std::vector<float> feed) {
     _start = std::chrono::system_clock::now();
 
 	for (std::shared_ptr<Node> operation: _postOrderTraversedList) {
-		operation->forwards();
+		operation->generalForward();
 	}
     _end = std::chrono::system_clock::now();
 

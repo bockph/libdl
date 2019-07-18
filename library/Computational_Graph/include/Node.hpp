@@ -5,12 +5,13 @@
 #include <vector>
 #include <memory>
 #include <Eigen/Dense>
-#define lr 0.01
+#define lr 0.0001
 #define beta1 0.95
 #define beta2 0.99
 #define BATCH_SIZE 8
-class Node {
 
+using Matrix = Eigen::MatrixXf;
+class Node {
 public:
 	Node();
 	~Node() = default;
@@ -53,6 +54,8 @@ public:
     int getInputChannels() const;
 
     void setInputChannels(int inputChannels);
+
+    void generalForward();
 
     virtual void forwards(){};
 	virtual void backwards(){};

@@ -7,7 +7,7 @@
 
 Placeholder::Placeholder(Eigen::MatrixXf& m,int dim,int channel) {
 	setForward(m);
-	setOutputDim(dim);
+//	setOutputDim(dim);
     setOutputChannels(channel);
 }
 

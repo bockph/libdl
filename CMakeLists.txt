@@ -3,6 +3,8 @@ project(libdl VERSION 0.1
         DESCRIPTION "testing CI setup"
         LANGUAGES CXX)
 set (CMAKE_CXX_STANDARD 14)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp  -O3")
 #find_package(Eigen3 REQUIRED)
 add_subdirectory(extern)
 add_subdirectory(library)

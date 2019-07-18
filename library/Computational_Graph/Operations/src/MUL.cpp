@@ -31,9 +31,9 @@ void MUL::backwards() {
     Eigen::MatrixXf weightGradient = (getInputA()->getForward().transpose()) * getCurrentGradients();
 
     //TODO is this correct?
-    inputGradient/getCurrentGradients().rows();
+//    inputGradient/getCurrentGradients().rows();
 	//TODO is this correct?
-    weightGradient/=getCurrentGradients().rows();
+//    weightGradient/=getCurrentGradients().rows();
 
 
     getInputA()->setCurrentGradients(inputGradient);
@@ -42,7 +42,4 @@ void MUL::backwards() {
 
 
 
-}
-std::string MUL::printForward() {
-	return "MUL:0";
 }

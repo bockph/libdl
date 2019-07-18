@@ -24,7 +24,7 @@
 #
 #include <IO.hpp>
 #include <Sigmoid.hpp>
-#include <ConvolveFilter.hpp>
+//#include <ConvolveFilter.hpp>
 
 
 void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf>& training_data, std::vector<Eigen::MatrixXf>& label_data,bool trainData =true){
@@ -194,8 +194,8 @@ int main() {
      * readWeights: if set (and Weights have already been Written once) weights are initialized with weights from Source_Directory/WeightDeposit
      */
 	int batch_size = 8;
-	int epochs =10;
-	int amount_batches = 4;
+	int epochs =15;
+	int amount_batches = 10;
 	bool trainModel = true;
 	bool testModel =true;
     bool writeWeights = false;

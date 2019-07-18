@@ -76,6 +76,3 @@ void Softmax::backwards() {
 
 }
 
-std::string Softmax::printForward() {
-	return "Softmax:0";
-}
