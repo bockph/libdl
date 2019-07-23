@@ -247,7 +247,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		auto sig2 = std::make_shared<SigmoidOP>(sum2);
 		auto mse =std::make_shared<MSEOp>(sig2,CN);
 
-		Session session(mse, );
+		Session session(mse);
 		session.run();
 		std::cout<<"         Round "<<1<<std::endl;
 		std::cout<<"Output:\n"<<sig2->getForward()<<std::endl;
