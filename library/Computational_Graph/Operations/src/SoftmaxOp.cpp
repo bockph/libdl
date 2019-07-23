@@ -2,14 +2,13 @@
 // Created by phili on 30.06.2019.
 //
 
-#include "Softmax.hpp"
+#include "SoftmaxOp.hpp"
 
 
 #include <iostream>
 
 
-void Softmax::forwards() {
-
+void SoftmaxOp::forwards() {
     startTimeMeasurement();
     Eigen::MatrixXf tmp = getInputA()->getForward();
     tmp.setZero();
@@ -35,11 +34,19 @@ void Softmax::forwards() {
 
 };
 
-void Softmax::backwards() {
+void SoftmaxOp::backwards() {
     startTimeMeasurement();
-    //Right Now Softmax does only work together with CrossEntropyLoss, as the gradient of both together is calculated there and then just passed forward
+    //Right Now Softmax does only work together with CrossEntropyOp, as the gradient of both together is calculated there and then just passed forward
     getInputA()->setCurrentGradients(getCurrentGradients());
     stopTimeMeasurement(1);
+
+    /*
+     * Debug Information
+     */
+    /*int rows1 = getInputA()->getForward().rows();
+    int cols1 = getInputA()->getForward().cols();
+    std::cout<<"Softmax FOrward:"<<getForward()<<std::endl;
+    std::cout<<"Softmax Backwards:"<<getCurrentGradients()<<std::endl;*/
 
 }
 

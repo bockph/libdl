@@ -6,17 +6,16 @@
 #include <Placeholder.hpp>
 #include <Operation.hpp>
 #include <Session.hpp>
-#include <SUM.hpp>
+#include <SummationOp.hpp>
 #include <Weight.hpp>
 #include <Bias.hpp>
-#include <MUL.hpp>
+#include <MultiplicationOp.hpp>
 #include <Filter.hpp>
 #include <ConvolveFilterIM2COL.hpp>
 #include <ReLuOp.hpp>
-#include <MaxPool.hpp>
-#include <Flatten.hpp>
-#include <Softmax.hpp>
-#include <CrossEntropyLoss.hpp>
+#include <MaxPoolOp.hpp>
+#include <SoftmaxOp.hpp>
+#include <CrossEntropyOp.hpp>
 #include "mnist/mnist_reader.hpp"
 #include <mnist/mnist_utils.hpp>
 #include <DataInitialization.hpp>
@@ -89,7 +88,7 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
     auto B1 = std::make_shared<Bias>(params[6],8);
 
     auto conv1 = std::make_shared<ConvolveFilterIM2COL>(X,F1,1);
-    auto sum1 = std::make_shared<SUM>(conv1,B1);
+    auto sum1 = std::make_shared<SummationOp>(conv1,B1);
     auto relu1  = std::make_shared<SigmoidOP>(sum1);
 
 //convolutional Layer 2
@@ -97,19 +96,18 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
     auto B2 = std::make_shared<Bias>(params[7],8);
 
     auto conv2 = std::make_shared<ConvolveFilterIM2COL>(relu1,F2,1);
-    auto sum2 = std::make_shared<SUM>(conv2,B2);
+    auto sum2 = std::make_shared<SummationOp>(conv2,B2);
     auto relu2 = std::make_shared<ReLuOp>(sum2);
 
 //Maxpooling
-    auto maxPool = std::make_shared<MaxPool>(relu2,2,2);
-    auto flattened = std::make_shared<Flatten>(maxPool);
+    auto maxPool = std::make_shared<MaxPoolOp>(relu2,2,2);
 
 //Dense Layer 1
     auto W1 = std::make_shared<Weight>(params[4]);
     auto B3 = std::make_shared<Bias>(params[8]);
 
-    auto mul1 = std::make_shared<MUL>(flattened, W1);
-	auto sum3 = std::make_shared<SUM>(mul1, B3);
+    auto mul1 = std::make_shared<MultiplicationOp>(maxPool, W1);
+	auto sum3 = std::make_shared<SummationOp>(mul1, B3);
 
 	auto relu3 = std::make_shared<ReLuOp>(sum3);
 
@@ -117,12 +115,12 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
     auto W2 = std::make_shared<Weight>(params[5]);
     auto B4 = std::make_shared<Bias>(params[9]);
 
-    auto mul2 = std::make_shared<MUL>(relu3, W2);
-    auto sum4 = std::make_shared<SUM>(mul2, B4);
+    auto mul2 = std::make_shared<MultiplicationOp>(relu3, W2);
+    auto sum4 = std::make_shared<SummationOp>(mul2, B4);
 
 //    Output/Cost Layer
-    auto soft = std::make_shared<Softmax>(sum4,10);
-    auto CE = std::make_shared<CrossEntropyLoss>(soft,CN);
+    auto soft = std::make_shared<SoftmaxOp>(sum4,10);
+    auto CE = std::make_shared<CrossEntropyOp>(soft,CN);
 
     //Create Deep Learning session
     Session session(CE);
@@ -144,7 +142,7 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
 //        std::cout << "Convolution 2: Total backwards: " << conv2->getBackwardsTime()<<"Percentage: "<<(float)conv2->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
 //
 //        std::cout << "Maxpool: Total forward: " << maxPool->getForwardTime()<<"Percentage: "<<(float)maxPool->getForwardTime()/(float)session.getForwardTime()<<std::endl;
-//        std::cout << "MaxPool: Total backwards: " << maxPool->getBackwardsTime()<<"Percentage: "<<(float)maxPool->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
+//        std::cout << "MaxPoolOp: Total backwards: " << maxPool->getBackwardsTime()<<"Percentage: "<<(float)maxPool->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
         params[2] = F1->getForward();
         params[3] = F2->getForward();
         params[4] = W1->getForward();

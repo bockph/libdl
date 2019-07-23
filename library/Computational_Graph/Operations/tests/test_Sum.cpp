@@ -1,7 +1,7 @@
 //
 // Created by phili on 14.05.2019.
 //
-#include <SUM.hpp>
+#include <SummationOp.hpp>
 #include <Session.hpp>
 #include <Placeholder.hpp>
 #include <memory>

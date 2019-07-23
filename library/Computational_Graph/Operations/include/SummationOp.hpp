@@ -5,12 +5,12 @@
 
 #include <Operation.hpp>
 
-class SUM : public Operation {
+class SummationOp : public Operation {
 public:
-	SUM(std::shared_ptr<Node> X, std::shared_ptr<Node> W)
+	SummationOp(std::shared_ptr<Node> X, std::shared_ptr<Node> W)
 			: Operation(X, W) {};
 
-	~SUM() = default;
+	~SummationOp() = default;
 
 	void forwards() override;
 

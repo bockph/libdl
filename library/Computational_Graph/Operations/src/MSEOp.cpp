@@ -3,10 +3,10 @@
 //
 
 #include <iostream>
-#include "MSE.hpp"
+#include "MSEOp.hpp"
 
 
-void MSE::forwards() {
+void MSEOp::forwards() {
 
     auto diff = getInputA()->getForward() - getInputB()->getForward();
     Eigen::MatrixXf squared = diff.array().pow(2);
@@ -31,7 +31,7 @@ void MSE::forwards() {
 }
 
 
-void MSE::backwards() {
+void MSEOp::backwards() {
     getInputA()->setCurrentGradients(2 * (getForward() - getInputB()->getForward()));
 }
 

@@ -4,7 +4,7 @@
 //
 // Created by phili on 14.05.2019.
 //
-#include <MUL.hpp>
+#include <MultiplicationOp.hpp>
 #include <Session.hpp>
 #include <Placeholder.hpp>
 #include <memory>
@@ -13,9 +13,9 @@
 #include <catch2/catch.hpp>
 #include <Weight.hpp>
 #include <iostream>
-#include <Sigmoid.hpp>
-#include <MSE.hpp>
-#include <SUM.hpp>
+#include <SigmoidOP.hpp>
+#include <MSEOp.hpp>
+#include <SummationOp.hpp>
 #include <Bias.hpp>
 
 
@@ -33,7 +33,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		std::vector<std::shared_ptr<Node>> forZ;
 		forZ.push_back(x1);
 		forZ.push_back(x2);
-		auto o1 = std::make_shared<MUL>(forZ);
+		auto o1 = std::make_shared<MultiplicationOp>(forZ);
 		Session session(o1, std::move(graph));
 		session.run();
 		REQUIRE(o1->getForwardData() == 1250);
@@ -44,7 +44,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		forZ.push_back(x2);
 		forZ.push_back(x3);
 		forZ.push_back(x4);
-		auto o1 = std::make_shared<MUL>(forZ);
+		auto o1 = std::make_shared<MultiplicationOp>(forZ);
 		Session session(o1, std::move(graph));
 		session.run();
 		REQUIRE(o1->getForwardData() == 9375000);
@@ -53,7 +53,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		std::vector<std::shared_ptr<Node>> forZ;
 		forZ.push_back(x1);
 		forZ.push_back(x2);
-		auto o1 = std::make_shared<MUL>(forZ);
+		auto o1 = std::make_shared<MultiplicationOp>(forZ);
 		Session session(o1, std::move(graph));
 		session.run();
 		REQUIRE(o1->getForwardData() == 1250);
@@ -66,7 +66,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		forZ.push_back(a);
 		forZ.push_back(b);
 		forZ.push_back(c);
-		auto o1 = std::make_shared<MUL>(forZ);
+		auto o1 = std::make_shared<MultiplicationOp>(forZ);
 		Session session(o1, std::move(graph));
 		session.run();
 		REQUIRE(o1->getForwardData()==24);
@@ -91,8 +91,8 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		auto W = std::make_shared<Weight>(mW1);
 		auto W2 = std::make_shared<Weight>(mW2);
 
-		auto mul = std::make_shared<MUL>(X,W);
-		auto mul2 = std::make_shared<MUL>(mul,W2);
+		auto mul = std::make_shared<MultiplicationOp>(X,W);
+		auto mul2 = std::make_shared<MultiplicationOp>(mul,W2);
 
 		Session session(mul2, std::move(graph));
 		session.run();
@@ -129,8 +129,8 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		auto W = std::make_shared<Weight>(mW1);
 		auto W2 = std::make_shared<Weight>(mW2);
 
-		auto mul = std::make_shared<MUL>(X,W);
-		auto mul2 = std::make_shared<MUL>(mul,W2);
+		auto mul = std::make_shared<MultiplicationOp>(X,W);
+		auto mul2 = std::make_shared<MultiplicationOp>(mul,W2);
 
 		Session session(mul2, std::move(graph));
 		session.run();
@@ -184,12 +184,12 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		auto W = std::make_shared<Weight>(mW1);
 		auto W2 = std::make_shared<Weight>(mW2);
 
-		auto mul = std::make_shared<MUL>(X,W);
-		auto sig1 = std::make_shared<Sigmoid>(mul);
-		auto mul2 = std::make_shared<MUL>(mul,W2);
-		auto sig2 = std::make_shared<Sigmoid>(mul2);
+		auto mul = std::make_shared<MultiplicationOp>(X,W);
+		auto sig1 = std::make_shared<SigmoidOP>(mul);
+		auto mul2 = std::make_shared<MultiplicationOp>(mul,W2);
+		auto sig2 = std::make_shared<SigmoidOP>(mul2);
 		auto CN = std::make_shared<Placeholder>(C);
-		auto mse =std::make_shared<MSE>(sig2,CN);
+		auto mse =std::make_shared<MSEOp>(sig2,CN);
 
 		/*Session session(mse, std::move(graph));
 		for(int i =0;i<1;i++) {
@@ -240,17 +240,17 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 
 		auto W2 = std::make_shared<Weight>(mW2);
 
-		auto mul = std::make_shared<MUL>(X,W);
-		auto sum = std::make_shared<SUM>(mul,B1);
-		auto sig1 = std::make_shared<Sigmoid>(sum);
-//		auto mul1 = std::make_shared<MUL>(sig1,W12);
-//		auto sig12 = std::make_shared<Sigmoid>(mul1);
-		auto mul2 = std::make_shared<MUL>(sig1,W2);
-		auto sum2 = std::make_shared<SUM>(mul2,B2);
+		auto mul = std::make_shared<MultiplicationOp>(X,W);
+		auto sum = std::make_shared<SummationOp>(mul,B1);
+		auto sig1 = std::make_shared<SigmoidOP>(sum);
+//		auto mul1 = std::make_shared<MultiplicationOp>(sig1,W12);
+//		auto sig12 = std::make_shared<SigmoidOP>(mul1);
+		auto mul2 = std::make_shared<MultiplicationOp>(sig1,W2);
+		auto sum2 = std::make_shared<SummationOp>(mul2,B2);
 
 
-		auto sig2 = std::make_shared<Sigmoid>(sum2);
-		auto mse =std::make_shared<MSE>(sig2,CN);
+		auto sig2 = std::make_shared<SigmoidOP>(sum2);
+		auto mse =std::make_shared<MSEOp>(sig2,CN);
 
 		Session session(mse, std::move(graph));
 		session.run();

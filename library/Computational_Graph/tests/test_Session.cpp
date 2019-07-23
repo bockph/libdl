@@ -1,8 +1,8 @@
 //
 // Created by phili on 15.05.2019.
 //
-#include <MUL.hpp>
-#include <SUM.hpp>
+#include <MultiplicationOp.hpp>
+#include <SummationOp.hpp>
 #include <Session.hpp>
 #include <Placeholder.hpp>
 #include <memory>
@@ -29,7 +29,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 	std::vector<std::shared_ptr<Node>> mul1;
 	mul1.push_back(x1);
 	mul1.push_back(x2);
-	auto o1 = std::make_shared<MUL>(mul1);
+	auto o1 = std::make_shared<MultiplicationOp>(mul1);
 
 	std::vector<std::shared_ptr<Node>> sum1;
 	sum1.push_back(o1);
@@ -39,7 +39,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 	std::vector<std::shared_ptr<Node>> mul2;
 	mul2.push_back(o2);
 	mul2.push_back(x4);
-	auto o3 = std::make_shared<MUL>(mul2);
+	auto o3 = std::make_shared<MultiplicationOp>(mul2);
 
 //	std::vector<std::shared_ptr<Node>> sigVec;
 //	sigVec.push_back(o3);
@@ -86,10 +86,10 @@ TEST_CASE("XOR test ", "[real problem]") {
 	std::vector<std::shared_ptr<Node>> mul21 = {w12,x1};
 	std::vector<std::shared_ptr<Node>> mul22 = {w22,x2};
 
-	auto nMul11 = std::make_shared<MUL>(mul11);
-	auto nMul12 = std::make_shared<MUL>(mul12);
-	auto nMul21 = std::make_shared<MUL>(mul21);
-	auto nMul22 = std::make_shared<MUL>(mul22);
+	auto nMul11 = std::make_shared<MultiplicationOp>(mul11);
+	auto nMul12 = std::make_shared<MultiplicationOp>(mul12);
+	auto nMul21 = std::make_shared<MultiplicationOp>(mul21);
+	auto nMul22 = std::make_shared<MultiplicationOp>(mul22);
 
 	std::vector<std::shared_ptr<Node>> sum1 = {nMul11,nMul12};
 	std::vector<std::shared_ptr<Node>> sum2 = {nMul21,nMul22};
@@ -109,8 +109,8 @@ TEST_CASE("XOR test ", "[real problem]") {
 
 	std::vector<std::shared_ptr<Node>> mul31 = {w31 ,nsig1};
 	std::vector<std::shared_ptr<Node>> mul32 = {w32 ,nsig2};
-	auto nMul31 = std::make_shared<MUL>(mul31);
-	auto nMul32 = std::make_shared<MUL>(mul32);
+	auto nMul31 = std::make_shared<MultiplicationOp>(mul31);
+	auto nMul32 = std::make_shared<MultiplicationOp>(mul32);
 
 	std::vector<std::shared_ptr<Node>> sum3 = {nMul31,nMul32};
 	auto nSum3 =std::make_shared<SUM>(sum3);

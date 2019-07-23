@@ -3,9 +3,9 @@
 //
 
 #include <iostream>
-#include "CrossEntropyLoss.hpp"
+#include "CrossEntropyOp.hpp"
 
-void CrossEntropyLoss::forwards() {
+void CrossEntropyOp::forwards() {
     startTimeMeasurement();
     Eigen::MatrixXf log = Eigen::log(getInputA()->getForward().array());
     Eigen::MatrixXf multiply = log.cwiseProduct(getInputB()->getForward());
@@ -26,7 +26,7 @@ void CrossEntropyLoss::forwards() {
 }
 
 
-void CrossEntropyLoss::backwards() {
+void CrossEntropyOp::backwards() {
     startTimeMeasurement();
 
     Eigen::MatrixXf c = getInputB()->getForward();
@@ -37,6 +37,17 @@ void CrossEntropyLoss::backwards() {
 
     getInputA()->setCurrentGradients(tmp2);
     stopTimeMeasurement(1);
+
+    /*
+     * Debug Information
+     */
+    /*int rows1 = getInputA()->getForward().rows();
+    int cols1 = getInputA()->getForward().cols();
+
+    int rows2 = getInputB()->getForward().rows();
+    int cols2 = getInputB()->getForward().cols();*/
+    /*std::cout<<"CrossEntropy FOrward:"<<getForward()<<std::endl;
+    std::cout<<"CrossEntropy Backwards:"<<getCurrentGradients()<<std::endl;*/
 
 }
 

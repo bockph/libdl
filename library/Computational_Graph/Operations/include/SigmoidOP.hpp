@@ -6,12 +6,12 @@
 
 #include <Operation.hpp>
 
-class Sigmoid : public Operation {
+class SigmoidOP : public Operation {
 public:
-	Sigmoid(std::shared_ptr<Node> X)
+	SigmoidOP(std::shared_ptr<Node> X)
 			: Operation(X) {};
 
-	~Sigmoid() = default;
+	~SigmoidOP() = default;
 
 	void forwards() override;
 

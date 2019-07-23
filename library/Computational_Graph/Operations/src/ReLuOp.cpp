@@ -2,13 +2,15 @@
 // Created by pbo on 18.06.19.
 //
 
-#include "ReLu.hpp"
+#include "ReLuOp.hpp"
 
 
 #include <iostream>
 
 
-void ReLu::forwards() {
+void ReLuOp::forwards() {
+
+
     startTimeMeasurement();
 
     setForward(getInputA()->getForward().cwiseMax(0));
@@ -17,12 +19,12 @@ void ReLu::forwards() {
 
 };
 
-float ReLu::deriveReLu(const float element) {
+float ReLuOp::deriveReLu(const float element) {
     if (element < 0)return 0;
     else return 1;
 }
 
-void ReLu::backwards() {
+void ReLuOp::backwards() {
     startTimeMeasurement();
 
     std::function<float(float)> deriveReLu_WRAP = deriveReLu;
@@ -30,4 +32,12 @@ void ReLu::backwards() {
     getInputA()->setCurrentGradients(getCurrentGradients().cwiseProduct(dReLu));
 
     stopTimeMeasurement(1);
+
+    /*
+     * Debug INformation
+     */
+    /* int rows1 = getInputA()->getForward().rows();
+     int cols1 = getInputA()->getForward().cols();
+     std::cout<<"RELU FOrward:"<<getForward()<<std::endl;
+     std::cout<<"RELU Backwards:"<<getCurrentGradients()<<std::endl;*/
 }

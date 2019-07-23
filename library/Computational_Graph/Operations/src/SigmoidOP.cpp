@@ -3,12 +3,10 @@
 //
 
 #include <iostream>
-#include "Sigmoid.hpp"
+#include "SigmoidOP.hpp"
 
 
-void Sigmoid::forwards() {
-
-
+void SigmoidOP::forwards() {
     startTimeMeasurement();
 
     setForward(getInputA()->getForward().unaryExpr(std::ref(sigmoid)));
@@ -17,7 +15,7 @@ void Sigmoid::forwards() {
 
 };
 
-void Sigmoid::backwards() {
+void SigmoidOP::backwards() {
     startTimeMeasurement();
 
     auto tmp = getForward();
@@ -26,9 +24,13 @@ void Sigmoid::backwards() {
     getInputA()->setCurrentGradients(getCurrentGradients().cwiseProduct(dSigmoid));
 
     stopTimeMeasurement(1);
-
+    /*
+     * Debug Information
+     */
+    /* std::cout<<"Sigmoid FOrward:"<<getForward()<<std::endl;
+     std::cout<<"Sigmoid Backwards:"<<getCurrentGradients()<<std::endl;*/
 }
 
-float Sigmoid::sigmoid(float a) {
+float SigmoidOP::sigmoid(float a) {
     return 1 / (1 + std::exp(-a));
 }

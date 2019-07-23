@@ -9,12 +9,12 @@
 
 #include <Operation.hpp>
 
-class MaxPool : public Operation {
+class MaxPoolOp : public Operation {
 public:
-    MaxPool(std::shared_ptr<Node> X,int windowSize, int stride =1)
+    MaxPoolOp(std::shared_ptr<Node> X,int windowSize, int stride =1)
             : Operation(X),_windowSize(windowSize),_stride(stride) {};
 
-    ~MaxPool() = default;
+    ~MaxPoolOp() = default;
 
     void forwards() override;
 

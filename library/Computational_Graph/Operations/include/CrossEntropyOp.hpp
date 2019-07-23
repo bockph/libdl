@@ -7,12 +7,12 @@
 
 #include <Operation.hpp>
 
-class CrossEntropyLoss : public Operation {
+class CrossEntropyOp : public Operation {
 public:
-	CrossEntropyLoss(std::shared_ptr<Node> X, std::shared_ptr<Node> C)
+	CrossEntropyOp(std::shared_ptr<Node> X, std::shared_ptr<Node> C)
 			: Operation(X, C) {};
 
-	~CrossEntropyLoss() = default;
+	~CrossEntropyOp() = default;
 
 	void forwards() override;
 

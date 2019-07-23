@@ -6,12 +6,12 @@
 
 #include <Operation.hpp>
 
-class ReLu : public Operation {
+class ReLuOp : public Operation {
 public:
-    ReLu(std::shared_ptr<Node> X)
+    ReLuOp(std::shared_ptr<Node> X)
             : Operation(X) {};
 
-    ~ReLu() = default;
+    ~ReLuOp() = default;
 
     void forwards() override;
 

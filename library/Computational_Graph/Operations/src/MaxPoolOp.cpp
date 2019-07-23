@@ -3,9 +3,9 @@
 //
 
 #include <iostream>
-#include "MaxPool.hpp"
+#include "MaxPoolOp.hpp"
 
-void MaxPool::forwards() {
+void MaxPoolOp::forwards() {
 
     startTimeMeasurement();
 
@@ -65,7 +65,7 @@ void MaxPool::forwards() {
 
 };
 
-void MaxPool::backwards() {
+void MaxPoolOp::backwards() {
     startTimeMeasurement();
     double convolutionCounter = 0;
 
@@ -106,13 +106,18 @@ void MaxPool::backwards() {
     getInputA()->setCurrentGradients(indexMatrix);
 
     stopTimeMeasurement(1);
+    /*
+     * Debug Information
+     */
+    /*std::cout<<" MaxPoolOp FOrward:"<<getForward()<<std::endl;
+    std::cout<<" MaxPoolOp Backwards:"<<getCurrentGradients()<<std::endl;*/
 }
 
 
-const Eigen::MatrixXf &MaxPool::getMaxIndexMatrix() const {
+const Eigen::MatrixXf &MaxPoolOp::getMaxIndexMatrix() const {
     return _maxIndexMatrix;
 }
 
-void MaxPool::setMaxIndexMatrix(const Eigen::MatrixXf &maxIndexMatrix) {
+void MaxPoolOp::setMaxIndexMatrix(const Eigen::MatrixXf &maxIndexMatrix) {
     _maxIndexMatrix = maxIndexMatrix;
 }

@@ -167,6 +167,7 @@ ConvolveFilterIM2COL::backwardsConvolution(Matrix &dX, Matrix &dW, const Eigen::
     ConvolveFilterIM2COL::col2im(dX,dXBeforeReshape, filterSizeOneChannel, inputDimX, stride, channelsX, batchSize);
 
     dW = doutReshaped * im2ColM.transpose();
+
 }
 
 void ConvolveFilterIM2COL::backwards() {
@@ -186,6 +187,14 @@ void ConvolveFilterIM2COL::backwards() {
 
     getInputB()->setCurrentGradients(gradientW);
     getInputA()->setCurrentGradients(gradientX);
+
+
+    /*
+     * Debug Information
+     */
+   /* std::cout<<"Convolution FOrward:"<<getForward()<<std::endl;
+    std::cout<<"Convolution Backwards:"<<getCurrentGradients()<<std::endl;*/
+
 
 
 }

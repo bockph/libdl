@@ -15,7 +15,7 @@
 
 #include <catch2/catch.hpp>
 
-#include <ReLu.hpp>
+#include <ReLuOp.hpp>
 
 
 TEST_CASE("RELU Forward ", "[operation]") {
@@ -29,7 +29,7 @@ TEST_CASE("RELU Forward ", "[operation]") {
 
         auto X = std::make_shared<Placeholder>(img);
 
-        auto conv = std::make_shared<ReLu>(X);
+        auto conv = std::make_shared<ReLuOp>(X);
 
         Session session(conv, std::move(graph));
         session.run();
@@ -53,7 +53,7 @@ TEST_CASE("RELU Backward ", "[operation]") {
 
     auto X = std::make_shared<Placeholder>(img);
 
-    auto conv = std::make_shared<ReLu>(X);
+    auto conv = std::make_shared<ReLuOp>(X);
 
     Session session(conv, std::move(graph));
     session.run();

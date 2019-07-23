@@ -9,19 +9,18 @@ set(GRAPH_SOURCES
          src/Operation.cpp
          src/Placeholder.cpp
          src/Session.cpp
-         Operations/src/SUM.cpp
-        Operations/src/MUL.cpp
-        Operations/src/Sigmoid.cpp
-        Operations/src/MSE.cpp
+        Operations/src/SummationOp.cpp
+        Operations/src/MultiplicationOp.cpp
+        Operations/src/SigmoidOP.cpp
+        Operations/src/MSEOp.cpp
         src/Weight.cpp
         src/Bias.cpp
         src/Filter.cpp
-        Operations/src/MaxPool.cpp
-        Operations/src/ReLu.cpp
-        Operations/src/Flatten.cpp
-        Operations/src/Softmax.cpp
-        Operations/src/CrossEntropyLoss.cpp
-        Operations/src/ConvolveFilterIM2Row.cpp
+        Operations/src/MaxPoolOp.cpp
+        Operations/src/ReLuOp.cpp
+        Operations/src/SoftmaxOp.cpp
+        Operations/src/CrossEntropyOp.cpp
+        Operations/src/ConvolutionOp.cpp
         )
 include_directories(${PROJECT_SOURCE_DIR}/extern/eigen/Eigen)
 

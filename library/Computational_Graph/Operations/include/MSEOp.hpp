@@ -7,12 +7,12 @@
 
 #include <Operation.hpp>
 
-class MSE : public Operation {
+class MSEOp : public Operation {
 public:
-	MSE(std::shared_ptr<Node> X, std::shared_ptr<Node> C)
+	MSEOp(std::shared_ptr<Node> X, std::shared_ptr<Node> C)
 			: Operation(X, C) {};
 
-	~MSE() = default;
+	~MSEOp() = default;
 
 	void forwards() override;
 

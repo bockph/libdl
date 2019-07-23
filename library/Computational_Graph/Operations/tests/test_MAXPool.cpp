@@ -15,7 +15,7 @@
 
 #include <catch2/catch.hpp>
 
-#include <MaxPool.hpp>
+#include <MaxPoolOp.hpp>
 
 
 TEST_CASE("Maxpool Forwardpass ", "[operation]") {
@@ -30,7 +30,7 @@ TEST_CASE("Maxpool Forwardpass ", "[operation]") {
 
     auto X = std::make_shared<Placeholder>(img,4);
 
-    auto maxPool = std::make_shared<MaxPool>(X, 2, 2);
+    auto maxPool = std::make_shared<MaxPoolOp>(X, 2, 2);
 
     Session session(maxPool, std::move(graph));
     session.run();
@@ -79,7 +79,7 @@ TEST_CASE("Maxpool Backwardpass ", "[operation]") {
 
     auto X = std::make_shared<Placeholder>(img,4);
 
-    auto maxPool = std::make_shared<MaxPool>(X, 2, 2);
+    auto maxPool = std::make_shared<MaxPoolOp>(X, 2, 2);
 
     Session session(maxPool, std::move(graph));
     session.run();

@@ -8,12 +8,12 @@
 
 #include <Operation.hpp>
 
-class Softmax : public Operation {
+class SoftmaxOp : public Operation {
 public:
-	Softmax(std::shared_ptr<Node> X,int amountClasses)
+	SoftmaxOp(std::shared_ptr<Node> X,int amountClasses)
 			: Operation(X),_amountClasses(amountClasses) {};
 
-	~Softmax() = default;
+	~SoftmaxOp() = default;
 
 	void forwards() override;
 
