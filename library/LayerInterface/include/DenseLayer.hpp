@@ -1,0 +1,32 @@
+//
+// Created by pbo on 23.07.19.
+//
+
+
+#pragma once
+
+#include <AbstractLayer.hpp>
+
+class DenseLayer: public AbstractLayer {
+public:
+    DenseLayer(std::shared_ptr<AbstractLayer> input, ActivationFunction activationFunction,int amountNeurons, InitializationType initializationType=InitializationType::Xavier);
+    ~DenseLayer()=default;
+
+    Matrix getWeightMatrix();
+    Matrix getBiasMatrix();
+
+    void setWeightMatrix(Matrix filter);
+    void setBiasMatrix(Matrix bias);
+
+private:
+
+    ActivationFunction _activationFunction;
+    InitializationType _initializationType;
+    int _amountNeurons;
+
+    std::shared_ptr<Weight> _weights;
+    std::shared_ptr<Bias> _bias;
+};
+
+
+

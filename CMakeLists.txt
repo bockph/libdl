@@ -4,14 +4,13 @@ project(libdl VERSION 0.1
         LANGUAGES CXX)
 set (CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -march=native")
 #find_package(Eigen3 REQUIRED)
 add_subdirectory(extern)
 add_subdirectory(library)
 #<-------Stuff for directly building an Application----->
 set(TEST_TARGET_ONE Example_XOR)
 add_executable(${TEST_TARGET_ONE} Example_XOR.cpp)
-#target_link_libraries (${TEST_TARGET_ONE} graph Eigen3::Eigen )# libdl)# pybind11)
 target_link_libraries (${TEST_TARGET_ONE} graph eigenI spdlogI catch2I pybind11I )# libdl)# pybind11)
 target_compile_features(${TEST_TARGET_ONE} PUBLIC cxx_std_17)
 
@@ -19,11 +18,17 @@ target_compile_features(${TEST_TARGET_ONE} PUBLIC cxx_std_17)
 
 set(TEST_TARGET_TWO Example_MNIST)
 add_executable(${TEST_TARGET_TWO} Example_MNIST.cpp)
-#target_link_libraries (${TEST_TARGET_TWO} graph Eigen3::Eigen )# libdl)# pybind11)
 target_link_libraries (${TEST_TARGET_TWO} graph mnist utils )# libdl)# pybind11)
 target_compile_definitions(${TEST_TARGET_TWO} PRIVATE MNIST_DATA_LOCATION="${CMAKE_SOURCE_DIR}/extern/mnist" WEIGHT_DEPOSIT="${CMAKE_SOURCE_DIR}/WeightDeposit")
 
 target_compile_features(${TEST_TARGET_TWO} PUBLIC cxx_std_17)
+
+set(TEST_TARGET_THREE Example_MNIST_Layer)
+add_executable(${TEST_TARGET_THREE} Example_MNIST_Layer.cpp)
+target_link_libraries (${TEST_TARGET_THREE} graph layerInterface mnist utils )# libdl)# pybind11)
+target_compile_definitions(${TEST_TARGET_THREE} PRIVATE MNIST_DATA_LOCATION="${CMAKE_SOURCE_DIR}/extern/mnist" WEIGHT_DEPOSIT="${CMAKE_SOURCE_DIR}/WeightDeposit")
+
+target_compile_features(${TEST_TARGET_THREE} PUBLIC cxx_std_17)
 
 
 
