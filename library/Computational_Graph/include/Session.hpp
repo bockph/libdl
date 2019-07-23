@@ -1,13 +1,13 @@
 //
 // Created by phili on 11.05.2019.
 //
-#include <Graph.hpp>
-
 #pragma once
 
+#include <Node.hpp>
+#include <chrono>
 class Session {
 public:
-	Session(const std::shared_ptr<Node> &endNode, std::unique_ptr<Graph> graph);
+    Session(const std::shared_ptr<Node> &endNode);
     ~Session() = default;
 	void run(std::vector<float> feed = {});
 
@@ -24,7 +24,6 @@ private:
 
 	std::vector<std::shared_ptr<Node>> _postOrderTraversedList;
 	std::vector<std::shared_ptr<Node>> _preOrderTraversedList;
-	std::unique_ptr<Graph> _graph;
 	std::shared_ptr<Node> _endNode;
 
     int _forwardTime, _backwardsTime;

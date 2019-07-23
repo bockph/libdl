@@ -3,15 +3,16 @@
 //
 
 #include "Session.hpp"
+#include <chrono>
 
-Session::Session(const std::shared_ptr<Node> &endNode, std::unique_ptr<Graph> graph)
-		:
-		_graph(std::move(graph))
-		, _postOrderTraversedList(postOrderTraversal(endNode))
-		, _preOrderTraversedList(preOrderTraversal(endNode))
-		, _endNode(endNode) {
+Session::Session(const std::shared_ptr<Node> &endNode)
+        :
+        _postOrderTraversedList(postOrderTraversal(endNode))
+        , _preOrderTraversedList(preOrderTraversal(endNode))
+        , _endNode(endNode) {
 
 }
+
 
 std::vector<std::shared_ptr<Node>> Session::postOrderTraversal(const std::shared_ptr<Node> &endNode) {
 	std::vector<std::shared_ptr<Node>> toReturn;

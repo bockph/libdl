@@ -10,8 +10,8 @@
 
 #include <catch2/catch.hpp>
 #include <iostream>
-#include <Sigmoid.hpp>
-#include <MSE.hpp>
+#include <SigmoidOP.hpp>
+#include <MSEOp.hpp>
 #include <Weight.hpp>
 
 
@@ -43,7 +43,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 
 //	std::vector<std::shared_ptr<Node>> sigVec;
 //	sigVec.push_back(o3);
-//	auto o4= std::make_shared<Sigmoid>(sigVec);
+//	auto o4= std::make_shared<SigmoidOP>(sigVec);
 
 	Session session(o3, std::move(graph));
 	session.run();
@@ -60,8 +60,8 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		REQUIRE(o2->_gradients(1)==100);
 		REQUIRE(o3->_gradients(0)==100);
 		REQUIRE(o3->_gradients(1)==1325);
-//		std::cout<<"Sigmoid:"<<o4->getForwardData()<<std::endl;
-//		std::cout<<"Sigmoid gradient:"<<o4->_gradients(0)<<std::endl;
+//		std::cout<<"SigmoidOP:"<<o4->getForwardData()<<std::endl;
+//		std::cout<<"SigmoidOP gradient:"<<o4->_gradients(0)<<std::endl;
 	}
 
 }
@@ -99,8 +99,8 @@ TEST_CASE("XOR test ", "[real problem]") {
 
 	std::vector<std::shared_ptr<Node>> sig1 = {nSum1};
 	std::vector<std::shared_ptr<Node>> sig2 = {nSum2};
-	auto nsig1 =std::make_shared<Sigmoid>(sig1);
-	auto nsig2 =std::make_shared<Sigmoid>(sig2);
+	auto nsig1 =std::make_shared<SigmoidOP>(sig1);
+	auto nsig2 =std::make_shared<SigmoidOP>(sig2);
 
 //	auto w31 =std::make_shared<Placeholder>(-8.06441097);
 //	auto w32 =std::make_shared<Placeholder>(7.41088524);
@@ -116,14 +116,14 @@ TEST_CASE("XOR test ", "[real problem]") {
 	auto nSum3 =std::make_shared<SUM>(sum3);
 
 	std::vector<std::shared_ptr<Node>> sig3 = {nSum3};
-	auto nsig3 =std::make_shared<Sigmoid>(sig3);
+	auto nsig3 =std::make_shared<SigmoidOP>(sig3);
 
 
 	auto c = std::make_shared<Placeholder>(1);
 
 	std::vector<std::shared_ptr<Node>> loss = {nsig3,c};
 
-	auto nloss =std::make_shared<MSE>(loss);
+	auto nloss =std::make_shared<MSEOp>(loss);
 
 	auto graph = std::make_unique<Graph>();
 

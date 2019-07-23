@@ -7,8 +7,13 @@ MACRO (LIBDL_TEST NAME)
     ADD_TEST(test_${NAME} test_${NAME})
 ENDMACRO (LIBDL_TEST)
 
-add_subdirectory(Computational_Graph)
+
+
 add_subdirectory(Utils)
-set(other_srcs )
+
+add_subdirectory(Computational_Graph)
+
+add_subdirectory(LayerInterface)
+
 
 

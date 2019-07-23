@@ -3,7 +3,6 @@
 //
 
 #include <iostream>
-#include <Graph.hpp>
 #include <Placeholder.hpp>
 #include <Operation.hpp>
 #include <Session.hpp>
@@ -11,20 +10,19 @@
 #include <Weight.hpp>
 #include <Bias.hpp>
 #include <MUL.hpp>
-#include <Utils.hpp>
 #include <Filter.hpp>
 #include <ConvolveFilterIM2COL.hpp>
-#include <ReLu.hpp>
+#include <ReLuOp.hpp>
 #include <MaxPool.hpp>
 #include <Flatten.hpp>
 #include <Softmax.hpp>
 #include <CrossEntropyLoss.hpp>
 #include "mnist/mnist_reader.hpp"
 #include <mnist/mnist_utils.hpp>
+#include <DataInitialization.hpp>
 #
 #include <IO.hpp>
-#include <Sigmoid.hpp>
-//#include <ConvolveFilter.hpp>
+#include <SigmoidOP.hpp>
 
 
 void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf>& training_data, std::vector<Eigen::MatrixXf>& label_data,bool trainData =true){
@@ -83,9 +81,8 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
      * params = [img,label,f1,f2,w3,w4,b1,b2,b3,b4]
      */
 
-    auto graph = std::make_unique<Graph>();
     auto X = std::make_shared<Placeholder>(params[0],28,1);
-    auto CN = std::make_shared<Placeholder>(params[1],0,0);
+    std::shared_ptr<Placeholder> CN = std::make_shared<Placeholder>(params[1],0,0);
 
 //Convolutional Layer 1
     auto F1 = std::make_shared<Filter>(params[2],5,1);
@@ -93,7 +90,7 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
 
     auto conv1 = std::make_shared<ConvolveFilterIM2COL>(X,F1,1);
     auto sum1 = std::make_shared<SUM>(conv1,B1);
-    auto relu1  = std::make_shared<ReLu>(sum1);
+    auto relu1  = std::make_shared<SigmoidOP>(sum1);
 
 //convolutional Layer 2
     auto F2 = std::make_shared<Filter>(params[3],5,8);
@@ -101,7 +98,7 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
 
     auto conv2 = std::make_shared<ConvolveFilterIM2COL>(relu1,F2,1);
     auto sum2 = std::make_shared<SUM>(conv2,B2);
-    auto relu2 = std::make_shared<ReLu>(sum2);
+    auto relu2 = std::make_shared<ReLuOp>(sum2);
 
 //Maxpooling
     auto maxPool = std::make_shared<MaxPool>(relu2,2,2);
@@ -114,7 +111,7 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
     auto mul1 = std::make_shared<MUL>(flattened, W1);
 	auto sum3 = std::make_shared<SUM>(mul1, B3);
 
-	auto relu3 = std::make_shared<ReLu>(sum3);
+	auto relu3 = std::make_shared<ReLuOp>(sum3);
 
 //Dense Layer 2
     auto W2 = std::make_shared<Weight>(params[5]);
@@ -128,7 +125,7 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
     auto CE = std::make_shared<CrossEntropyLoss>(soft,CN);
 
     //Create Deep Learning session
-    Session session(CE, std::move(graph));
+    Session session(CE);
 
 
 
@@ -194,7 +191,7 @@ int main() {
      * readWeights: if set (and Weights have already been Written once) weights are initialized with weights from Source_Directory/WeightDeposit
      */
 	int batch_size = 8;
-	int epochs =15;
+	int epochs =20;
 	int amount_batches = 10;
 	bool trainModel = true;
 	bool testModel =true;
@@ -221,11 +218,11 @@ int main() {
 
     //Initialize Weights & Bias & Filter
 
-	Eigen::MatrixXf filter1 = generateRandomMatrix(0,.1,8,5*5);
-	Eigen::MatrixXf filter2 = generateRandomMatrix(0.,.1,8,5*5*8);
+	Eigen::MatrixXf filter1 = DataInitialization::generateRandomMatrix(0,.1,8,5*5);
+	Eigen::MatrixXf filter2 = DataInitialization::generateRandomMatrix(0.,.1,8,5*5*8);
 
-	Eigen::MatrixXf W1 = generateRandomMatrix(0., .1, out3DimSQ, 128);
-	Eigen::MatrixXf W2 = generateRandomMatrix(0., .1,128, 10 );
+	Eigen::MatrixXf W1 = DataInitialization::generateRandomMatrix(0., .1, out3DimSQ, 128);
+	Eigen::MatrixXf W2 = DataInitialization::generateRandomMatrix(0., .1,128, 10 );
 
     Eigen::MatrixXf b1=Eigen::MatrixXf::Zero(batch_size,outputDim*outputDim*8);
     Eigen::MatrixXf b2=Eigen::MatrixXf::Zero(batch_size,outputDim2*outputDim2*8);
