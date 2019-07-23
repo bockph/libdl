@@ -12,7 +12,6 @@
 #include <Session.hpp>
 #include <Placeholder.hpp>
 #include <memory>
-#include <Graph.hpp>
 
 #include <catch2/catch.hpp>
 #include <iostream>

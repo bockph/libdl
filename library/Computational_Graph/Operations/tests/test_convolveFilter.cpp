@@ -12,7 +12,6 @@
 #include <Session.hpp>
 #include <Placeholder.hpp>
 #include <memory>
-#include <Graph.hpp>
 
 #include <catch2/catch.hpp>
 #include <iostream>
@@ -25,7 +24,6 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 
 	SECTION("One dimensional filter, one input", "[One_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(1, 4);
 		img << 1, 2, 3, 4;
 		Eigen::MatrixXf filter(1, 1);
@@ -36,7 +34,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+		Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 4);
 		test << 2, 4, 6, 8;
@@ -45,7 +43,6 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 	}
 	SECTION("One dimensional filter, miniBatch as input", "[One_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(2, 4);
 		img << 1, 2, 3, 4,
 				1, 2, 3, 4;
@@ -58,7 +55,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+		Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(2, 4);
 		test << 2, 4, 6, 8
@@ -68,7 +65,6 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 	}
     SECTION("One dimensional filter, stride 2", "[One_Channel_Image]") {
 
-        auto graph = std::make_unique<Graph>();
         Eigen::MatrixXf img(1, 9);
         img << 1, 2, 3, 4, 5, 6, 7, 8, 9;
 
@@ -84,7 +80,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 
         auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W, 2);
 
-        Session session(conv, std::move(graph));
+        Session session(conv);
         session.run();
         Eigen::MatrixXf test = Eigen::MatrixXf(1, 4);
         test << 2, 6, 14, 18;
@@ -94,7 +90,6 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
     }
     SECTION("One dimensional filter, stride 3", "[One_Channel_Image]") {
 
-        auto graph = std::make_unique<Graph>();
         Eigen::MatrixXf img(1, 9);
         img << 1, 2, 3, 4, 5, 6, 7, 8, 9;
 
@@ -110,7 +105,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 
         auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W, 3);
 
-        Session session2(conv, std::move(graph));
+        Session session2(conv);
         session2.run();
         Eigen::MatrixXf test2 = Eigen::MatrixXf(1, 1);
         test2 << 2;
@@ -119,7 +114,6 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
     }
 	SECTION("Multi-dimensional filter, stride 1", "[One_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(1, 25);
 		img <<
 			1, 1, 1, 0, 0,
@@ -138,7 +132,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+		Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 9);
 		test <<
@@ -149,7 +143,6 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 	}
 	SECTION("MultiChannel", "[Multi_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(1, 8);
 		img << 1, 2, 3, 4, 1, 2, 3, 4;
 		Eigen::MatrixXf filter(1, 2);
@@ -160,7 +153,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+		Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 4);
 		test << 5, 10, 15, 20;
@@ -169,7 +162,6 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 	}
 	SECTION("One dimensional filter, miniBatch as input", "[Multi_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(2, 8);
 		img << 1, 2, 3, 4, 1, 2, 3, 4,
 				1, 2, 3, 4, 1, 2, 3, 4;
@@ -182,7 +174,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(2, 4);
 		test << 5, 10, 15, 20,
@@ -192,7 +184,6 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 	}
 	SECTION("Two Filters and Two Convolutional Layers", "[Multi_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(2, 8);
 		img << 1, 2, 3, 4, 1, 2, 3, 4,
 				1, 2, 3, 4, 1, 2, 3, 4;
@@ -215,7 +206,7 @@ TEST_CASE("Convolution of Filter ", "[operation]") {
 
 
 
-		Session session2(conv2, std::move(graph));
+        Session session2(conv2);
 		session2.run();
 		//Test ForwardPass
         Eigen::MatrixXf testConvF = Eigen::MatrixXf(2, 8);
@@ -267,7 +258,6 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 
 	SECTION("One dimensional filter, one input", "[One_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(1, 4);
 		img << 1, 2, 3, 4;
 		Eigen::MatrixXf filter(1, 1);
@@ -278,7 +268,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 1);
 		test << 10;
@@ -288,7 +278,6 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 	}
 	SECTION("One dimensional filter, miniBatch as input", "[One_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(2, 4);
 		img << 1, 2, 3, 4,
 				1, 2, 3, 4;
@@ -301,7 +290,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 1);
 		test << 20;
@@ -310,7 +299,6 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 	}
 	SECTION("One dimensional filter, stride >1", "[One_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(1, 9);
 		img << 1, 2, 3, 4, 5, 6, 7, 8, 9;
 		Eigen::MatrixXf filter(1, 1);
@@ -327,7 +315,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W, 2);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 1);
 		test << 1 + 3 + 7 + 9;
@@ -336,7 +324,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 
 		auto conv2 = std::make_shared<ConvolveFilterIM2COL>(X, W2, 3);
 
-		Session session2(conv2, std::move(graph));
+        Session session2(conv2);
 		session2.run();
 		Eigen::MatrixXf test2 = Eigen::MatrixXf(1, 1);
 		test2 << 1;
@@ -345,7 +333,6 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 	}
 	SECTION("Multi-dimensional filter, stride 1", "[One_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(1, 25);
 		img <<
 			1, 1, 1, 0, 0,
@@ -364,7 +351,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 9);
 		test <<
@@ -375,7 +362,6 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 	}
 	SECTION("MultiChannel", "[Multi_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(1, 8);
 		img << 1, 2, 3, 4, 1, 2, 3, 4;
 		Eigen::MatrixXf filter(1, 2);
@@ -386,7 +372,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 2);
 		test << 10, 10;
@@ -395,7 +381,6 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 	}
 	SECTION("One dimensional filter, miniBatch as input", "[Multi_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(2, 8);
 		img << 1, 2, 3, 4, 1, 2, 3, 4,
 				1, 2, 3, 4, 1, 2, 3, 4;
@@ -408,7 +393,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 2);
 		test << 20, 20;
@@ -416,7 +401,6 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 	}
 	SECTION("Two Filters and Two Convolutional Layers", "[Multi_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(2, 8);
 		img << 1, 2, 3, 4, 2, 4, 6, 8,
 				1, 2, 3, 4, 1, 2, 3, 4;
@@ -432,7 +416,7 @@ TEST_CASE("Backpropagation Filter ", "[operation]") {
 		auto W2 = std::make_shared<Filter>(filter2, 1, 2);
 		auto conv2 = std::make_shared<ConvolveFilterIM2COL>(conv, W2);
 
-		Session session2(conv2, std::move(graph));
+        Session session2(conv2);
 		session2.run();
 
 
@@ -449,7 +433,6 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 	SECTION("One dimensional filter, one input", "[One_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(1, 4);
 		img << 1, 2, 3, 4;
 		Eigen::MatrixXf filter(1, 1);
@@ -460,7 +443,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 4);
 		test << 2, 2, 2, 2;
@@ -469,7 +452,6 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 	}
 	SECTION("One dimensional filter, miniBatch as input", "[One_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf img(2, 4);
 		img << 1, 2, 3, 4,
 				1, 2, 3, 4;
@@ -482,7 +464,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(2, 4);
 		test << 2, 2, 2, 2,
@@ -493,8 +475,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 	}
 	SECTION("One dimensional filter, stride >1", "[One_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
-		Eigen::MatrixXf img(1, 9);
+ 		Eigen::MatrixXf img(1, 9);
 		img << 1, 2, 3, 4, 5, 6, 7, 8, 9;
 		Eigen::MatrixXf filter(1, 1);
 		filter << 2;
@@ -511,7 +492,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W, 2);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1,9);
 		test << 2,0,2,
@@ -525,7 +506,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 		auto conv2 = std::make_shared<ConvolveFilterIM2COL>(X, W2, 3);
 
-		Session session2(conv2, std::move(graph));
+		Session session2(conv2 );
 		session2.run();
 		Eigen::MatrixXf test2 = Eigen::MatrixXf(1, 1);
 		test2 << 1;
@@ -534,8 +515,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 	}
 	SECTION("Multi-dimensional filter, stride 1", "[One_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
-		Eigen::MatrixXf img(1, 25);
+ 		Eigen::MatrixXf img(1, 25);
 		img <<
 				1, 1, 1, 0, 0,
 				0, 1, 1, 1, 0,
@@ -553,7 +533,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 25);
 		test <<
@@ -566,8 +546,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 	}
 	SECTION("MultiChannel", "[Multi_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
-		Eigen::MatrixXf img(1, 8);
+ 		Eigen::MatrixXf img(1, 8);
 		img << 1, 2, 3, 4, 1, 2, 3, 4;
 		Eigen::MatrixXf filter(1, 2);
 		filter << 2, 3;
@@ -577,7 +556,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(1, 8);
 		test << 2,2,2,2,3,3,3,3;
@@ -587,8 +566,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 	}
 	SECTION("One dimensional filter, miniBatch as input", "[Multi_Channel_Image]") {
 
-		auto graph = std::make_unique<Graph>();
-		Eigen::MatrixXf img(2, 8);
+ 		Eigen::MatrixXf img(2, 8);
 		img << 1, 2, 3, 4, 1, 2, 3, 4,
 				1, 2, 3, 4, 1, 2, 3, 4;
 		Eigen::MatrixXf filter(1, 2);
@@ -600,7 +578,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
-		Session session(conv, std::move(graph));
+        Session session(conv);
 		session.run();
 		Eigen::MatrixXf test = Eigen::MatrixXf(2, 8);
 		test << 2,2,2,2,3,3,3,3,
@@ -608,9 +586,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		REQUIRE(X->getCurrentGradients().isApprox(test));
 	}
 	SECTION("Two Filters and Two Convolutional Layers", "[Multi_Channel_Image]") {
-
-		auto graph = std::make_unique<Graph>();
-		Eigen::MatrixXf img(2, 8);
+ 		Eigen::MatrixXf img(2, 8);
 		img << 1, 2, 3, 4, 1, 2, 3, 4,
 				1, 2, 3, 4, 1, 2, 3, 4;
 		Eigen::MatrixXf filter(2, 2);
@@ -625,12 +601,8 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		auto W2 = std::make_shared<Filter>(filter2, 1, 2);
 		auto conv2 = std::make_shared<ConvolveFilterIM2COL>(conv, W2);
 
-		Session session2(conv2, std::move(graph));
+		Session session2(conv2);
 		session2.run();
-
-
-
-
 	}
 
 

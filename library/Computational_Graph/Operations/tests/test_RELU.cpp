@@ -9,7 +9,6 @@
 #include <Session.hpp>
 #include <Placeholder.hpp>
 #include <memory>
-#include <Graph.hpp>
 
 #include <iostream>
 
@@ -22,7 +21,6 @@ TEST_CASE("RELU Forward ", "[operation]") {
 
 
 
-        auto graph = std::make_unique<Graph>();
         Eigen::MatrixXf img(1, 3);
         img <<-1,0,1;
 
@@ -31,7 +29,7 @@ TEST_CASE("RELU Forward ", "[operation]") {
 
         auto conv = std::make_shared<ReLuOp>(X);
 
-        Session session(conv, std::move(graph));
+    Session session(conv);
         session.run();
 
         Eigen::MatrixXf test = Eigen::MatrixXf(1, 3);
@@ -46,8 +44,7 @@ TEST_CASE("RELU Backward ", "[operation]") {
 
 
 
-    auto graph = std::make_unique<Graph>();
-    Eigen::MatrixXf img(1, 3);
+     Eigen::MatrixXf img(1, 3);
     img <<-1,0,5;
 
 
@@ -55,7 +52,7 @@ TEST_CASE("RELU Backward ", "[operation]") {
 
     auto conv = std::make_shared<ReLuOp>(X);
 
-    Session session(conv, std::move(graph));
+    Session session(conv);
     session.run();
 
     Eigen::MatrixXf test = Eigen::MatrixXf(1, 3);

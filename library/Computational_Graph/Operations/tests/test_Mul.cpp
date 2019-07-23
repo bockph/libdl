@@ -8,7 +8,6 @@
 #include <Session.hpp>
 #include <Placeholder.hpp>
 #include <memory>
-#include <Graph.hpp>
 
 #include <catch2/catch.hpp>
 #include <Weight.hpp>
@@ -75,7 +74,6 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		REQUIRE(o1->_gradients(2)==6);
 	}*/
 	SECTION("without activation functions and one input vector","[XOR Computational Graph]"){
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf mX1(1,2);
 		mX1<<2,	10;
 
@@ -94,7 +92,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		auto mul = std::make_shared<MultiplicationOp>(X,W);
 		auto mul2 = std::make_shared<MultiplicationOp>(mul,W2);
 
-		Session session(mul2, std::move(graph));
+		Session session(mul2);
 		session.run();
 		REQUIRE(mul->getForward()(0,0)==22);
 		REQUIRE(mul->getForward()(0,1)==46);
@@ -112,7 +110,6 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		REQUIRE(W->getCurrentGradients()(1,1)==70 );
 	}
 	SECTION("without activation functions and 2 input vectors","[XOR Computational Graph]"){
-		auto graph = std::make_unique<Graph>();
 		Eigen::MatrixXf mX1(2,2);
 		mX1<<2,	10,4,20;
 
@@ -132,7 +129,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		auto mul = std::make_shared<MultiplicationOp>(X,W);
 		auto mul2 = std::make_shared<MultiplicationOp>(mul,W2);
 
-		Session session(mul2, std::move(graph));
+		Session session(mul2);
 		session.run();
 		REQUIRE(mul->getForward()(0,0)==22);
 		REQUIRE(mul->getForward()(0,1)==46);
@@ -157,7 +154,6 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 	}
 
 	SECTION("Test XOR Computational Graph withou activation functions"){
-		auto graph = std::make_unique<Graph>();
 
 		Eigen::MatrixXf mX1(4,2);
 		mX1<<
@@ -191,7 +187,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		auto CN = std::make_shared<Placeholder>(C);
 		auto mse =std::make_shared<MSEOp>(sig2,CN);
 
-		/*Session session(mse, std::move(graph));
+		/*Session session(mse);
 		for(int i =0;i<1;i++) {
 			session.run();
 			std::cout << "         Round " << i << std::endl;
@@ -201,7 +197,6 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 	}
 
 	SECTION("Test XOR Computational Graph withou activation functions"){
-		auto graph = std::make_unique<Graph>();
 
 		Eigen::MatrixXf mX1(4,2);
 		mX1<<
@@ -252,7 +247,7 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 		auto sig2 = std::make_shared<SigmoidOP>(sum2);
 		auto mse =std::make_shared<MSEOp>(sig2,CN);
 
-		Session session(mse, std::move(graph));
+		Session session(mse, );
 		session.run();
 		std::cout<<"         Round "<<1<<std::endl;
 		std::cout<<"Output:\n"<<sig2->getForward()<<std::endl;

@@ -9,7 +9,6 @@
 #include <Session.hpp>
 #include <Placeholder.hpp>
 #include <memory>
-#include <Graph.hpp>
 
 #include <iostream>
 
@@ -19,7 +18,6 @@
 
 
 TEST_CASE("Maxpool Forwardpass ", "[operation]") {
-    auto graph = std::make_unique<Graph>();
     Eigen::MatrixXf img(1, 16);
     img <<
             1, 2, 1, 4,
@@ -32,7 +30,7 @@ TEST_CASE("Maxpool Forwardpass ", "[operation]") {
 
     auto maxPool = std::make_shared<MaxPoolOp>(X, 2, 2);
 
-    Session session(maxPool, std::move(graph));
+    Session session(maxPool);
     session.run();
     SECTION("general Functionality", "[One_Channel_Image]") {
 
@@ -68,8 +66,7 @@ TEST_CASE("Maxpool Forwardpass ", "[operation]") {
 
 
 TEST_CASE("Maxpool Backwardpass ", "[operation]") {
-    auto graph = std::make_unique<Graph>();
-    Eigen::MatrixXf img(1, 16);
+     Eigen::MatrixXf img(1, 16);
     img <<
             1, 2, 1, 4,
             0, 0, 3, 0,
@@ -81,7 +78,7 @@ TEST_CASE("Maxpool Backwardpass ", "[operation]") {
 
     auto maxPool = std::make_shared<MaxPoolOp>(X, 2, 2);
 
-    Session session(maxPool, std::move(graph));
+    Session session(maxPool);
     session.run();
 
     SECTION("IndexMatrix", "[One_Channel_Image]") {
