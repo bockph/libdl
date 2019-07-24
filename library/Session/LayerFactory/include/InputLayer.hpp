@@ -9,13 +9,11 @@
 
 class InputLayer: public AbstractLayer {
 public:
-    InputLayer(Matrix miniBatch, int dim, int channel);
+    InputLayer(int batchSize, int dim, int channel);
     ~InputLayer()=default;
     void updateX(Matrix newMiniBatch);
-private:
 
 
-    int _dim,_channel;
 
 };
 

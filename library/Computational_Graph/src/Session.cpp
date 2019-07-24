@@ -3,15 +3,16 @@
 //
 
 #include "Session.hpp"
-#include <chrono>
 #include <Variable.hpp>
 #include <iostream>
+#include <IO.hpp>
 
-Session::Session(const std::shared_ptr<Node> &endNode)
+
+Session::Session(const std::shared_ptr<Node> &endNode, hyperParameters params)
         :
         _postOrderTraversedList(postOrderTraversal(endNode))
-        , _preOrderTraversedList(preOrderTraversal(endNode))
-        , _endNode(endNode) {
+        , _endNode(endNode)
+        , _params(params){
 
 }
 
@@ -21,14 +22,6 @@ std::vector<std::shared_ptr<Node>> Session::postOrderTraversal(const std::shared
 	if (!endNode->getInputNodes().empty()) {
 		std::vector<std::shared_ptr<Node>> tmp;
 		for (std::shared_ptr<Node> input: endNode->getInputNodes()) {
-		    std::cout<< typeid(*input).name()<<std::endl;
-		    if(std::dynamic_pointer_cast<Variable>(input)!= nullptr){
-                std::dynamic_pointer_cast<Variable>(input)->setLearningRate(0.01);
-
-                std::cout<<"hello"<<std::endl;
-		    }
-		    if(typeid(input)== typeid(Variable)||typeid(input)==typeid(Variable))
-                std::dynamic_pointer_cast<Variable>(input)->setLearningRate(0.01);
 			tmp = postOrderTraversal(input);
 			toReturn.insert(std::end(toReturn), std::begin(tmp), std::end(tmp));
 		}
@@ -37,7 +30,7 @@ std::vector<std::shared_ptr<Node>> Session::postOrderTraversal(const std::shared
 	return toReturn;
 }
 
-std::vector<std::shared_ptr<Node>> Session::preOrderTraversal(const std::shared_ptr<Node> &endNode) {
+/*std::vector<std::shared_ptr<Node>> Session::preOrderTraversal(const std::shared_ptr<Node> &endNode) {
 	std::vector<std::shared_ptr<Node>> toReturn;
 	toReturn.push_back(endNode);
 	if (!endNode->getInputNodes().empty()) {
@@ -48,7 +41,7 @@ std::vector<std::shared_ptr<Node>> Session::preOrderTraversal(const std::shared_
 		}
 	}
 	return toReturn;
-}
+}*/
 
 void Session::backProp(std::shared_ptr<Node> &endNode) {
 
@@ -62,14 +55,17 @@ void Session::backProp(std::shared_ptr<Node> &endNode) {
 
 }
 
-void Session::run(std::vector<float> feed) {
+void Session::run() {
 
-	//TODO: write method to fill placeholders with the feed,
-	//maybe some vector of pairs with <Node,float>??
+
     _start = std::chrono::system_clock::now();
 
-	for (std::shared_ptr<Node> operation: _postOrderTraversedList) {
-		operation->forwards();
+	for (std::shared_ptr<Node> node: _postOrderTraversedList) {
+        if(std::dynamic_pointer_cast<Variable>(node)!= nullptr){
+            std::dynamic_pointer_cast<Variable>(node)->setHyperParameters(_params);
+        }
+
+		node->forwards();
 	}
     _end = std::chrono::system_clock::now();
 
@@ -96,11 +92,47 @@ void Session::run(std::vector<float> feed) {
 
 }
 
+bool Session::writeVariables(std::string dir) {
+
+    int idx =0;
+    for (std::shared_ptr<Node> node: _postOrderTraversedList) {
+        if(std::dynamic_pointer_cast<Variable>(node)!= nullptr)
+            if(!write_binary(dir+std::to_string(idx)+std::string(".bin"), std::dynamic_pointer_cast<Variable>(node)->getForward()))
+                return false;
+        idx++;
+    }
+    return true;
+}
+
+bool Session::readVariables(std::string dir) {
+    int idx =0;
+    for (std::shared_ptr<Node> node: _postOrderTraversedList) {
+        if(std::dynamic_pointer_cast<Variable>(node)!= nullptr){
+
+            Matrix tmpStore;
+            if(!read_binary(dir+std::to_string(idx)+std::string(".bin"), tmpStore))
+                return false;
+            std::dynamic_pointer_cast<Variable>(node)->setForward(tmpStore);
+
+        }
+
+        idx++;
+    }
+    return true;}
+
 int Session::getForwardTime() const {
     return _forwardTime;
 }
 
 int Session::getBackwardsTime() const {
     return _backwardsTime;
+}
+
+const hyperParameters &Session::getParams() const {
+    return _params;
+}
+
+void Session::setParams(const hyperParameters &params) {
+    _params = params;
 }
 

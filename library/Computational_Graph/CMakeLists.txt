@@ -8,7 +8,7 @@ set(GRAPH_SOURCES
          src/Node.cpp
          src/Operation.cpp
          src/Placeholder.cpp
-         src/Session.cpp
+        src/Session.cpp
         Operations/src/SummationOp.cpp
         Operations/src/MultiplicationOp.cpp
         Operations/src/SigmoidOP.cpp

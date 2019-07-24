@@ -20,30 +20,37 @@ Variable::Variable(Eigen::MatrixXf& m, int channel,int dim) {
 }
 
 void Variable::backwards() {
-    Matrix tmp =getCurrentGradients()/BATCH_SIZE;
+    Matrix tmp =getCurrentGradients()/getHyperParameters()._batchsize;
 
-    bool adam=true;
-	if(adam){
-        Matrix tmpPow =tmp.array().pow(2);
-		_v1 = beta1*_v1 + (1-beta1)*tmp;// # momentum update
-		_s1 = beta2*_s1 + (1-beta2)*tmpPow;//# RMSProp update
-		Eigen::MatrixXf f1 = getForward();
-		Eigen::MatrixXf div = (_s1.array()+1e-7).array().sqrt();
-		f1 -= lr * _v1.cwiseQuotient(div);
+    switch(_hyperParameters._optimizer){
+        case Optimizer::Adam:
+        {
+            Matrix tmpPow =tmp.array().pow(2);
+            _v1 = getHyperParameters()._beta1*_v1 + (1-getHyperParameters()._beta1)*tmp;// # momentum update
+            _s1 = getHyperParameters()._beta2*_s1 + (1-getHyperParameters()._beta2)*tmpPow;//# RMSProp update
+            Eigen::MatrixXf f1 = getForward();
+            Eigen::MatrixXf div = (_s1.array()+1e-7).array().sqrt();
+            f1 -= getHyperParameters()._learningRate * _v1.cwiseQuotient(div);
 
-		setForward(f1);
-	}else{
-		setForward(getForward() - lr * tmp);
-	}
+            setForward(f1);
+            break;
+        }
+        default:
+            setForward(getForward()-getHyperParameters()._learningRate*tmp);
+            break;
+    }
+
 
 
 
 }
 
-float Variable::getLearningRate() const {
-    return _learningRate;
+
+
+const hyperParameters &Variable::getHyperParameters() const {
+    return _hyperParameters;
 }
 
-void Variable::setLearningRate(float learningRate) {
-    _learningRate = learningRate;
+void Variable::setHyperParameters(const hyperParameters &hyperParameters) {
+    _hyperParameters = hyperParameters;
 }

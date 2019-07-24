@@ -4,6 +4,7 @@
 #pragma once
 
 #include <Node.hpp>
+#include <commonDatatypes.hpp>
 
 
 class Variable : public Node {
@@ -19,10 +20,14 @@ public:
 
     void setLearningRate(float learningRate);
 
+    const hyperParameters &getHyperParameters() const;
+
+    void setHyperParameters(const hyperParameters &hyperParameters);
+
 private:
     Eigen::MatrixXf _s1;
     Eigen::MatrixXf _v1;
-    float _learningRate;
+    hyperParameters _hyperParameters;
 
 };
 

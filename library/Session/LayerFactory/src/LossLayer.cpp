@@ -8,7 +8,7 @@
 #include <MSEOp.hpp>
 
 
-LossLayer::LossLayer(std::shared_ptr<AbstractLayer> input, Matrix labelsMatrix,LossType losstype):
+LossLayer::LossLayer(std::shared_ptr<AbstractLayer> input, LossType losstype):
         AbstractLayer(input){
 
 
@@ -16,7 +16,8 @@ LossLayer::LossLayer(std::shared_ptr<AbstractLayer> input, Matrix labelsMatrix,L
     /*
      * Initialization Labels
      */
-   auto labels = std::make_shared<Placeholder>(labelsMatrix,0,0);
+    Matrix tmp;
+   auto labels = std::make_shared<Placeholder>(tmp,0,0);
 
 
     /*
@@ -40,9 +41,11 @@ LossLayer::LossLayer(std::shared_ptr<AbstractLayer> input, Matrix labelsMatrix,L
 
 }
 float LossLayer::getLoss(){
+
     return getOutputNode()->getForward()(0,0);
 }
 void LossLayer::updateLabels(Matrix newLabels){
+
     getOutputNode()->getInputB()->setForward(newLabels);
 }
 

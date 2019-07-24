@@ -6,22 +6,24 @@
 #include "InputLayer.hpp"
 
 
-InputLayer::InputLayer(Matrix miniBatch, int dim, int channel) :
+InputLayer::InputLayer(int batchSize, int dim, int channel) :
         AbstractLayer() {
 
     /*
      * Initialization of Placeholder
      */
-    std::shared_ptr<Placeholder> X = std::make_shared<Placeholder>(miniBatch, dim, channel);
+    Matrix tmp;
+    std::shared_ptr<Placeholder> X = std::make_shared<Placeholder>(tmp, dim, channel);
 
 
     setOutputNode(X);
     setOutputChannels(channel);
-    setOutputSize(miniBatch.cols());
-    setBatchSize(miniBatch.rows());
+    setOutputSize(std::pow(dim,2)*channel);
+    setBatchSize(batchSize);
 
 }
 
 void InputLayer::updateX(Matrix newMiniBatch){
     getOutputNode()->setForward(newMiniBatch);
+
 }

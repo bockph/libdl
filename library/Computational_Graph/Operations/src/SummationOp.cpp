@@ -7,7 +7,10 @@
 
 void SummationOp::forwards() {
 
-
+    int rows1 =getInputA()->getForward().rows();
+    int cols1 =getInputA()->getForward().cols();
+    int rows2 =getInputB()->getForward().rows();
+    int cols2 =getInputB()->getForward().cols();
     startTimeMeasurement();
     setForward(getInputA()->getForward() + getInputB()->getForward());
 

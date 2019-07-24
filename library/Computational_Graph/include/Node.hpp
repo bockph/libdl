@@ -7,10 +7,7 @@
 #include <memory>
 #include <Eigen/Dense>
 
-#define lr 0.001
-#define beta1 0.95
-#define beta2 0.99
-#define BATCH_SIZE 8
+
 
 using Matrix = Eigen::MatrixXf;
 
@@ -63,7 +60,6 @@ public:
 
 private:
     std::vector<std::shared_ptr<Node>> _inputNodes;
-//    std::vector<std::shared_ptr<Node>> _outputNodes;
     std::shared_ptr<Node> inputA;
     std::shared_ptr<Node> inputB;
     int _outputChannels;

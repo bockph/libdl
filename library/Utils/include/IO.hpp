@@ -7,8 +7,8 @@
 
 
 
-        void write_binary(const char* filename, const Eigen::MatrixXf& matrix);
-        void read_binary(const char* filename, Eigen::MatrixXf& matrix);
+        bool write_binary(const std::string filename, const Eigen::MatrixXf& matrix);
+        bool read_binary(const std::string filename, Eigen::MatrixXf& matrix);
 
 
 

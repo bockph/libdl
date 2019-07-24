@@ -9,7 +9,7 @@
 
 class LossLayer: public AbstractLayer {
 public:
-    LossLayer(std::shared_ptr<AbstractLayer> input, Matrix labelsMatrix,LossType losstype);
+    LossLayer(std::shared_ptr<AbstractLayer> input, LossType losstype);
     ~LossLayer()=default;
 
     float getLoss();

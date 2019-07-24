@@ -226,14 +226,14 @@ int main() {
     Eigen::MatrixXf b4 = Eigen::MatrixXf::Zero(batch_size, 10);
     std::vector<Eigen::MatrixXf> params ={training_data[0],training_label[0],filter1,filter2,W1,W2,b1,b2,b3,b4};
     if(readWeights){
-        read_binary(WEIGHT_DEPOSIT"/f1.txt",params[2]);
-        read_binary(WEIGHT_DEPOSIT"/f2.txt",params[3]);
-        read_binary(WEIGHT_DEPOSIT"/w1.txt",params[4]);
-        read_binary(WEIGHT_DEPOSIT"/w2.txt",params[5]);
-        read_binary(WEIGHT_DEPOSIT"/b1.txt",params[6]);
-        read_binary(WEIGHT_DEPOSIT"/b2.txt",params[7]);
-        read_binary(WEIGHT_DEPOSIT"/b3.txt",params[8]);
-        read_binary(WEIGHT_DEPOSIT"/b4.txt",params[9]);
+        read_binary(WEIGHT_DEPOSIT"f1.txt",params[2]);
+        read_binary(WEIGHT_DEPOSIT"f2.txt",params[3]);
+        read_binary(WEIGHT_DEPOSIT"w1.txt",params[4]);
+        read_binary(WEIGHT_DEPOSIT"w2.txt",params[5]);
+        read_binary(WEIGHT_DEPOSIT"b1.txt",params[6]);
+        read_binary(WEIGHT_DEPOSIT"b2.txt",params[7]);
+        read_binary(WEIGHT_DEPOSIT"b3.txt",params[8]);
+        read_binary(WEIGHT_DEPOSIT"b4.txt",params[9]);
     }
 
 
@@ -261,14 +261,14 @@ int main() {
     }
 
     if(writeWeights){
-        write_binary(WEIGHT_DEPOSIT"/f1.txt",params[2]);
-        write_binary(WEIGHT_DEPOSIT"/f2.txt",params[3]);
-        write_binary(WEIGHT_DEPOSIT"/w1.txt",params[4]);
-        write_binary(WEIGHT_DEPOSIT"/w2.txt",params[5]);
-        write_binary(WEIGHT_DEPOSIT"/b1.txt",params[6]);
-        write_binary(WEIGHT_DEPOSIT"/b2.txt",params[7]);
-        write_binary(WEIGHT_DEPOSIT"/b3.txt",params[8]);
-        write_binary(WEIGHT_DEPOSIT"/b4.txt",params[9]);
+        write_binary(WEIGHT_DEPOSIT"f1.txt",params[2]);
+        write_binary(WEIGHT_DEPOSIT"f2.txt",params[3]);
+        write_binary(WEIGHT_DEPOSIT"w1.txt",params[4]);
+        write_binary(WEIGHT_DEPOSIT"w2.txt",params[5]);
+        write_binary(WEIGHT_DEPOSIT"b1.txt",params[6]);
+        write_binary(WEIGHT_DEPOSIT"b2.txt",params[7]);
+        write_binary(WEIGHT_DEPOSIT"b3.txt",params[8]);
+        write_binary(WEIGHT_DEPOSIT"b4.txt",params[9]);
     }
 
     if(testModel){

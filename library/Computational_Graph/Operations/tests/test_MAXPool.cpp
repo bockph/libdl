@@ -20,13 +20,13 @@
 TEST_CASE("Maxpool Forwardpass ", "[operation]") {
     Eigen::MatrixXf img(1, 16);
     img <<
-            1, 2, 1, 4,
+        1, 2, 1, 4,
             0, 0, 3, 0,
             1, 2, 0, 9,
             0, 0, 0, 0;
 
 
-    auto X = std::make_shared<Placeholder>(img,4);
+    auto X = std::make_shared<Placeholder>(img, 4);
 
     auto maxPool = std::make_shared<MaxPoolOp>(X, 2, 2);
 
@@ -35,10 +35,9 @@ TEST_CASE("Maxpool Forwardpass ", "[operation]") {
     SECTION("general Functionality", "[One_Channel_Image]") {
 
 
-
         Eigen::MatrixXf test = Eigen::MatrixXf(1, 4);
         test <<
-                2, 4,
+             2, 4,
                 2, 9;
 
         REQUIRE(maxPool->getForward().isApprox(test)
@@ -49,16 +48,12 @@ TEST_CASE("Maxpool Forwardpass ", "[operation]") {
 
         Eigen::MatrixXf test = Eigen::MatrixXf(1, 16);
         test <<
-            0,1,0,1,
-            0,0,0,0,
-            0,1,0,1,
-            0,0,0,0;
-        auto tmp = maxPool->getMaxIndexMatrix();
-        tmp.resize(4, 4);
-        tmp.transposeInPlace();
+             0, 1, 0, 1,
+                0, 0, 0, 0,
+                0, 1, 0, 1,
+                0, 0, 0, 0;
 
-        REQUIRE(maxPool->getMaxIndexMatrix().isApprox(test)
-        );
+        REQUIRE(maxPool->getMaxIndexMatrix().isApprox(test));
     }
     //TODO there might be an issue if e.g. stride is one, that one index is for example maximum value for two windows, then ther might should be an average update?
 
@@ -66,15 +61,15 @@ TEST_CASE("Maxpool Forwardpass ", "[operation]") {
 
 
 TEST_CASE("Maxpool Backwardpass ", "[operation]") {
-     Eigen::MatrixXf img(1, 16);
+    Eigen::MatrixXf img(1, 16);
     img <<
-            1, 2, 1, 4,
+        1, 2, 1, 4,
             0, 0, 3, 0,
             1, 2, 0, 9,
             0, 0, 0, 0;
 
 
-    auto X = std::make_shared<Placeholder>(img,4);
+    auto X = std::make_shared<Placeholder>(img, 4);
 
     auto maxPool = std::make_shared<MaxPoolOp>(X, 2, 2);
 
@@ -86,13 +81,11 @@ TEST_CASE("Maxpool Backwardpass ", "[operation]") {
 
         Eigen::MatrixXf test = Eigen::MatrixXf(1, 16);
         test <<
-             0,1,0,1,
-                0,0,0,0,
-                0,1,0,1,
-                0,0,0,0;
-        auto tmp = maxPool->getMaxIndexMatrix();
-        tmp.resize(4, 4);
-        tmp.transposeInPlace();
+             0, 1, 0, 1,
+                0, 0, 0, 0,
+                0, 1, 0, 1,
+                0, 0, 0, 0;
+
 
         REQUIRE(X->getCurrentGradients().isApprox(test)
         );
