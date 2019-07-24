@@ -16,7 +16,7 @@
 #include <catch2/catch.hpp>
 #include <iostream>
 
-#include <Filter.hpp>
+#include <Weight.hpp>
 #include <ConvolveFilterIM2COL.hpp>
 
 

@@ -6,12 +6,12 @@
 
 
 #include <Operation.hpp>
-#include <Filter.hpp>
+#include <Weight.hpp>
 #include <Placeholder.hpp>
 
 class ConvolveFilterIM2COL : public Operation {
 public:
-    ConvolveFilterIM2COL(std::shared_ptr<Node> X, std::shared_ptr<Filter> W,int stride =1);
+    ConvolveFilterIM2COL(std::shared_ptr<Node> X, std::shared_ptr<Weight> W,int stride =1);
 
 	~ConvolveFilterIM2COL() = default;
 	void forwards() override;

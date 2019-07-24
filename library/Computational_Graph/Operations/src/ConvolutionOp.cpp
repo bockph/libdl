@@ -8,7 +8,7 @@
 
 
 //THis need to be moved to the forward class
-ConvolveFilterIM2COL::ConvolveFilterIM2COL(std::shared_ptr<Node> X, std::shared_ptr<Filter> W, int stride)
+ConvolveFilterIM2COL::ConvolveFilterIM2COL(std::shared_ptr<Node> X, std::shared_ptr<Weight> W, int stride)
         :
         Operation(X, W), _stride(stride) {
     if(X->getOutputChannels()!= W->getOutputChannels()){

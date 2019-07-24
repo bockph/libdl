@@ -10,7 +10,7 @@
 #include <Weight.hpp>
 #include <Bias.hpp>
 #include <MultiplicationOp.hpp>
-#include <Filter.hpp>
+#include <Weight.hpp>
 #include <ConvolveFilterIM2COL.hpp>
 #include <ReLuOp.hpp>
 #include <MaxPoolOp.hpp>
@@ -84,7 +84,7 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
     std::shared_ptr<Placeholder> CN = std::make_shared<Placeholder>(params[1],0,0);
 
 //Convolutional Layer 1
-    auto F1 = std::make_shared<Filter>(params[2],5,1);
+    auto F1 = std::make_shared<Weight>(params[2],5,1);
     auto B1 = std::make_shared<Bias>(params[6],8);
 
     auto conv1 = std::make_shared<ConvolveFilterIM2COL>(X,F1,1);
@@ -92,7 +92,7 @@ float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bo
     auto relu1  = std::make_shared<SigmoidOP>(sum1);
 
 //convolutional Layer 2
-    auto F2 = std::make_shared<Filter>(params[3],5,8);
+    auto F2 = std::make_shared<Weight>(params[3],5,8);
     auto B2 = std::make_shared<Bias>(params[7],8);
 
     auto conv2 = std::make_shared<ConvolveFilterIM2COL>(relu1,F2,1);
@@ -214,7 +214,7 @@ int main() {
     auto out3DimSQ = std::pow(outputDim3,2)*8;
 
 
-    //Initialize Weights & Bias & Filter
+    //Initialize Weights & Bias & Weight
 
 	Eigen::MatrixXf filter1 = DataInitialization::generateRandomMatrix(0,.1,8,5*5);
 	Eigen::MatrixXf filter2 = DataInitialization::generateRandomMatrix(0.,.1,8,5*5*8);

@@ -42,7 +42,7 @@ AbstractLayer(input){
      * Initialization of Operation Nodes
      */
 
-    _filter = std::make_shared<Filter>(filterMatrix,kernelDim,getInputChannels());
+    _filter = std::make_shared<Weight>(filterMatrix,kernelDim,getInputChannels());
     _bias = std::make_shared<Bias>(biasMatrix,amountFilter);
 
     std::shared_ptr<Node> convolutionOp = std::make_shared<ConvolveFilterIM2COL>(getInputNode(),_filter,stride);

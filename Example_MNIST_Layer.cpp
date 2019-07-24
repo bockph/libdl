@@ -7,11 +7,10 @@
 #include <Operation.hpp>
 #include <Session.hpp>
 #include <SummationOp.hpp>
-#include <Weight.hpp>
 #include <Bias.hpp>
 #include <MultiplicationOp.hpp>
 #include <DataInitialization.hpp>
-#include <Filter.hpp>
+#include <Weight.hpp>
 #include <ConvolveFilterIM2COL.hpp>
 #include <ReLuOp.hpp>
 #include <MaxPoolOp.hpp>
@@ -204,7 +203,7 @@ int main() {
 
 
 
-    //Initialize Weights & Bias & Filter
+    //Initialize Weights & Bias & Weight
 
 
     std::vector<Eigen::MatrixXf> params ={training_data[0],training_label[0]};

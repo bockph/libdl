@@ -19,7 +19,7 @@ public:
 private:
 
 
-    std::shared_ptr<Filter> _filter;
+    std::shared_ptr<Weight> _filter;
     std::shared_ptr<Bias> _bias;
 
 };
