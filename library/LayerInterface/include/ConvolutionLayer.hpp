@@ -19,8 +19,8 @@ public:
 private:
 
 
-    std::shared_ptr<Weight> _filter;
-    std::shared_ptr<Bias> _bias;
+    std::shared_ptr<Variable> _filter;
+    std::shared_ptr<Variable> _bias;
 
 };
 

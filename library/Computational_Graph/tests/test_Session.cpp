@@ -11,7 +11,7 @@
 #include <iostream>
 #include <SigmoidOP.hpp>
 #include <MSEOp.hpp>
-#include <Weight.hpp>
+#include <Variable.hpp>
 
 
 /*
@@ -69,10 +69,10 @@ TEST_CASE("XOR test ", "[real problem]") {
 
 	auto x1 = std::make_shared<Placeholder>(0);
 	auto x2 = std::make_shared<Placeholder>(1);
-	auto w11 =std::make_shared<Weight>(0.5);
-	auto w12 =std::make_shared<Weight>(0.3);
-	auto w21 =std::make_shared<Weight>(0.43);
-	auto w22 =std::make_shared<Weight>(0.234);
+	auto w11 =std::make_shared<Variable>(0.5);
+	auto w12 =std::make_shared<Variable>(0.3);
+	auto w21 =std::make_shared<Variable>(0.43);
+	auto w22 =std::make_shared<Variable>(0.234);
 //	auto w11 =std::make_shared<Placeholder>(3.6216969);
 //	auto w12 =std::make_shared<Placeholder>(5.79319846);
 //	auto w21 =std::make_shared<Placeholder>(3.63346351);
@@ -103,8 +103,8 @@ TEST_CASE("XOR test ", "[real problem]") {
 
 //	auto w31 =std::make_shared<Placeholder>(-8.06441097);
 //	auto w32 =std::make_shared<Placeholder>(7.41088524);
-	auto w31 =std::make_shared<Weight>(0.9);
-	auto w32 =std::make_shared<Weight>(0.1);
+	auto w31 =std::make_shared<Variable>(0.9);
+	auto w32 =std::make_shared<Variable>(0.1);
 
 	std::vector<std::shared_ptr<Node>> mul31 = {w31 ,nsig1};
 	std::vector<std::shared_ptr<Node>> mul32 = {w32 ,nsig2};

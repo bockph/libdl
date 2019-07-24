@@ -3,13 +3,12 @@
 //
 
 #include <DataInitialization.hpp>
-#include <Weight.hpp>
-#include <Bias.hpp>
+#include <Variable.hpp>
 #include <SummationOp.hpp>
 #include <MultiplicationOp.hpp>
 #include <SigmoidOP.hpp>
 #include <ReLuOp.hpp>
-#include <Weight.hpp>
+#include <Variable.hpp>
 #include "DenseLayer.hpp"
 
 
@@ -35,8 +34,8 @@ DenseLayer::DenseLayer(std::shared_ptr<AbstractLayer> input, ActivationFunction 
      * Initialization of Operation Nodes
      */
 
-    _weights = std::make_shared<Weight>(weightMatrix,1,1);
-    _bias = std::make_shared<Bias>(biasMatrix);
+    _weights = std::make_shared<Variable>(weightMatrix,1,1);
+    _bias = std::make_shared<Variable>(biasMatrix);
 
     auto multiplicationOp = std::make_shared<MultiplicationOp>(getInputNode(),_weights);
     auto biasOp = std::make_shared<SummationOp>(multiplicationOp, _bias);

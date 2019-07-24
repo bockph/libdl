@@ -7,10 +7,9 @@
 #include <Operation.hpp>
 #include <Session.hpp>
 #include <SummationOp.hpp>
-#include <Bias.hpp>
 #include <MultiplicationOp.hpp>
 #include <DataInitialization.hpp>
-#include <Weight.hpp>
+#include <Variable.hpp>
 #include <ConvolveFilterIM2COL.hpp>
 #include <ReLuOp.hpp>
 #include <MaxPoolOp.hpp>
@@ -183,7 +182,7 @@ int main() {
      */
 	int batch_size = 32;
 	int epochs =10;
-	int amount_batches = 100;
+	int amount_batches = 10;
 	bool trainModel = true;
 	bool testModel =true;
     bool writeWeights = false;
@@ -203,7 +202,7 @@ int main() {
 
 
 
-    //Initialize Weights & Bias & Weight
+    //Initialize Weights & Bias & Variable
 
 
     std::vector<Eigen::MatrixXf> params ={training_data[0],training_label[0]};

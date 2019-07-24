@@ -13,8 +13,7 @@ set(GRAPH_SOURCES
         Operations/src/MultiplicationOp.cpp
         Operations/src/SigmoidOP.cpp
         Operations/src/MSEOp.cpp
-        src/Bias.cpp
-        src/Weight.cpp
+        src/Variable.cpp
         Operations/src/MaxPoolOp.cpp
         Operations/src/ReLuOp.cpp
         Operations/src/SoftmaxOp.cpp

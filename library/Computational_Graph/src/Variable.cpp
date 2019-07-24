@@ -3,23 +3,23 @@
 //
 
 #include <iostream>
-#include "Weight.hpp"
+#include "Variable.hpp"
 
 
-Weight::Weight(Eigen::MatrixXf& m,int dim, int channel) {
+Variable::Variable(Eigen::MatrixXf& m, int channel,int dim) {
 	setForward(m);
 //    setOutputDim(dim);
     setOutputChannels(channel);
     _v1 = Eigen::MatrixXf::Zero(m.rows(),m.cols());
     _s1 = Eigen::MatrixXf::Zero(m.rows(),m.cols());
     /*
-     * A Weight should be a row vector (for the beginning ) of the Form RGB, RGB,RGB,... so 3 data points per pixel
+     * A Variable should be a row vector (for the beginning ) of the Form RGB, RGB,RGB,... so 3 data points per pixel
      * If several filters are used, a matrix -existing of several row vectors- is used
      */
 
 }
 
-void Weight::backwards() {
+void Variable::backwards() {
     Matrix tmp =getCurrentGradients()/BATCH_SIZE;
 
     bool adam=true;
@@ -40,10 +40,10 @@ void Weight::backwards() {
 
 }
 
-float Weight::getLearningRate() const {
+float Variable::getLearningRate() const {
     return _learningRate;
 }
 
-void Weight::setLearningRate(float learningRate) {
+void Variable::setLearningRate(float learningRate) {
     _learningRate = learningRate;
 }

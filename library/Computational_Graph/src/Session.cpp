@@ -4,7 +4,7 @@
 
 #include "Session.hpp"
 #include <chrono>
-#include <Weight.hpp>
+#include <Variable.hpp>
 #include <iostream>
 
 Session::Session(const std::shared_ptr<Node> &endNode)
@@ -22,13 +22,13 @@ std::vector<std::shared_ptr<Node>> Session::postOrderTraversal(const std::shared
 		std::vector<std::shared_ptr<Node>> tmp;
 		for (std::shared_ptr<Node> input: endNode->getInputNodes()) {
 		    std::cout<< typeid(*input).name()<<std::endl;
-		    if(std::dynamic_pointer_cast<Weight>(input)!= nullptr){
-                std::dynamic_pointer_cast<Weight>(input)->setLearningRate(0.01);
+		    if(std::dynamic_pointer_cast<Variable>(input)!= nullptr){
+                std::dynamic_pointer_cast<Variable>(input)->setLearningRate(0.01);
 
                 std::cout<<"hello"<<std::endl;
 		    }
-		    if(typeid(input)== typeid(Weight)||typeid(input)==typeid(Weight))
-                std::dynamic_pointer_cast<Weight>(input)->setLearningRate(0.01);
+		    if(typeid(input)== typeid(Variable)||typeid(input)==typeid(Variable))
+                std::dynamic_pointer_cast<Variable>(input)->setLearningRate(0.01);
 			tmp = postOrderTraversal(input);
 			toReturn.insert(std::end(toReturn), std::begin(tmp), std::end(tmp));
 		}

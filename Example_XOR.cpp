@@ -4,8 +4,7 @@
 #include <Operation.hpp>
 #include <SummationOp.hpp>
 #include <Session.hpp>
-#include <Weight.hpp>
-#include <Bias.hpp>
+#include <Variable.hpp>
 #include <SigmoidOP.hpp>
 #include <MultiplicationOp.hpp>
 #include <MSEOp.hpp>
@@ -38,10 +37,10 @@ int main() {
 
 	//create Inputs, Weights and Biases
 	auto X = std::make_shared<Placeholder>(mX1,0,0);
-	auto W = std::make_shared<Weight>(mW1);
-	auto W2 = std::make_shared<Weight>(mW2);
-	auto B1 = std::make_shared<Bias>(b1,0);
-	auto B2 = std::make_shared<Bias>(b2,0);
+	auto W = std::make_shared<Variable>(mW1);
+	auto W2 = std::make_shared<Variable>(mW2);
+	auto B1 = std::make_shared<Variable>(b1,0);
+	auto B2 = std::make_shared<Variable>(b2,0);
 
 	//create First hidden Layer
 	auto mul = std::make_shared<MultiplicationOp>(X, W);

@@ -6,16 +6,14 @@
 #include <Node.hpp>
 
 
-
-
-class Weight : public Node {
+class Variable : public Node {
 
 public:
-	Weight(Eigen::MatrixXf& t,int dim=1,int channel=1);
+    Variable(Eigen::MatrixXf &t, int channel = 1, int dim = 1);
 
-	~Weight() = default;
+    ~Variable() = default;
 
-	void backwards() override;
+    void backwards() override;
 
     float getLearningRate() const;
 

@@ -24,8 +24,8 @@ private:
     InitializationType _initializationType;
     int _amountNeurons;
 
-    std::shared_ptr<Weight> _weights;
-    std::shared_ptr<Bias> _bias;
+    std::shared_ptr<Variable> _weights;
+    std::shared_ptr<Variable> _bias;
 };
 
 

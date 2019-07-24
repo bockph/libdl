@@ -3,7 +3,6 @@
 //
 
 #include <DataInitialization.hpp>
-#include <Bias.hpp>
 #include <SummationOp.hpp>
 #include <SigmoidOP.hpp>
 #include <ReLuOp.hpp>
@@ -42,8 +41,8 @@ AbstractLayer(input){
      * Initialization of Operation Nodes
      */
 
-    _filter = std::make_shared<Weight>(filterMatrix,kernelDim,getInputChannels());
-    _bias = std::make_shared<Bias>(biasMatrix,amountFilter);
+    _filter = std::make_shared<Variable>(filterMatrix , getInputChannels(), kernelDim);
+    _bias = std::make_shared<Variable>(biasMatrix,amountFilter);
 
     std::shared_ptr<Node> convolutionOp = std::make_shared<ConvolveFilterIM2COL>(getInputNode(),_filter,stride);
 

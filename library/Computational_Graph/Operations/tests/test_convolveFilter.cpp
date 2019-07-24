@@ -16,11 +16,11 @@
 #include <catch2/catch.hpp>
 #include <iostream>
 
-#include <Weight.hpp>
+#include <Variable.hpp>
 #include <ConvolveFilterIM2COL.hpp>
 
 
-TEST_CASE("Convolution of Weight ", "[operation]") {
+TEST_CASE("Convolution of Variable ", "[operation]") {
 
 	SECTION("One dimensional filter, one input", "[One_Channel_Image]") {
 
@@ -30,7 +30,7 @@ TEST_CASE("Convolution of Weight ", "[operation]") {
 		filter << 2;
 
 		auto X = std::make_shared<Placeholder>(img, 2, 1);
-		auto W = std::make_shared<Weight>(filter, 1, 1);
+		auto W = std::make_shared<Variable>(filter, 1, 1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -51,7 +51,7 @@ TEST_CASE("Convolution of Weight ", "[operation]") {
 
 
 		auto X = std::make_shared<Placeholder>(img, 2, 1);
-		auto W = std::make_shared<Weight>(filter, 1, 1);
+		auto W = std::make_shared<Variable>(filter, 1, 1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -75,8 +75,8 @@ TEST_CASE("Convolution of Weight ", "[operation]") {
 
 
         auto X = std::make_shared<Placeholder>(img, 3, 1);
-        auto W = std::make_shared<Weight>(filter, 1, 1);
-        auto W2 = std::make_shared<Weight>(filter2, 1, 1);
+        auto W = std::make_shared<Variable>(filter, 1, 1);
+        auto W2 = std::make_shared<Variable>(filter2, 1, 1);
 
         auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W, 2);
 
@@ -99,7 +99,7 @@ TEST_CASE("Convolution of Weight ", "[operation]") {
 
 
         auto X = std::make_shared<Placeholder>(img, 3, 1);
-        auto W = std::make_shared<Weight>(filter, 1, 1);
+        auto W = std::make_shared<Variable>(filter, 1, 1);
 
 
 
@@ -128,7 +128,7 @@ TEST_CASE("Convolution of Weight ", "[operation]") {
 				1, 0, 1;
 
 		auto X = std::make_shared<Placeholder>(img, 5, 1);
-		auto W = std::make_shared<Weight>(filter, 3, 1);
+		auto W = std::make_shared<Variable>(filter, 1,3);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -149,7 +149,7 @@ TEST_CASE("Convolution of Weight ", "[operation]") {
 		filter << 2, 3;
 
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
-		auto W = std::make_shared<Weight>(filter, 1, 2);
+		auto W = std::make_shared<Variable>(filter, 2,1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -170,7 +170,7 @@ TEST_CASE("Convolution of Weight ", "[operation]") {
 
 
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
-		auto W = std::make_shared<Weight>(filter, 1, 2);
+		auto W = std::make_shared<Variable>(filter, 2,1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -194,10 +194,10 @@ TEST_CASE("Convolution of Weight ", "[operation]") {
 		filter2 << 2, 3;
 
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
-		auto W = std::make_shared<Weight>(filter, 1, 2);
+		auto W = std::make_shared<Variable>(filter, 2,1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
-		auto W2 = std::make_shared<Weight>(filter2, 1, 2);
+		auto W2 = std::make_shared<Variable>(filter2, 2,1);
 		auto conv2 = std::make_shared<ConvolveFilterIM2COL>(conv, W2);
 
 
@@ -254,7 +254,7 @@ TEST_CASE("Convolution of Weight ", "[operation]") {
 };
 
 
-TEST_CASE("Backpropagation Weight ", "[operation]") {
+TEST_CASE("Backpropagation Variable ", "[operation]") {
 
 	SECTION("One dimensional filter, one input", "[One_Channel_Image]") {
 
@@ -264,7 +264,7 @@ TEST_CASE("Backpropagation Weight ", "[operation]") {
 		filter << 2;
 
 		auto X = std::make_shared<Placeholder>(img, 2, 1);
-		auto W = std::make_shared<Weight>(filter, 1, 1);
+		auto W = std::make_shared<Variable>(filter, 1, 1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -286,7 +286,7 @@ TEST_CASE("Backpropagation Weight ", "[operation]") {
 
 
 		auto X = std::make_shared<Placeholder>(img, 2, 1);
-		auto W = std::make_shared<Weight>(filter, 1, 1);
+		auto W = std::make_shared<Variable>(filter, 1, 1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -310,8 +310,8 @@ TEST_CASE("Backpropagation Weight ", "[operation]") {
 
 
 		auto X = std::make_shared<Placeholder>(img, 3, 1);
-		auto W = std::make_shared<Weight>(filter, 1, 1);
-        auto W2 = std::make_shared<Weight>(filter2, 1, 1);
+		auto W = std::make_shared<Variable>(filter, 1, 1);
+        auto W2 = std::make_shared<Variable>(filter2, 1, 1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W, 2);
 
@@ -347,7 +347,7 @@ TEST_CASE("Backpropagation Weight ", "[operation]") {
 				1, 0, 1;
 
 		auto X = std::make_shared<Placeholder>(img, 5, 1);
-		auto W = std::make_shared<Weight>(filter, 3, 1);
+		auto W = std::make_shared<Variable>(filter, 1,3);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -368,7 +368,7 @@ TEST_CASE("Backpropagation Weight ", "[operation]") {
 		filter << 2, 3;
 
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
-		auto W = std::make_shared<Weight>(filter, 1, 2);
+		auto W = std::make_shared<Variable>(filter, 2,1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -389,7 +389,7 @@ TEST_CASE("Backpropagation Weight ", "[operation]") {
 
 
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
-		auto W = std::make_shared<Weight>(filter, 1, 2);
+		auto W = std::make_shared<Variable>(filter, 2,1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -411,9 +411,9 @@ TEST_CASE("Backpropagation Weight ", "[operation]") {
 		filter2 << 2, 3;
 
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
-		auto W = std::make_shared<Weight>(filter, 1, 2);
+		auto W = std::make_shared<Variable>(filter, 2,1);
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
-		auto W2 = std::make_shared<Weight>(filter2, 1, 2);
+		auto W2 = std::make_shared<Variable>(filter2, 2,1);
 		auto conv2 = std::make_shared<ConvolveFilterIM2COL>(conv, W2);
 
         Session session2(conv2);
@@ -439,7 +439,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		filter << 2;
 
 		auto X = std::make_shared<Placeholder>(img, 2, 1);
-		auto W = std::make_shared<Weight>(filter, 1, 1);
+		auto W = std::make_shared<Variable>(filter, 1, 1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -460,7 +460,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 
 		auto X = std::make_shared<Placeholder>(img, 2, 1);
-		auto W = std::make_shared<Weight>(filter, 1, 1);
+		auto W = std::make_shared<Variable>(filter, 1, 1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -484,11 +484,11 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 
 
-        auto W2 = std::make_shared<Weight>(filter2, 1, 1);
+        auto W2 = std::make_shared<Variable>(filter2, 1, 1);
 
 
 		auto X = std::make_shared<Placeholder>(img, 3, 1);
-		auto W = std::make_shared<Weight>(filter, 1, 1);
+		auto W = std::make_shared<Variable>(filter, 1, 1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W, 2);
 
@@ -529,7 +529,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 				1, 0, 1;
 
 		auto X = std::make_shared<Placeholder>(img, 5, 1);
-		auto W = std::make_shared<Weight>(filter, 3, 1);
+		auto W = std::make_shared<Variable>(filter, 1,3);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -552,7 +552,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		filter << 2, 3;
 
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
-		auto W = std::make_shared<Weight>(filter, 1, 2);
+		auto W = std::make_shared<Variable>(filter, 2,1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -574,7 +574,7 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 
 
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
-		auto W = std::make_shared<Weight>(filter, 1, 2);
+		auto W = std::make_shared<Variable>(filter, 2,1);
 
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
 
@@ -596,9 +596,9 @@ TEST_CASE("Backpropagation Input ", "[operation]") {
 		filter2 << 2, 3;
 
 		auto X = std::make_shared<Placeholder>(img, 2, 2);
-		auto W = std::make_shared<Weight>(filter, 1, 2);
+		auto W = std::make_shared<Variable>(filter, 2,1);
 		auto conv = std::make_shared<ConvolveFilterIM2COL>(X, W);
-		auto W2 = std::make_shared<Weight>(filter2, 1, 2);
+		auto W2 = std::make_shared<Variable>(filter2, 2,1);
 		auto conv2 = std::make_shared<ConvolveFilterIM2COL>(conv, W2);
 
 		Session session2(conv2);

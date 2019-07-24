@@ -10,12 +10,11 @@
 #include <memory>
 
 #include <catch2/catch.hpp>
-#include <Weight.hpp>
+#include <Variable.hpp>
 #include <iostream>
 #include <SigmoidOP.hpp>
 #include <MSEOp.hpp>
 #include <SummationOp.hpp>
-#include <Bias.hpp>
 
 
 TEST_CASE("Multiplication Node ", "[operation]") {
@@ -86,8 +85,8 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 
 
 		auto X = std::make_shared<Placeholder>(mX1);
-		auto W = std::make_shared<Weight>(mW1);
-		auto W2 = std::make_shared<Weight>(mW2);
+		auto W = std::make_shared<Variable>(mW1);
+		auto W2 = std::make_shared<Variable>(mW2);
 
 		auto mul = std::make_shared<MultiplicationOp>(X,W);
 		auto mul2 = std::make_shared<MultiplicationOp>(mul,W2);
@@ -123,8 +122,8 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 
 
 		auto X = std::make_shared<Placeholder>(mX1);
-		auto W = std::make_shared<Weight>(mW1);
-		auto W2 = std::make_shared<Weight>(mW2);
+		auto W = std::make_shared<Variable>(mW1);
+		auto W2 = std::make_shared<Variable>(mW2);
 
 		auto mul = std::make_shared<MultiplicationOp>(X,W);
 		auto mul2 = std::make_shared<MultiplicationOp>(mul,W2);
@@ -177,8 +176,8 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 
 
 		auto X = std::make_shared<Placeholder>(mX1);
-		auto W = std::make_shared<Weight>(mW1);
-		auto W2 = std::make_shared<Weight>(mW2);
+		auto W = std::make_shared<Variable>(mW1);
+		auto W2 = std::make_shared<Variable>(mW2);
 
 		auto mul = std::make_shared<MultiplicationOp>(X,W);
 		auto sig1 = std::make_shared<SigmoidOP>(mul);
@@ -228,12 +227,12 @@ TEST_CASE("Multiplication Node ", "[operation]") {
 
 
 		auto X = std::make_shared<Placeholder>(mX1);
-		auto W = std::make_shared<Weight>(mW1);
-		auto B1 = std::make_shared<Bias>(b1);
-		auto B2 = std::make_shared<Bias>(b2);
-//		auto W12 = std::make_shared<Weight>(mW12);
+		auto W = std::make_shared<Variable>(mW1);
+		auto B1 = std::make_shared<Variable>(b1);
+		auto B2 = std::make_shared<Variable>(b2);
+//		auto W12 = std::make_shared<Variable>(mW12);
 
-		auto W2 = std::make_shared<Weight>(mW2);
+		auto W2 = std::make_shared<Variable>(mW2);
 
 		auto mul = std::make_shared<MultiplicationOp>(X,W);
 		auto sum = std::make_shared<SummationOp>(mul,B1);

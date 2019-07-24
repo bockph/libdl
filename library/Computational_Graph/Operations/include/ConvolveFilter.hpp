@@ -6,7 +6,7 @@
 
 
 #include <Operation.hpp>
-#include <Weight.hpp>
+#include <Variable.hpp>
 #include <Placeholder.hpp>
 
 class ConvolveFilter : public Operation {
