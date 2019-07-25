@@ -15,5 +15,6 @@ add_subdirectory(Computational_Graph)
 
 add_subdirectory(Session)
 
+add_subdirectory(bindings)
 
 

@@ -42,8 +42,8 @@ target_include_directories(catch2I INTERFACE ${PROJECT_SOURCE_DIR}/extern/Catch2
 #target_sources(catch2I INTERFACE ${PROJECT_SOURCE_DIR}/extern/Catch2/include/internal)
 add_library(spdlogI INTERFACE)
 target_include_directories(spdlogI INTERFACE ${PROJECT_SOURCE_DIR}/extern/spdlog/include)
-add_library(pybind11I INTERFACE)
-target_include_directories(pybind11I INTERFACE ${PROJECT_SOURCE_DIR}/extern/pybind11/include)
+add_subdirectory(lodepng)
+
 
 add_library(mnist INTERFACE)
 target_include_directories(mnist INTERFACE ${PROJECT_SOURCE_DIR}/extern/mnist/include)
