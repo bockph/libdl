@@ -38,3 +38,4 @@ float NeuralNetwork::getLoss() {
     if(!_runAchieved)throw std::runtime_error("The Neural Network can't return a Loss, if no runs has been performed yet.");
     return _lossLayer->getLoss();
 }
+
