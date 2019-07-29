@@ -6,9 +6,9 @@
 #include "MSEOp.hpp"
 
 
-void MSEOp::forwards() {
+void MSEOp::forwardPass() {
 
-    auto diff = getInputA()->getForward() - getInputB()->getForward();
+    auto diff = getInput()->getForward() - getLabels()->getForward();
     Eigen::MatrixXf squared = diff.array().pow(2);
 
     Eigen::MatrixXf mse(squared.rows(), squared.cols());
@@ -31,7 +31,7 @@ void MSEOp::forwards() {
 }
 
 
-void MSEOp::backwards() {
-    getInputA()->setCurrentGradients(2 * (getForward() - getInputB()->getForward()));
+void MSEOp::backwardPass() {
+	getInput()->setPreviousGradients(2 * (getForward() - getLabels()->getForward()));
 }
 

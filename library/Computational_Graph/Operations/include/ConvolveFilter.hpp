@@ -6,12 +6,12 @@
 
 
 #include <Operation.hpp>
-#include <Variable.hpp>
+#include <Parameter.hpp>
 #include <Placeholder.hpp>
 
-class ConvolveFilter : public Operation {
+class ConvolveFilter : public NormalFunction {
 public:
-	ConvolveFilter(std::shared_ptr<Node> X, std::shared_ptr<Filter> W,int stride =1);
+	ConvolveFilter(std::shared_ptr<Node> X, std::shared_ptr<Variable> W,int stride =1);
 
 	~ConvolveFilter() = default;
 

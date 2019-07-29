@@ -5,46 +5,56 @@
 #include <iostream>
 #include <Placeholder.hpp>
 #include <Operation.hpp>
-#include <Session.hpp>
 #include <SummationOp.hpp>
-#include <Variable.hpp>
 #include <MultiplicationOp.hpp>
-#include <ConvolveFilterIM2COL.hpp>
+#include <DataInitialization.hpp>
+#include <Parameter.hpp>
+#include <ConvolutionOp.hpp>
 #include <ReLuOp.hpp>
 #include <MaxPoolOp.hpp>
 #include <SoftmaxOp.hpp>
 #include <CrossEntropyOp.hpp>
 #include "mnist/mnist_reader.hpp"
 #include <mnist/mnist_utils.hpp>
-#include <DataInitialization.hpp>
-#
+
+
+
+
 #include <IO.hpp>
 #include <SigmoidOP.hpp>
+#include <InputLayer.hpp>
+#include <ConvolutionLayer.hpp>
+#include <AbstractLayer.hpp>
+#include <MaxPoolLayer.hpp>
+#include <DenseLayer.hpp>
+#include <LossLayer.hpp>
+#include <LogitsLayer.hpp>
+#include <NeuralNetwork.hpp>
 
-
-void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf>& training_data, std::vector<Eigen::MatrixXf>& label_data,bool trainData =true){
+/*void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf> &training_data,
+                std::vector<Eigen::MatrixXf> &label_data, bool trainData = true) {
 
     mnist::MNIST_dataset<std::vector, std::vector<uint8_t>, uint8_t> dataset =
             mnist::read_dataset<std::vector, std::vector, uint8_t, uint8_t>(MNIST_DATA_LOCATION,
-            		batch_size*amountBatches);
+                                                                            batch_size * amountBatches);
     mnist::normalize_dataset(dataset);
 
     training_data.clear();
     label_data.clear();
 
-    for(int j = 0;j<amountBatches;j++){
-        Eigen::MatrixXf img(batch_size,28*28);
-        for ( int i = 0;i< batch_size;i++){
-            if(trainData){
-                Eigen::Matrix<unsigned char,1,784> tmp(dataset.training_images.at(i+j*batch_size).data());
+    for (int j = 0; j < amountBatches; j++) {
+        Eigen::MatrixXf img(batch_size, 28 * 28);
+        for (int i = 0; i < batch_size; i++) {
+            if (trainData) {
+                Eigen::Matrix<unsigned char, 1, 784> tmp(dataset.training_images.at(i + j * batch_size).data());
                 Eigen::MatrixXf tmp2 = tmp.cast<float>();
-                img.block(i,0,1,784)=tmp2;
-            }else{
-            	if(i+j*batch_size<5000){
-					Eigen::Matrix<unsigned char,1,784> tmp(dataset.test_images.at(i+j*batch_size).data());
-					Eigen::MatrixXf tmp2 = tmp.cast<float>();
-					img.block(i,0,1,784)=tmp2;
-            	}
+                img.block(i, 0, 1, 784) = tmp2;
+            } else {
+                if (i + j * batch_size < 5000) {
+                    Eigen::Matrix<unsigned char, 1, 784> tmp(dataset.test_images.at(i + j * batch_size).data());
+                    Eigen::MatrixXf tmp2 = tmp.cast<float>();
+                    img.block(i, 0, 1, 784) = tmp2;
+                }
 
             }
 
@@ -52,15 +62,15 @@ void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf>&
 
 
         training_data.push_back(img);
-        Eigen::MatrixXf C(batch_size,10);
+        Eigen::MatrixXf C(batch_size, 10);
         C.setZero();
-        for ( int i = 0;i< batch_size;i++){
-            if(trainData)
-                C(i,dataset.training_labels.at(i+j*batch_size))=1;
-            else{
-				if(i+j*batch_size<5000){
-					C(i,dataset.test_labels.at(i+j*batch_size))=1;
-				}
+        for (int i = 0; i < batch_size; i++) {
+            if (trainData)
+                C(i, dataset.training_labels.at(i + j * batch_size)) = 1;
+            else {
+                if (i + j * batch_size < 5000) {
+                    C(i, dataset.test_labels.at(i + j * batch_size)) = 1;
+                }
             }
 
 
@@ -70,219 +80,164 @@ void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf>&
     }
 
 
+}*/
+
+void getData(int samples, dataSet &data, bool trainData = true) {
+
+	mnist::MNIST_dataset<std::vector, std::vector<uint8_t>, uint8_t> dataset =
+			mnist::read_dataset<std::vector, std::vector, uint8_t, uint8_t>(MNIST_DATA_LOCATION, samples);
+	mnist::normalize_dataset(dataset);
+	std::vector<Matrix> trainingSamples, trainingLabels, testSamples, testLabels;
+
+	for (int i = 0; i < samples; i++) {
+		Eigen::Matrix<unsigned char, 1, 784> train(dataset.training_images.at(i).data());
+		Eigen::MatrixXf labelTrain(1, 10);
+		labelTrain.setZero();
+		labelTrain(0, dataset.training_labels[i]) = 1;
+
+		trainingSamples.push_back(train.cast<float>());
+		trainingLabels.push_back(labelTrain);
+
+		if (i < 5000) {
+			Eigen::Matrix<unsigned char, 1, 784> test(dataset.test_images.at(i).data());
+			testSamples.push_back(test.cast<float>());
+			Eigen::MatrixXf labelTest(1, 10);
+			labelTest.setZero();
+			labelTest(0, dataset.training_labels[i]) = 1;
+			testLabels.push_back(labelTest);
+
+		}
+
+
+	}
+	data._trainingLabels = trainingLabels;
+	data._trainingSamples = trainingSamples;
+	data._validationLabels = testSamples;
+	data._validationSamples = testLabels;
 
 
 }
-float train(std::vector<Eigen::MatrixXf>& params,float &correct,float &total, bool train =true){
-    /*
-     * params = [img,label,f1,f2,w3,w4,b1,b2,b3,b4]
-     */
-
-    auto X = std::make_shared<Placeholder>(params[0],28,1);
-    std::shared_ptr<Placeholder> CN = std::make_shared<Placeholder>(params[1],0,0);
-
-//Convolutional Layer 1
-    auto F1 = std::make_shared<Variable>(params[2],1,5);
-    auto B1 = std::make_shared<Variable>(params[6],8);
-
-    auto conv1 = std::make_shared<ConvolveFilterIM2COL>(X,F1,1);
-    auto sum1 = std::make_shared<SummationOp>(conv1,B1);
-    auto relu1  = std::make_shared<SigmoidOP>(sum1);
-
-//convolutional Layer 2
-    auto F2 = std::make_shared<Variable>(params[3],8,5);
-    auto B2 = std::make_shared<Variable>(params[7],8);
-
-    auto conv2 = std::make_shared<ConvolveFilterIM2COL>(relu1,F2,1);
-    auto sum2 = std::make_shared<SummationOp>(conv2,B2);
-    auto relu2 = std::make_shared<ReLuOp>(sum2);
-
-//Maxpooling
-    auto maxPool = std::make_shared<MaxPoolOp>(relu2,2,2);
-
-//Dense Layer 1
-    auto W1 = std::make_shared<Variable>(params[4]);
-    auto B3 = std::make_shared<Variable>(params[8]);
-
-    auto mul1 = std::make_shared<MultiplicationOp>(maxPool, W1);
-	auto sum3 = std::make_shared<SummationOp>(mul1, B3);
-
-	auto relu3 = std::make_shared<ReLuOp>(sum3);
-
-//Dense Layer 2
-    auto W2 = std::make_shared<Variable>(params[5]);
-    auto B4 = std::make_shared<Variable>(params[9]);
-
-    auto mul2 = std::make_shared<MultiplicationOp>(relu3, W2);
-    auto sum4 = std::make_shared<SummationOp>(mul2, B4);
-
-//    Output/Cost Layer
-    auto soft = std::make_shared<SoftmaxOp>(sum4,10);
-    auto CE = std::make_shared<CrossEntropyOp>(soft,CN);
-
-    //Create Deep Learning session
-    Session session(CE);
-
-
-
-
-
-    if(train){
-
-		session.run();
-//        std::cout << "Total forward" << session.getForwardTime()<<std::endl;
-//        std::cout << "Total backwards" << session.getBackwardsTime()<<std::endl;
-//
-//        std::cout << "Convolution 1: Total forward: " << conv1->getForwardTime()<<"Percentage: "<<(float)conv1->getForwardTime()/(float)session.getForwardTime()<<std::endl;
-//        std::cout << "Convolution 1: Total backwards: " << conv1->getBackwardsTime()<<"Percentage: "<<(float)conv1->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
-//
-//        std::cout << "Convolution 2 Total forward: " << conv2->getForwardTime()<<"Percentage: "<<(float)conv2->getForwardTime()/(float)session.getForwardTime()<<std::endl;
-//        std::cout << "Convolution 2: Total backwards: " << conv2->getBackwardsTime()<<"Percentage: "<<(float)conv2->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
-//
-//        std::cout << "Maxpool: Total forward: " << maxPool->getForwardTime()<<"Percentage: "<<(float)maxPool->getForwardTime()/(float)session.getForwardTime()<<std::endl;
-//        std::cout << "MaxPoolOp: Total backwards: " << maxPool->getBackwardsTime()<<"Percentage: "<<(float)maxPool->getBackwardsTime()/(float)session.getBackwardsTime()<<std::endl;
-        params[2] = F1->getForward();
-        params[3] = F2->getForward();
-        params[4] = W1->getForward();
-        params[5] = W2->getForward();
-        params[6] = B1->getForward();
-        params[7] = B2->getForward();
-        params[8] = B3->getForward();
-        params[9] = B4->getForward();
-    }else{
-        session.run();
-
-        Eigen::MatrixXf::Index maxRow, maxCol;
-
-        for(int i =0;i<params[0].rows();i++){
-            soft->getForward().block(i,0,1,10).maxCoeff(&maxRow,&maxCol);
-            int p = maxCol;
-            params[1].block(i,0,1,10).maxCoeff(&maxRow,&maxCol);
-            int A = maxCol;
-
-            if(p==A)correct++;
-            total++;
-
-        }
-
-    }
-
-
-    return CE->getForward()(0,0);
-
-
-}
-
 
 
 int main() {
-    Eigen::initParallel();
-    /*
-     * batch_size: if this is changed '#define BATCH_SIZE' in Node.hpp has to be changed as well
-     * epochs: sets the amount of epochs for training, to big values in combination with a big 'amount_batches' can lead to OutOfMemory Error
-     * amount_batches: 'batch_size*amount_batches' gives the total amount of samples
-     * trainModel: defines if the model should be trained with the aboved set parameters
-     * testModel: defines if the model should be tested (using the MNIST test_data)
-     * writeWeights: if set the trained Weights  are written to Source_Directory/WeightDeposit
-     * readWeights: if set (and Weights have already been Written once) weights are initialized with weights from Source_Directory/WeightDeposit
-     */
-	int batch_size = 8;
-	int epochs =20;
+	Eigen::initParallel();
+	/*
+	 * batch_size: if this is changed '#define BATCH_SIZE' in Node.hpp has to be changed as well
+	 * epochs: sets the amount of epochs for training, to big values in combination with a big 'amount_batches' can lead to OutOfMemory Error
+	 * amount_batches: 'batch_size*amount_batches' gives the total amount of samples
+	 * trainModel: defines if the model should be trained with the aboved set parameters
+	 * testModel: defines if the model should be tested (using the MNIST test_data)
+	 * writeWeights: if set the trained Weights  are written to Source_Directory/WeightDeposit
+	 * readWeights: if set (and Weights have already been Written once) weights are initialized with weights from Source_Directory/WeightDeposit
+	 */
+	int batch_size = 32;
+	int epochs = 50;
 	int amount_batches = 10;
+	double learningRate = 0.001;
 	bool trainModel = true;
-	bool testModel =true;
-    bool writeWeights = false;
-    bool readWeights =false;
+	bool testModel = true;
+	bool writeWeights = false;
+	bool readWeights = false;
+
+
+	float correct, total;
+	std::vector<Eigen::MatrixXf> training_data, training_label;
+	std::vector<Eigen::MatrixXf> test_data, test_label;
+
+//    getBatches(batch_size, amount_batches, training_data, training_label);
+//    getBatches(batch_size, amount_batches, test_data, test_label, false);
+	dataSet data;
+	getData(batch_size * amount_batches, data);
 
 
 
+/*
+ * Create Neural Network
+ */
+
+	hyperParameters config(epochs, batch_size, learningRate);
+	std::shared_ptr<Graph> graph = std::make_shared<Graph>(config);
 
 
-	float correct,total;
-    std::vector<Eigen::MatrixXf> training_data,training_label;
-    std::vector<Eigen::MatrixXf> test_data,test_label;
+	//Create InputLayer
+	auto inputLayer = std::make_shared<InputLayer>(graph, batch_size, 28, 1);
 
-    getBatches(batch_size,amount_batches,training_data,training_label);
-    getBatches(batch_size,amount_batches,test_data,test_label,false);
+	//Convolutional Layer 1
 
-    //precalculate Dimensions needed for Weights
-    auto outputDim =std::floor((28 - 5) / 1) + 1;
-    auto outputDim2 =std::floor((outputDim - 5) / 1) + 1;
-    auto outputDim3 =std::floor((outputDim2 - 2) / 2) + 1;
-    auto out3DimSQ = std::pow(outputDim3,2)*8;
+	auto convolution1 = std::make_shared<ConvolutionLayer>(inputLayer, graph, AbstractLayer::ActivationType::ReLu, 32, 5, 1, AbstractLayer::InitializationType::Xavier);
+
+	auto maxPool2 = std::make_shared<MaxPoolLayer>(convolution1, graph, 2, 2);
 
 
-    //Initialize Weights & Bias & Variable
+	//convolutional Layer 2
+	auto convolution2 = std::make_shared<ConvolutionLayer>(maxPool2, graph, AbstractLayer::ActivationType::ReLu, 64, 5, 1, AbstractLayer::InitializationType::Xavier);
+	//Maxpooling
+	auto maxPool = std::make_shared<MaxPoolLayer>(convolution2, graph, 2, 2);
 
-	Eigen::MatrixXf filter1 = DataInitialization::generateRandomMatrix(0,.1,8,5*5);
-	Eigen::MatrixXf filter2 = DataInitialization::generateRandomMatrix(0.,.1,8,5*5*8);
+	//Dense Layer 1
+	auto dense1 = std::make_shared<DenseLayer>(maxPool, graph, AbstractLayer::ActivationType::ReLu, 1024, AbstractLayer::InitializationType::Xavier);
 
-	Eigen::MatrixXf W1 = DataInitialization::generateRandomMatrix(0., .1, out3DimSQ, 128);
-	Eigen::MatrixXf W2 = DataInitialization::generateRandomMatrix(0., .1,128, 10 );
-
-    Eigen::MatrixXf b1=Eigen::MatrixXf::Zero(batch_size,outputDim*outputDim*8);
-    Eigen::MatrixXf b2=Eigen::MatrixXf::Zero(batch_size,outputDim2*outputDim2*8);
-    Eigen::MatrixXf b3 = Eigen::MatrixXf::Zero(batch_size,128);
-    Eigen::MatrixXf b4 = Eigen::MatrixXf::Zero(batch_size, 10);
-    std::vector<Eigen::MatrixXf> params ={training_data[0],training_label[0],filter1,filter2,W1,W2,b1,b2,b3,b4};
-    if(readWeights){
-        read_binary(WEIGHT_DEPOSIT"f1.txt",params[2]);
-        read_binary(WEIGHT_DEPOSIT"f2.txt",params[3]);
-        read_binary(WEIGHT_DEPOSIT"w1.txt",params[4]);
-        read_binary(WEIGHT_DEPOSIT"w2.txt",params[5]);
-        read_binary(WEIGHT_DEPOSIT"b1.txt",params[6]);
-        read_binary(WEIGHT_DEPOSIT"b2.txt",params[7]);
-        read_binary(WEIGHT_DEPOSIT"b3.txt",params[8]);
-        read_binary(WEIGHT_DEPOSIT"b4.txt",params[9]);
-    }
+	//Dense Layer 2
+	auto dense2 = std::make_shared<DenseLayer>(dense1, graph, AbstractLayer::ActivationType::None, 10, AbstractLayer::InitializationType::Xavier);
 
 
+	//Logits Layer
+	auto logits = std::make_shared<LogitsLayer>(dense2, graph, 10);
+
+	//    Cost Layer
+	auto loss = std::make_shared<LossLayer>(logits, graph, AbstractLayer::LossType::CrossEntropy);
+
+	//Create Deep Learning session
+	NeuralNetwork network(graph, inputLayer, loss, config);
+
+	/*
+	 * Initialize Network with precalculated Weights
+	 */
+	if (readWeights) { network.readVariables(WEIGHT_DEPOSIT, "mnist_layer"); }
+
+	/*
+	 * Train the Network
+	 */
+	if (trainModel) {
+		//trainAndValidate causes right now some Problems check Data preparation
+		network.train(data, config);
+
+		/*
+		 * Write calculated Weights to Network
+		 */
+		if (writeWeights) { network.writeVariables(WEIGHT_DEPOSIT, "mnist_layer"); }
+	}
 
 
-    /*
-     * Train Data
-     */
-    if(trainModel){
-        float cost =0;
-        for(int k = 0;k<epochs;k++){
-            cost=0;
-            for(int i = 0;i<amount_batches;i++){
-                params[0] = training_data[i];
-                params[1] = training_label[i];
 
-                cost+=train(params,correct,total);
+	/*
+	 * Test the Network
+	 */
 
-            }
-            cost/=(float)amount_batches;
-            std::cout<<"Current Cost:"<<cost<<" Round: "<<k<<std::endl;
-            if(cost<1)break;
+	if (testModel) {
 
-        }
-    }
+		/* for (int b = 0; b < amount_batches; b++) {
 
-    if(writeWeights){
-        write_binary(WEIGHT_DEPOSIT"f1.txt",params[2]);
-        write_binary(WEIGHT_DEPOSIT"f2.txt",params[3]);
-        write_binary(WEIGHT_DEPOSIT"w1.txt",params[4]);
-        write_binary(WEIGHT_DEPOSIT"w2.txt",params[5]);
-        write_binary(WEIGHT_DEPOSIT"b1.txt",params[6]);
-        write_binary(WEIGHT_DEPOSIT"b2.txt",params[7]);
-        write_binary(WEIGHT_DEPOSIT"b3.txt",params[8]);
-        write_binary(WEIGHT_DEPOSIT"b4.txt",params[9]);
-    }
+			 network.run(test_data[b], test_label[b]);
 
-    if(testModel){
-        for(int i = 0;i<amount_batches;i++){
-            params[0] = test_data[i];
-            params[1] = test_label[i];
-            train(params,correct,total,false);
+			 Eigen::MatrixXf::Index maxRow, maxCol;
 
-        }
-        std::cout<<"Amount Correct: "<<correct<<"\nAmount Wrong: "<<total-correct<<"\nPercentage Correct: "<<correct/(float)
-                total<<std::endl;
-    }
+			 for (int i = 0; i < test_data[b].rows(); i++) {
+				 logits->getOutputNode()->getForward().block(i, 0, 1, 10).maxCoeff(&maxRow, &maxCol);
+				 int p = maxCol;
+				 test_label[b].block(i, 0, 1, 10).maxCoeff(&maxRow, &maxCol);
+				 int A = maxCol;
+
+				 if (p == A)correct++;
+				 total++;
+
+			 }
 
 
+		 }
+		 std::cout << "Amount Correct: " << correct << "\nAmount Wrong: " << total - correct << "\nPercentage Correct: "
+				   << correct / (float) total << std::endl;*/
+	}
 
 
 }

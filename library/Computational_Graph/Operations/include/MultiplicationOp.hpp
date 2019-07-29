@@ -4,23 +4,17 @@
 #pragma once
 
 
-#include <Operation.hpp>
+#include "NormalFunction.hpp"
 
-class MultiplicationOp : public Operation {
+class MultiplicationOp : public NormalFunction {
 public:
-	MultiplicationOp(std::shared_ptr<Node> X, std::shared_ptr<Node> W)
-			: Operation(X, W) {
-//	    if(X->getForward().cols()!=W->getForward().rows()){
-//	        int cols =X->getForward().cols();
-//            int rows =W->getForward().rows();
-//            throw std::runtime_error("Multiplication Operation: X.cols() should equal W.rows()");
-//	    }
-	};
+	MultiplicationOp(std::shared_ptr<Node> X, std::shared_ptr<Parameter> W)
+			: NormalFunction(X, W,X->getOutputChannels()) {}
 
 	~MultiplicationOp() = default;
 
-	void forwards() override;
+	void forwardPass() override;
 
-	void backwards() override;
+	void backwardPass() override;
 
 };

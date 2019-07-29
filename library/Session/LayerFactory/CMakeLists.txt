@@ -1,7 +1,7 @@
 
 
 
-include_directories(include)
+#include_directories(include)
 set(LIB_NAME layerFactory)
 
 set(LIB_SOURCES

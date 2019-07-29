@@ -9,7 +9,8 @@
 
 class DenseLayer: public AbstractLayer {
 public:
-    DenseLayer(std::shared_ptr<AbstractLayer> input, ActivationFunction activationFunction,int amountNeurons, InitializationType initializationType=InitializationType::Xavier);
+    DenseLayer(std::shared_ptr<AbstractLayer> input,std::shared_ptr<Graph> computeGraph, ActivationType
+    activationFunction,int amountNeurons, InitializationType initializationType=InitializationType::Xavier);
     ~DenseLayer()=default;
 
     Matrix getWeightMatrix();
@@ -20,12 +21,12 @@ public:
 
 private:
 
-    ActivationFunction _activationFunction;
+    ActivationType _activationFunction;
     InitializationType _initializationType;
     int _amountNeurons;
 
-    std::shared_ptr<Variable> _weights;
-    std::shared_ptr<Variable> _bias;
+    std::shared_ptr<Parameter> _weights;
+    std::shared_ptr<Parameter> _bias;
 };
 
 

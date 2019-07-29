@@ -5,119 +5,105 @@
 #include <iostream>
 #include "MaxPoolOp.hpp"
 
-void MaxPoolOp::forwards() {
+void MaxPoolOp::forwardPass() {
 
-    startTimeMeasurement();
+	int batchSize = getInput()->getForward().rows();
+	int imgSize = getInput()->getForward().cols() / getInputChannels();
+	int imgDim = std::sqrt(imgSize);
+	int outputDim = std::floor((imgDim - _windowSize) / _stride) + 1;
 
-
-    //TODO for efficency maybe change eigen to row major order for convfilter this should make sense, not sure about the
-    // other operations ( as long as each input is a row)
-
-    int imgN = getInputA()->getForward().rows();
-    int imgSize = getInputA()->getForward().cols() / getInputChannels();
-    int imgDim = std::sqrt(imgSize);
-
-    int outputDim = std::floor((imgDim - _windowSize) / _stride) + 1;
+	Eigen::MatrixXf::Index maxRow, maxCol;
 
 
-    Eigen::MatrixXf::Index maxRow, maxCol;
+	Eigen::MatrixXf outputMatrix = Eigen::MatrixXf::Zero(batchSize, outputDim * outputDim * getOutputChannels());
+	Eigen::MatrixXf maxIndexMatrix = Eigen::MatrixXf::Zero(batchSize, getInput()->getForward().cols());
 
 
-    Eigen::MatrixXf outputMatrix = Eigen::MatrixXf::Zero(imgN, outputDim * outputDim * getOutputChannels());
-    Eigen::MatrixXf indexMatrix = Eigen::MatrixXf::Zero(imgN, getInputA()->getForward().cols()); //, imgDim * imgDim);
+	//loop over all samples :
+	for (int i = 0; i < batchSize; i++) {
+		//loop over all channels
+		for (int c = 0; c < getInputChannels(); c++) {
+			//get the Current Channel of the Current Sample
+			Eigen::MatrixXf currentChannelOfSample = getInput()->getForward().block(i, imgSize * c, 1, imgSize)
+					.reshaped(imgDim, imgDim);
 
-    //loop over all images :
-    for (int i = 0; i < imgN; i++) {
-
-        for (int c = 0; c < getInputA()->getOutputChannels(); c++) {
-            Eigen::MatrixXf tmpIMG = getInputA()->getForward().block(i, imgSize * c, 1, imgSize);
-
-            tmpIMG.resize(imgDim, imgDim);
-//            tmpIMG.transposeInPlace();
-            Eigen::MatrixXf indexTMP = indexMatrix.block(i, imgSize * c, 1, imgSize);
-            indexTMP.resize(imgDim, imgDim);
-//            indexTMP.transposeInPlace();
-
-            //2.2 loop over amount of possible convolutions and apply filter to img
-            for (int x = 0; x < outputDim; x++) {
-                for (int y = 0; y < outputDim; y++) {
-                    int x_stride = x * _stride;
-                    int y_stride = y * _stride;
-                    outputMatrix(i, y + x * outputDim + c * outputDim * outputDim) =
-                            tmpIMG.transpose().block(x_stride, y_stride, 2, 2).maxCoeff(&maxRow, &maxCol);
-                    indexTMP.transpose().block(x_stride, y_stride, 2, 2)
-                            (maxRow, maxCol) = 1;
-
-                }
-            }
-//            indexTMP.transposeInPlace();
-            indexTMP.resize(1, imgSize);
-            indexMatrix.block(i, imgSize * c, 1, imgSize) = indexTMP.block(0, 0, 1, imgSize);
-
-        }
+			//get the current block of the maxIndexMatrix
+			Eigen::MatrixXf currentMaxIndexMatrix = maxIndexMatrix.block(i, imgSize * c, 1, imgSize)
+					.reshaped(imgDim, imgDim);
 
 
-    }
-    setMaxIndexMatrix(indexMatrix);
-    setForward(outputMatrix);
+			for (int x = 0; x < outputDim; x++) {
+				for (int y = 0; y < outputDim; y++) {
+					int x_stride = x * _stride;
+					int y_stride = y * _stride;
+					//apply maxPooling
+					outputMatrix(i, y + x * outputDim + c * outputDim * outputDim) =
+							currentChannelOfSample.transpose().block(x_stride, y_stride, 2, 2).maxCoeff(&maxRow, &maxCol);
+					//store the index of the maximum Value
+					currentMaxIndexMatrix.transpose().block(x_stride, y_stride, 2, 2)
+							(maxRow, maxCol) = 1;
 
-    stopTimeMeasurement(0);
+				}
+			}
+
+			maxIndexMatrix.block(i,
+					imgSize * c, 1, imgSize) = currentMaxIndexMatrix.reshaped(1, imgSize).block(0, 0, 1, imgSize);
+
+		}
+
+
+	}
+	setMaxIndexMatrix(maxIndexMatrix);
+	setForward(outputMatrix);
 
 };
 
-void MaxPoolOp::backwards() {
-    startTimeMeasurement();
-    double convolutionCounter = 0;
+void MaxPoolOp::backwardPass() {
 
-    int imgN = getInputA()->getForward().rows();
-    int imgSize = getInputA()->getForward().cols() / getInputChannels();
-    int imgDim = std::sqrt(imgSize);
-    int outputDim = std::floor((imgDim - _windowSize) / _stride) + 1;
+	int batchSize = getInput()->getForward().rows();
+	int imgSize = getInput()->getForward().cols() / getInputChannels();
+	int imgDim = std::sqrt(imgSize);
+	int outputDim = std::floor((imgDim - _windowSize) / _stride) + 1;
 
 
-    Eigen::MatrixXf indexMatrix = Eigen::MatrixXf::Zero(imgN, imgSize * getInputA()->getOutputChannels());
+	Eigen::MatrixXf dX = Eigen::MatrixXf::Zero(batchSize, imgSize * getInputChannels());
 
 
-    //loop over all images :
-    for (int i = 0; i < imgN; i++) {
-        for (int c = 0; c < getInputA()->getOutputChannels(); c++) {
-            Eigen::MatrixXf tmpIMG = getMaxIndexMatrix().block(i, imgSize * c, 1, imgSize);
-            tmpIMG.resize(imgDim, imgDim);
-//            tmpIMG.transposeInPlace();
-            convolutionCounter++;
-            //2.2 loop over amount of possible convolutions and apply filter to img
-            for (int x = 0; x < outputDim; x++) {
-                for (int y = 0; y < outputDim; y++) {
-                    int x_stride = x * _stride;
-                    int y_stride = y * _stride;
-                    tmpIMG.transpose().block(x_stride, y_stride, 2, 2) *= getCurrentGradients()(i,
-                                                                                    y + x * outputDim +
-                                                                                    c * outputDim * outputDim);
-                }
-            }
+	//loop over all samples :
+	for (int i = 0; i < batchSize; i++) {
+		//loop over all channels
+		for (int c = 0; c < getInputChannels(); c++) {
+			//get the maxIndexMatrix for current sample & channel
+			Eigen::MatrixXf currentMaxIndexMatrix = getMaxIndexMatrix()
+					.block(i, imgSize * c, 1, imgSize).reshaped(imgDim, imgDim);
+			//apply Gradients to corrresponding maxIndex
+			for (int x = 0; x < outputDim; x++) {
+				for (int y = 0; y < outputDim; y++) {
+					int x_stride = x * _stride;
+					int y_stride = y * _stride;
+					currentMaxIndexMatrix.transpose().block(x_stride, y_stride, 2, 2) *=
+							getPreviousGradients()(i, y + x * outputDim + c * outputDim * outputDim);
+				}
+			}
+			dX.block(i, imgSize * c, 1, imgSize) = currentMaxIndexMatrix.reshaped(1, imgSize);
 
-//            tmpIMG.transposeInPlace();
-            tmpIMG.resize(1, imgDim * imgDim);
-            indexMatrix.block(i, imgSize * c, 1, imgSize) = tmpIMG;
+		}
 
-        }
+	}
+	getInput()->setPreviousGradients(dX);
 
-    }
-    getInputA()->setCurrentGradients(indexMatrix);
-
-    stopTimeMeasurement(1);
-    /*
-     * Debug Information
-     */
-    /*std::cout<<" MaxPoolOp FOrward:"<<getForward()<<std::endl;
-    std::cout<<" MaxPoolOp Backwards:"<<getCurrentGradients()<<std::endl;*/
+	/*
+	 * Debug Information
+	 */
+	/*std::cout<<" MaxPoolOp FOrward:"<<getForward()<<std::endl;
+	std::cout<<" MaxPoolOp Backwards:"<<getCurrentGradients()<<std::endl;*/
 }
 
 
 const Eigen::MatrixXf &MaxPoolOp::getMaxIndexMatrix() const {
-    return _maxIndexMatrix;
+	return _maxIndexMatrix;
 }
 
 void MaxPoolOp::setMaxIndexMatrix(const Eigen::MatrixXf &maxIndexMatrix) {
-    _maxIndexMatrix = maxIndexMatrix;
+	_maxIndexMatrix = maxIndexMatrix;
 }

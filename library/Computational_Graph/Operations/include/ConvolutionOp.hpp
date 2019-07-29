@@ -5,18 +5,17 @@
 #pragma once
 
 
-#include <Operation.hpp>
-#include <Variable.hpp>
-#include <Placeholder.hpp>
+#include <Parameter.hpp>
+#include "NormalFunction.hpp"
 
-class ConvolveFilterIM2COL : public Operation {
+class ConvolutionOp : public NormalFunction {
 public:
-    ConvolveFilterIM2COL(std::shared_ptr<Node> X, std::shared_ptr<Variable> W,int stride =1);
+    ConvolutionOp(std::shared_ptr<Node> X, std::shared_ptr<Parameter> W,int stride =1);
 
-	~ConvolveFilterIM2COL() = default;
-	void forwards() override;
+	~ConvolutionOp() = default;
+	void forwardPass() override;
 
-	void backwards() override;
+	void backwardPass() override;
 
 
 

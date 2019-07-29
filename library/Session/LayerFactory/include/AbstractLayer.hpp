@@ -6,10 +6,12 @@
 #include <Node.hpp>
 #include <memory>
 #include <DataInitialization.hpp>
+#include <Graph.hpp>
+#include <OperationsFactory.hpp>
 
 class AbstractLayer {
 public:
-    enum ActivationFunction {
+    enum ActivationType {
         ReLu, Sigmoid, LeakyRelu,None
     };
     enum InitializationType{
@@ -19,8 +21,8 @@ public:
         CrossEntropy,MSE
     };
 
-    AbstractLayer(std::shared_ptr<AbstractLayer> input);
-    AbstractLayer(){};
+    AbstractLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph> computeGraph);
+    AbstractLayer(std::shared_ptr<Graph> computeGraph):_computeGraph(computeGraph){};
 
     ~AbstractLayer() = default;
 
@@ -45,6 +47,8 @@ public:
 
     void setBatchSize(int batchSize);
 
+	const std::shared_ptr<Graph> &getComputeGraph() const;
+
 private:
     std::shared_ptr<AbstractLayer> _inputLayer;
     std::shared_ptr<Node> _inputNode;
@@ -53,6 +57,7 @@ private:
     int _outputSize;
     int _inputChannels;
     int _batchSize;
+    std::shared_ptr<Graph> _computeGraph;
 
 };
 

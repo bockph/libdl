@@ -8,14 +8,12 @@
 #include <iostream>
 
 
-void ReLuOp::forwards() {
+void ReLuOp::forwardPass() {
 
 
-    startTimeMeasurement();
 
-    setForward(getInputA()->getForward().cwiseMax(0));
+    setForward(getInput()->getForward().cwiseMax(0));
 
-    stopTimeMeasurement(0);
 
 };
 
@@ -24,14 +22,12 @@ float ReLuOp::deriveReLu(const float element) {
     else return 1;
 }
 
-void ReLuOp::backwards() {
-    startTimeMeasurement();
+void ReLuOp::backwardPass() {
 
     std::function<float(float)> deriveReLu_WRAP = deriveReLu;
     Eigen::MatrixXf dReLu = getForward().unaryExpr(deriveReLu_WRAP);
-    getInputA()->setCurrentGradients(getCurrentGradients().cwiseProduct(dReLu));
+	getInput()->setPreviousGradients(getPreviousGradients().cwiseProduct(dReLu));
 
-    stopTimeMeasurement(1);
 
     /*
      * Debug INformation

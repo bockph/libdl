@@ -4,19 +4,19 @@
 #pragma once
 
 
-#include <Operation.hpp>
+#include "ActivationFunction.hpp"
 
-class SigmoidOP : public Operation {
+class SigmoidOP : public ActivationFunction {
 public:
 	SigmoidOP(std::shared_ptr<Node> X)
-			: Operation(X) {};
+			: ActivationFunction(X) {};
 
 	~SigmoidOP() = default;
 
-	void forwards() override;
+	void forwardPass() override;
 
 	static float sigmoid(float a);
 
-	void backwards() override;
+	void backwardPass() override;
 
 };

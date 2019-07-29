@@ -8,13 +8,12 @@
 #include <iostream>
 
 
-void SoftmaxOp::forwards() {
-    startTimeMeasurement();
-    Eigen::MatrixXf tmp = getInputA()->getForward();
+void SoftmaxOp::forwardPass() {
+    Eigen::MatrixXf tmp = getInput()->getForward();
     tmp.setZero();
 
-    for (int i = 0; i < getInputA()->getForward().rows(); i++) {
-        Eigen::MatrixXf result = getInputA()->getForward().block(i, 0, 1, tmp.cols());
+    for (int i = 0; i < getInput()->getForward().rows(); i++) {
+        Eigen::MatrixXf result = getInput()->getForward().block(i, 0, 1, tmp.cols());
 
         //adds numerical stability https://deepnotes.io/softmax-crossentropy, http://cs231n.github.io/linear-classify/#softmax
         result = result.array() - result.maxCoeff() + 0.0000000001;
@@ -29,16 +28,13 @@ void SoftmaxOp::forwards() {
         tmp.block(i, 0, 1, tmp.cols()) = result;
     }
     setForward(tmp);
-    stopTimeMeasurement(0);
 
 
 };
 
-void SoftmaxOp::backwards() {
-    startTimeMeasurement();
+void SoftmaxOp::backwardPass() {
     //Right Now Softmax does only work together with CrossEntropyOp, as the gradient of both together is calculated there and then just passed forward
-    getInputA()->setCurrentGradients(getCurrentGradients());
-    stopTimeMeasurement(1);
+	getInput()->setPreviousGradients(getPreviousGradients());
 
     /*
      * Debug Information

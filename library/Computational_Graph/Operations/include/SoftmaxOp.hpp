@@ -6,19 +6,19 @@
 #pragma once
 
 
-#include <Operation.hpp>
+#include "ActivationFunction.hpp"
 
-class SoftmaxOp : public Operation {
+class SoftmaxOp : public ActivationFunction {
 public:
 	SoftmaxOp(std::shared_ptr<Node> X,int amountClasses)
-			: Operation(X),_amountClasses(amountClasses) {};
+			: ActivationFunction(X),_amountClasses(amountClasses) {};
 
 	~SoftmaxOp() = default;
 
-	void forwards() override;
+	void forwardPass() override;
 
 
-	void backwards() override;
+	void backwardPass() override;
 
 private:
 	int _amountClasses;

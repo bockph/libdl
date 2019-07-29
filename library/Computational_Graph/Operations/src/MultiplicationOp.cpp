@@ -5,25 +5,20 @@
 #include <iostream>
 #include "MultiplicationOp.hpp"
 
-void MultiplicationOp::forwards() {
-    startTimeMeasurement();
+void MultiplicationOp::forwardPass() {
 
     //this results in a Vector containing in each row the result for a different input of the Batch
-    setForward(getInputA()->getForward() * getInputB()->getForward());
-
-    stopTimeMeasurement(0);
+    setForward(getInput()->getForward() * getParameter()->getForward());
 
 };
 
-void MultiplicationOp::backwards() {
-    startTimeMeasurement();
+void MultiplicationOp::backwardPass() {
 
-    Eigen::MatrixXf dX = getCurrentGradients() * (getInputB()->getForward().transpose());
-    Eigen::MatrixXf dW = (getInputA()->getForward().transpose()) * getCurrentGradients();
+    Eigen::MatrixXf dX = getPreviousGradients() * (getParameter()->getForward().transpose());
+    Eigen::MatrixXf dW = (getInput()->getForward().transpose()) * getPreviousGradients();
 
-    getInputA()->setCurrentGradients(dX);
-    getInputB()->setCurrentGradients(dW);
-    stopTimeMeasurement(1);
+	getInput()->setPreviousGradients(dX);
+	getParameter()->setPreviousGradients(dW);
 
     /*
      * Debug Information

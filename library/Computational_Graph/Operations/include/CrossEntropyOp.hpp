@@ -5,18 +5,18 @@
 #pragma once
 
 
-#include <Operation.hpp>
+#include "LossFunction.hpp"
 
-class CrossEntropyOp : public Operation {
+class CrossEntropyOp : public LossFunction {
 public:
-	CrossEntropyOp(std::shared_ptr<Node> X, std::shared_ptr<Node> C)
-			: Operation(X, C) {};
+	CrossEntropyOp(std::shared_ptr<Node> X, std::shared_ptr<Placeholder> C)
+			: LossFunction(X, C) {};
 
 	~CrossEntropyOp() = default;
 
-	void forwards() override;
+	void forwardPass() override;
 
-	void backwards() override;
+	void backwardPass() override;
 
 
 };

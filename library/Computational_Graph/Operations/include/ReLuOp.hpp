@@ -4,18 +4,18 @@
 
 #pragma once
 
-#include <Operation.hpp>
+#include "ActivationFunction.hpp"
 
-class ReLuOp : public Operation {
+class ReLuOp : public ActivationFunction {
 public:
     ReLuOp(std::shared_ptr<Node> X)
-            : Operation(X) {};
+            : ActivationFunction(X) {};
 
     ~ReLuOp() = default;
 
-    void forwards() override;
+    void forwardPass() override;
 
-    void backwards() override;
+    void backwardPass() override;
 
     static float deriveReLu(const float element) ;
 };

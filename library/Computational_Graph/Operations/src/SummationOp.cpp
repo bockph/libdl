@@ -5,35 +5,26 @@
 #include <iostream>
 #include "SummationOp.hpp"
 
-void SummationOp::forwards() {
+void SummationOp::forwardPass() {
+    setForward(getInput()->getForward() + getParameter()->getForward());
 
-    int rows1 =getInputA()->getForward().rows();
-    int cols1 =getInputA()->getForward().cols();
-    int rows2 =getInputB()->getForward().rows();
-    int cols2 =getInputB()->getForward().cols();
-    startTimeMeasurement();
-    setForward(getInputA()->getForward() + getInputB()->getForward());
-
-    stopTimeMeasurement(0);
 
 }
 
-void SummationOp::backwards() {
-    startTimeMeasurement();
+void SummationOp::backwardPass() {
 
-    getInputB()->setCurrentGradients(getCurrentGradients());
-    getInputA()->setCurrentGradients(getCurrentGradients());
+	getParameter()->setPreviousGradients(getPreviousGradients());
+	getInput()->setPreviousGradients(getPreviousGradients());
 
-    stopTimeMeasurement(1);
 
 
     /*
      * Debug Information
      */
-    /*int rows1 =getInputA()->getForward().rows();
-    int cols1 =getInputA()->getForward().cols();
-    int rows2 =getInputB()->getForward().rows();
-    int cols2 =getInputB()->getForward().cols();*/
+    /*int rows1 =getInput()->getForward().rows();
+    int cols1 =getInput()->getForward().cols();
+    int rows2 =getVariable()->getForward().rows();
+    int cols2 =getParameter()->getForward().cols();*/
    /* int rows1 = getInputA()->getForward().rows();
     int cols1 = getInputA()->getForward().cols();
 

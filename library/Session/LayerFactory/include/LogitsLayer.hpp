@@ -9,7 +9,7 @@
 
 class LogitsLayer: public AbstractLayer {
 public:
-    LogitsLayer(std::shared_ptr<AbstractLayer> input,int outputClasses);
+    LogitsLayer(std::shared_ptr<AbstractLayer> input,std::shared_ptr<Graph> computeGraph,int outputClasses);
     ~LogitsLayer()=default;
 private:
 

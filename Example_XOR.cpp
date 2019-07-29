@@ -3,71 +3,75 @@
 #include <Placeholder.hpp>
 #include <Operation.hpp>
 #include <SummationOp.hpp>
-#include <Session.hpp>
-#include <Variable.hpp>
+#include <Parameter.hpp>
 #include <SigmoidOP.hpp>
 #include <MultiplicationOp.hpp>
 #include <MSEOp.hpp>
 #include <DataInitialization.hpp>
+#include <Graph.hpp>
+#include <NeuralNetwork.hpp>
+#include <LogitsLayer.hpp>
+#include <InputLayer.hpp>
+#include <DenseLayer.hpp>
+
 
 int main() {
-	//Input Data: with dimensions: Amount of Training Samples x Dimension of training Sample
-	Eigen::MatrixXf mX1(4, 2);
-	mX1 << 1, 0,
-			0, 1,
-			0, 0,
-			1, 1;
-	//Corresponding Classes of input Data DImensions are : Amount of Training Samples x 1
-	Eigen::MatrixXf C(4, 1);
-	C << 1,
-			1,
-			0,
-			0;
+	int epochs = 10;
+	int batchSize = 4;
+	int learningRate = 10;
 
-	auto CN = std::make_shared<Placeholder>(C,0,0);
-	//Weights Hidden Layer 1
-	Eigen::MatrixXf mW1 = DataInitialization::generateRandomMatrix(0., 1., 2, 2);
-	//Bias Hidden Layer 1
-	Eigen::MatrixXf b1 = DataInitialization::generateRandomMatrix(0., 10., 1, 2);
+	hyperParameters config(epochs, batchSize, learningRate);
 
-	//Weights OutputLayer
-	Eigen::MatrixXf mW2 = DataInitialization::generateRandomMatrix(0., 1., 2, 1);
-	//Bias Output Layer
-	Eigen::MatrixXf b2 = DataInitialization::generateRandomMatrix(0., 10., 1, 1);
+	std::shared_ptr<Graph> graph = std::make_shared<Graph>(config);
+	/*
+	 * Setup Layers
+	 */
+	auto inputLayer = std::make_shared<InputLayer>(graph, batchSize, 2, 1);
+	auto dense1 = std::make_shared<DenseLayer>(inputLayer, graph, AbstractLayer::ActivationType::ReLu, 2,
+			AbstractLayer::InitializationType::Xavier);
+	auto dense2 = std::make_shared<DenseLayer>(dense1, graph, AbstractLayer::ActivationType::ReLu, 2,
+			AbstractLayer::InitializationType::Xavier);
+	auto softmax = std::make_shared<LogitsLayer>(dense2, graph, 2);
+	auto loss = std::make_shared<LossLayer>(softmax, graph, AbstractLayer::LossType::CrossEntropy);
 
-	//create Inputs, Weights and Biases
-	auto X = std::make_shared<Placeholder>(mX1,0,0);
-	auto W = std::make_shared<Variable>(mW1);
-	auto W2 = std::make_shared<Variable>(mW2);
-	auto B1 = std::make_shared<Variable>(b1,0);
-	auto B2 = std::make_shared<Variable>(b2,0);
+	NeuralNetwork network(graph, inputLayer, loss, config);
+	/*
+	 * Prepare Data Inputs
+	 */
+	Matrix input1(1, 2);
+	input1 << 1, 0;
+	Matrix input2(1, 2);
+	input2 << 0, 1;
+	Matrix input3(1, 2);
+	input3 << 0, 0;
+	Matrix input4(1, 2);
+	input4 << 1, 1;
+	/*
+	 * Prepare corresponding Labels to Data Inputs
+	 */
+	Matrix label1(1, 2);
+	label1 << 1, 0;
+	Matrix label2(1, 2);
+	label2 << 1, 0;
 
-	//create First hidden Layer
-	auto mul = std::make_shared<MultiplicationOp>(X, W);
-	auto sum = std::make_shared<SummationOp>(mul, B1);
-	auto sig1 = std::make_shared<SigmoidOP>(sum);
+	Matrix label3(1, 2);
+	label3 << 0, 1;
+	Matrix label4(1, 2);
+	label4 << 0, 1;
 
-	//create output layer
-	auto mul2 = std::make_shared<MultiplicationOp>(sig1, W2);
-	auto sum2 = std::make_shared<SummationOp>(mul2, B2);
-	auto sig2 = std::make_shared<SigmoidOP>(sum2);
+	/*
+	 * Create Data set
+	 */
+	std::vector<Matrix> trainingData{input1, input2, input3, input4}, trainingLabels{label1, label2, label3, label4};
+	dataSet data(trainingData, trainingLabels);
 
-	//create Loss function
-	auto mse = std::make_shared<MSEOp>(sig2, CN);
+	/*
+	 * Train Network
+	 */
+	network.train(data, config);
+	std::cout << "Prediction:\n" << softmax->getOutputNode()->getForward() << std::endl;
 
-	//Create Deep Learning session
-	Session session(mse);
+	std::cout << "Final Loss:\n" << loss->getOutputNode()->getForward() << std::endl;
 
-	//session.run() Executes Forward Pass & Backpropagation, Learning Rate is hardcoded at the moment and is 1
-	session.run();
-	std::cout << "First Run" << std::endl;
-	std::cout << "Output:\n" << sig2->getForward() << std::endl;
-	std::cout << "LOSS:\n" << mse->getForward() << std::endl;
-	for (int i = 0; i < 50000; i++) {
-		session.run();
-	}
-	session.run();
-	std::cout << " Results of Last Run (5002th)" << std::endl;
-	std::cout << "Output:\n" << sig2->getForward() << std::endl;
-	std::cout << "LOSS:\n" << mse->getForward() << std::endl;
+
 }

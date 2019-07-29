@@ -5,10 +5,9 @@
 #include <iostream>
 #include "CrossEntropyOp.hpp"
 
-void CrossEntropyOp::forwards() {
-    startTimeMeasurement();
-    Eigen::MatrixXf log = Eigen::log(getInputA()->getForward().array());
-    Eigen::MatrixXf multiply = log.cwiseProduct(getInputB()->getForward());
+void CrossEntropyOp::forwardPass() {
+    Eigen::MatrixXf log = Eigen::log(getInput()->getForward().array());
+    Eigen::MatrixXf multiply = log.cwiseProduct(getLabels()->getForward());
 
     auto sumC = multiply.sum();
     float minus = sumC * -1;
@@ -21,31 +20,33 @@ void CrossEntropyOp::forwards() {
     }
 
     setForward(result);
-    stopTimeMeasurement(0);
 
 }
 
 
-void CrossEntropyOp::backwards() {
-    startTimeMeasurement();
+void CrossEntropyOp::backwardPass() {
+	int rows1 = getInput()->getForward().rows();
+	int cols1 = getInput()->getForward().cols();
 
-    Eigen::MatrixXf c = getInputB()->getForward();
-    Eigen::MatrixXf p = getInputA()->getForward();
+	int rows2 = getLabels()->getForward().rows();
+	int cols2 = getLabels()->getForward().cols();
+	Eigen::MatrixXf p = getInput()->getForward();
+
+    Eigen::MatrixXf c = getLabels()->getForward();
     Eigen::MatrixXf tmp2 = p - c;
-    tmp2 = tmp2 / getInputA()->getForward().rows();
+    tmp2 = tmp2 / getInput()->getForward().rows();
 
 
-    getInputA()->setCurrentGradients(tmp2);
-    stopTimeMeasurement(1);
+	getInput()->setPreviousGradients(tmp2);
 
     /*
      * Debug Information
      */
-    /*int rows1 = getInputA()->getForward().rows();
-    int cols1 = getInputA()->getForward().cols();
+    /*int rows1 = getInput()->getForward().rows();
+    int cols1 = getInput()->getForward().cols();
 
-    int rows2 = getInputB()->getForward().rows();
-    int cols2 = getInputB()->getForward().cols();*/
+    int rows2 = getLabels()->getForward().rows();
+    int cols2 = getLabels()->getForward().cols();*/
     /*std::cout<<"CrossEntropy FOrward:"<<getForward()<<std::endl;
     std::cout<<"CrossEntropy Backwards:"<<getCurrentGradients()<<std::endl;*/
 

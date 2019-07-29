@@ -9,7 +9,7 @@
 
 class InputLayer: public AbstractLayer {
 public:
-    InputLayer(int batchSize, int dim, int channel);
+    InputLayer(std::shared_ptr<Graph> computeGraph,int batchSize, int dataPoints, int channel);
     ~InputLayer()=default;
     void updateX(Matrix newMiniBatch);
 

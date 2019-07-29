@@ -6,8 +6,8 @@
 #include <LogitsLayer.hpp>
 
 
-LogitsLayer::LogitsLayer(std::shared_ptr<AbstractLayer> input, int outputClasses) :
-        AbstractLayer(input) {
+LogitsLayer::LogitsLayer(std::shared_ptr<AbstractLayer> input,std::shared_ptr<Graph> computeGraph, int outputClasses) :
+        AbstractLayer(input,computeGraph) {
 
 
 
@@ -15,7 +15,8 @@ LogitsLayer::LogitsLayer(std::shared_ptr<AbstractLayer> input, int outputClasses
      * Initialization of Softmax Node
      */
 
-    auto softmax = std::make_shared<SoftmaxOp>(getInputNode(), outputClasses);
+    auto softmax = OperationsFactory::createSoftmaxOp(getComputeGraph(),getInputNode(),outputClasses);
+//    std::shared_ptr<SoftmaxOp> softmax = std::make_shared<SoftmaxOp>(getInputNode(), outputClasses);
 
 
     setOutputNode(softmax);

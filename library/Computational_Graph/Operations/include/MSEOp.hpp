@@ -5,18 +5,18 @@
 #pragma once
 
 
-#include <Operation.hpp>
+#include "LossFunction.hpp"
 
-class MSEOp : public Operation {
+class MSEOp : public LossFunction {
 public:
-	MSEOp(std::shared_ptr<Node> X, std::shared_ptr<Node> C)
-			: Operation(X, C) {};
+	MSEOp(std::shared_ptr<Node> X, std::shared_ptr<Placeholder> C)
+			: LossFunction(X, C) {};
 
 	~MSEOp() = default;
 
-	void forwards() override;
+	void forwardPass() override;
 
-	void backwards() override;
+	void backwardPass() override;
 
 
 };

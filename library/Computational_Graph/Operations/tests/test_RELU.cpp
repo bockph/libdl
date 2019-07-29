@@ -6,7 +6,6 @@
 // Created by pbo on 17.06.19.
 //
 
-#include <Session.hpp>
 #include <Placeholder.hpp>
 #include <memory>
 
@@ -15,9 +14,12 @@
 #include <catch2/catch.hpp>
 
 #include <ReLuOp.hpp>
+#include <Graph.hpp>
+#include <OperationsFactory.hpp>
 
 
 TEST_CASE("RELU Forward ", "[operation]") {
+	auto graph = std::make_shared<Graph>();
 
 
 
@@ -25,41 +27,36 @@ TEST_CASE("RELU Forward ", "[operation]") {
         img <<-1,0,1;
 
 
-        auto X = std::make_shared<Placeholder>(img);
+        auto X = std::make_shared<Placeholder>(img,1);
+		graph->setInput(X);
+		auto relu = OperationsFactory::createReLuOp(graph,X);
+		graph->predict();
 
-        auto conv = std::make_shared<ReLuOp>(X);
-
-    Session session(conv);
-        session.run();
 
         Eigen::MatrixXf test = Eigen::MatrixXf(1, 3);
         test <<0,0,1;
 
-        REQUIRE(conv->getForward().isApprox(test)
+        REQUIRE(relu->getForward().isApprox(test)
         );
 
 
 }
 TEST_CASE("RELU Backward ", "[operation]") {
-
-
+	auto graph = std::make_shared<Graph>();
 
      Eigen::MatrixXf img(1, 3);
     img <<-1,0,5;
 
 
-    auto X = std::make_shared<Placeholder>(img);
-
-    auto conv = std::make_shared<ReLuOp>(X);
-
-    Session session(conv);
-    session.run();
+	auto X = std::make_shared<Placeholder>(img,1);
+	graph->setInput(X);
+	auto relu = OperationsFactory::createReLuOp(graph,X);
+	graph->train();
 
     Eigen::MatrixXf test = Eigen::MatrixXf(1, 3);
     test <<1,1,1;
-    REQUIRE(X->getCurrentGradients().isApprox(test)
+    REQUIRE(X->getPreviousGradients().isApprox(test)
     );
-    //TODO: A test is missing for incoming negative gradients
 
 
 }

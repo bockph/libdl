@@ -5,10 +5,10 @@
 #include "Placeholder.hpp"
 
 
-Placeholder::Placeholder(Eigen::MatrixXf& m,int dim,int channel) {
-	setForward(m);
-//	setOutputDim(dim);
-    setOutputChannels(channel);
+Placeholder::Placeholder(Matrix& batch,int channel) {
+	setForward(batch);
+	setOutputChannels(channel);
 }
-
-void Placeholder::backwards() {}
+Placeholder::Placeholder(Matrix& labels) {
+	setForward(labels);
+}

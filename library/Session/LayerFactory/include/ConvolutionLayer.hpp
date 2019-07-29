@@ -8,7 +8,9 @@
 
 class ConvolutionLayer: public AbstractLayer {
 public:
-    ConvolutionLayer(std::shared_ptr<AbstractLayer> input, ActivationFunction activationFunction,int amountFiltersint, int kernelDim, int stride=1, InitializationType initializationType=InitializationType::Xavier);
+    ConvolutionLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph> computeGraph, ActivationType
+    activationFunction,int
+    amountFilters, int kernelDim, int stride=1, InitializationType initializationType=InitializationType::Xavier);
     ~ConvolutionLayer()=default;
 
     Matrix getFilterMatrix();
@@ -19,8 +21,8 @@ public:
 private:
 
 
-    std::shared_ptr<Variable> _filter;
-    std::shared_ptr<Variable> _bias;
+    std::shared_ptr<Parameter> _filter;
+    std::shared_ptr<Parameter> _bias;
 
 };
 

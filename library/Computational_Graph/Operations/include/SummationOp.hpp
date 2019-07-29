@@ -3,18 +3,18 @@
 //
 #pragma once
 
-#include <Operation.hpp>
+#include "NormalFunction.hpp"
 
-class SummationOp : public Operation {
+class SummationOp : public NormalFunction {
 public:
-	SummationOp(std::shared_ptr<Node> X, std::shared_ptr<Node> W)
-			: Operation(X, W) {};
+	SummationOp(std::shared_ptr<Node> X, std::shared_ptr<Parameter> W)
+			: NormalFunction(X, W,X->getOutputChannels()) {};
 
 	~SummationOp() = default;
 
-	void forwards() override;
+	void forwardPass() override;
 
-	void backwards() override;
+	void backwardPass() override;
 
 };
 

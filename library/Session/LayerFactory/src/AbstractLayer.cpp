@@ -4,8 +4,10 @@
 
 #include "AbstractLayer.hpp"
 
-AbstractLayer::AbstractLayer(std::shared_ptr<AbstractLayer> input):_inputLayer(input),
-_inputNode(input->getOutputNode()),_inputChannels(input->getOutputChannels()),_batchSize(input->getBatchSize())
+AbstractLayer::AbstractLayer(std::shared_ptr<AbstractLayer> input,std::shared_ptr<Graph> computeGraph):_inputLayer
+(input),
+_inputNode(input->getOutputNode()),_computeGraph(computeGraph),_inputChannels(input->getOutputChannels()),_batchSize
+(input->getBatchSize())
 {}
 
 const std::shared_ptr<Node> &AbstractLayer::getInputNode() const {
@@ -48,4 +50,8 @@ int AbstractLayer::getOutputSize() const {
 
 void AbstractLayer::setOutputSize(int outputSize) {
     _outputSize = outputSize;
+}
+
+const std::shared_ptr<Graph> &AbstractLayer::getComputeGraph() const {
+	return _computeGraph;
 }

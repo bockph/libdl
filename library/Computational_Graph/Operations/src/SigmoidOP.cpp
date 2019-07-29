@@ -6,24 +6,20 @@
 #include "SigmoidOP.hpp"
 
 
-void SigmoidOP::forwards() {
-    startTimeMeasurement();
+void SigmoidOP::forwardPass() {
 
-    setForward(getInputA()->getForward().unaryExpr(std::ref(sigmoid)));
+    setForward(getInput()->getForward().unaryExpr(std::ref(sigmoid)));
 
-    stopTimeMeasurement(0);
 
 };
 
-void SigmoidOP::backwards() {
-    startTimeMeasurement();
+void SigmoidOP::backwardPass() {
 
     auto tmp = getForward();
     tmp.setOnes();
     auto dSigmoid = getForward().cwiseProduct(tmp - getForward());
-    getInputA()->setCurrentGradients(getCurrentGradients().cwiseProduct(dSigmoid));
+	getInput()->setPreviousGradients(getPreviousGradients().cwiseProduct(dSigmoid));
 
-    stopTimeMeasurement(1);
     /*
      * Debug Information
      */

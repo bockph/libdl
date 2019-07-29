@@ -3,31 +3,16 @@
 //
 
 #include <iostream>
+
 #include "Operation.hpp"
 
 
-Operation::Operation(std::shared_ptr<Node> X, std::shared_ptr<Node> W){
-	setInputA(X);
-	setInputB(W);
 
-	_inputNodes.push_back(X);
-	_inputNodes.push_back(W);
 
-    setInputChannels(getInputA()->getOutputChannels());
-    setOutputChannels(getInputChannels());
+Operation::Operation(std::shared_ptr<Node> X, int outputChannel):
+_input(X),_inputChannels(X->getOutputChannels()){
+	setOutputChannels(outputChannel);
 }
-
-Operation::Operation(std::shared_ptr<Node> X){
-    setInputA(X);
-	_inputNodes.push_back(X);
-    setInputChannels(getInputA()->getOutputChannels());
-	setOutputChannels(getInputChannels());
-}
-
-const std::vector<std::shared_ptr<Node>> &Operation::getInputNodes() {
-	return _inputNodes;
-}
-
 
 
 
@@ -38,7 +23,7 @@ void Operation::startTimeMeasurement() {
 
 }
 
-void Operation::stopTimeMeasurement(char function) {
+int Operation::stopTimeMeasurement(char function) {
     _end = std::chrono::system_clock::now();
 
     int elapsed_seconds = std::chrono::duration_cast<std::chrono::microseconds>
@@ -52,6 +37,7 @@ void Operation::stopTimeMeasurement(char function) {
         default:break;
     }
 
+    return elapsed_seconds;
 
 }
 
@@ -62,6 +48,29 @@ int Operation::getForwardTime() const {
 int Operation::getBackwardsTime() const {
     return _backwardsTime;
 }
+
+const std::shared_ptr<Node> &Operation::getInput() const {
+	return _input;
+}
+
+
+int Operation::forwardPassWithMeasurement() {
+	startTimeMeasurement();
+	forwardPass();
+	return stopTimeMeasurement(0);
+}
+
+int Operation::backwardPassWithMeasurement() {
+	startTimeMeasurement();
+	backwardPass();
+	return stopTimeMeasurement(1);}
+
+
+int Operation::getInputChannels() const {
+	return _inputChannels;
+}
+
+
 
 
 

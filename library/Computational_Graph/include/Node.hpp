@@ -4,66 +4,52 @@
 #pragma once
 
 #include <vector>
-#include <memory>
 #include <Eigen/Dense>
 
 
 
 using Matrix = Eigen::MatrixXf;
-
+/*!
+ * This class represents the Base Class of all Nodes of the Computational Graph.
+ */
 class Node {
 public:
-    Node();
-
-    ~Node() = default;
-
-
-//    virtual void addOutputNode(std::shared_ptr<Node> n);
-    virtual const std::vector<std::shared_ptr<Node>> &getInputNodes() { return _inputNodes; };
-
-
-    const Eigen::MatrixXf &getForward() const;
-
-    void setForward(const Eigen::MatrixXf &forward);
-
-    const std::shared_ptr<Node> &getInputA() const;
-
-    void setInputA(const std::shared_ptr<Node> &inputA);
-
-    const std::shared_ptr<Node> &getInputB() const;
-
-    void setInputB(const std::shared_ptr<Node> &inputB);
-
-
-    const Eigen::MatrixXf &getCurrentGradients() const;
-
-    void setCurrentGradients(const Eigen::MatrixXf &currentGradients);
-
-    void setOutputChannels(int outputChannels);
-
-    int getOutputChannels() const;
-
-    int getInputChannels() const;
-
-
-    void setInputChannels(int inputChannels);
-
-
-    virtual void forwards() {};
-
-    virtual void backwards() {};
-
-
-    Eigen::MatrixXf _forward;
-    Eigen::MatrixXf currentGradients;
-
-
+	virtual ~Node()=default;
 private:
-    std::vector<std::shared_ptr<Node>> _inputNodes;
-    std::shared_ptr<Node> inputA;
-    std::shared_ptr<Node> inputB;
+	/*!
+	 * Contains the Output of this Node which equals to the Data Input of the following Node
+	 * Each sample that was computed is a row-Vector and therefore represented by one row of the Matrix
+	 */
+	Matrix _forward;
+	/*!
+	 * contains the Gradients of the previous Node, if the Node is the EndNode, it should contain a Matrix of Ones with
+	 * the Dimensions of _forward. Further, each row represents the Gradient for one sample.
+	 */
+	Matrix _previousGradients;
+
+	/*!
+	 * contains the amount of Channels the output of this Node has
+	 */
     int _outputChannels;
-    int _inputChannels;
+
+
+    /*
+     * Getters & Setters
+     */
+public:
+
+	const Matrix &getForward() const;
+
+	void setForward(const Matrix &forward);
+
+	const Matrix &getPreviousGradients() const;
+
+	void setPreviousGradients(const Matrix &previousGradients);
+
+	void setOutputChannels(int outputChannels);
+
+	int getOutputChannels() const;
+
 
 
 };
