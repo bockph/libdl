@@ -1,4 +1,5 @@
-image: elsa/gcc:9
+image: elsa/ubu18-clang6:latest
+
 stages:
   - compile
 
