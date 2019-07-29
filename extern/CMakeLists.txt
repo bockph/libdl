@@ -32,14 +32,13 @@ find_package(OpenMP)
 
 add_library(eigenI INTERFACE)
 target_include_directories(eigenI INTERFACE ${PROJECT_SOURCE_DIR}/extern/eigen)
-if(OpenMP_CXX_FOUND)
-    target_link_libraries(eigenI INTERFACE  OpenMP::OpenMP_CXX)
-endif()
+#uncomment the following in order to activate parallelization for Eigen
+#if(OpenMP_CXX_FOUND)
+#    target_link_libraries(eigenI INTERFACE  OpenMP::OpenMP_CXX)
+#endif()
 add_library(catch2I INTERFACE)
 target_include_directories(catch2I INTERFACE ${PROJECT_SOURCE_DIR}/extern/Catch2/single_include)
-#target_include_directories(catch2I INTERFACE ${PROJECT_SOURCE_DIR}/extern/Catch2/internal)
-#
-#target_sources(catch2I INTERFACE ${PROJECT_SOURCE_DIR}/extern/Catch2/include/internal)
+
 add_library(spdlogI INTERFACE)
 target_include_directories(spdlogI INTERFACE ${PROJECT_SOURCE_DIR}/extern/spdlog/include)
 add_subdirectory(lodepng)
@@ -49,20 +48,3 @@ add_library(mnist INTERFACE)
 target_include_directories(mnist INTERFACE ${PROJECT_SOURCE_DIR}/extern/mnist/include)
 
 
-
-
-
-#
-#set(EIGEN_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extern/eigen/Eigen CACHE PATH "eigen include directory")
-#set(install {CMAKE_CURRENT_SOURCE_DIR}/extern/eigenInstall)
-#install(DIRECTORY ${EIGEN_INCLUDE_DIR} DESTINATION  ${install})
-#add_library(eigenI INTERFACE)
-#target_include_directories(eigenI INTERFACE $<BUILD_INTERFACE:${FOO_INCLUDE_DIR}>
-#        $<INSTALL_INTERFACE:${install}>)
-#install(TARGETS eigenI EXPORT my_export_set DESTINATION ${install})
-##add_subdirectory(eigen)
-#add_subdirectory(Catch2)
-#add_subdirectory(pybind11)
-#add_subdirectory(spdlog)
-
-#//https://foonathan.net/blog/2016/07/07/cmake-dependency-handling.html <-- do this, see E-mail Tobias

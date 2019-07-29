@@ -1,11 +1,9 @@
-
+image: elsa/gcc:9
 stages:
   - compile
 
 
 build-linux-gcc:
-  image: elsa/gcc:9
-
   stage: compile
   script:
     - mkdir -p build
@@ -21,8 +19,6 @@ build-linux-gcc:
       - build/
 
 build-linux-clang:
-  image: elsa/clang:8
-
   stage: compile
   script:
     - mkdir -p build
