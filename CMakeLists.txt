@@ -9,7 +9,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -I/usr/include/python2.7 -O0 
 add_subdirectory(extern)
 add_subdirectory(extern/pybind11)
 add_subdirectory(library)
-add_subdirectory(pythonApps)
 
 
 
