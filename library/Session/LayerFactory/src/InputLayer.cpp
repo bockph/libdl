@@ -24,7 +24,7 @@ InputLayer::InputLayer(std::shared_ptr<Graph> computeGraph,int batchSize, int da
 
 }
 
-void InputLayer::updateX(Matrix newMiniBatch){
+void InputLayer::updateX(Matrix &newMiniBatch){
     getOutputNode()->setForward(newMiniBatch);
 
 }

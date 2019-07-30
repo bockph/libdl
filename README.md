@@ -27,3 +27,8 @@ The MNIST problem is simulated in the build File Example_MNIST, which is build f
 The settings are predefined so that pre-learned weights are read from the WeightDeposit and are then used to predict a subset of the MNIST testset.
 
 In order to train the Model, the settings at the beginning of the main method (in Example_MNIST.cpp) have to be changed. See inline Comments.
+
+
+Problems that may Occur
+===
+in the Top Level CMakeLists.txt -march=native is set as CXX Flag, this causes problems for some processors

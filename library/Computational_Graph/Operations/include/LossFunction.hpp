@@ -20,6 +20,7 @@ private:
 	 */
 public:
 	const std::shared_ptr<Placeholder> &getLabels() const;
+	const Matrix getPrediction() const;
 
 };
 

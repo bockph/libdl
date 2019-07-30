@@ -11,35 +11,39 @@
 
 class NeuralNetwork {
 public:
-	NeuralNetwork(const std::shared_ptr<Graph> computeGraph, const std::shared_ptr<InputLayer> inputLayer,
-				  const std::shared_ptr<LossLayer> lossLayer, const HyperParameters params = HyperParameters());
+    NeuralNetwork(const std::shared_ptr<Graph> computeGraph, const std::shared_ptr<InputLayer> inputLayer,
+                  const std::shared_ptr<LossLayer> lossLayer, const HyperParameters params = HyperParameters());
 
-	void trainBatch(Matrix &miniBatch, Matrix &labels);
+    void trainBatch(Matrix &miniBatch, Matrix &labels);
 
-	void predictBatch(Matrix &miniBatch, Matrix &labels);
+    Matrix predictBatch(Matrix &miniBatch, Matrix &labels);
 
-	bool writeVariables(std::string dir, std::string networkName);
+    bool writeVariables(std::string dir, std::string networkName);
 
-	bool readVariables(std::string dir, std::string networkName);
+    void testAccuracy(Matrix &results, Matrix &labels, float &correct, float &total);
 
-	void setParams(const HyperParameters &params);
 
-	float getLoss();
+    bool writeTrainingLog(std::string dir, std::string training);
 
-	float train(DataSet &data, HyperParameters params,float trainingLossThreshold=1);
+    bool readVariables(std::string dir, std::string networkName);
 
-	std::vector<std::pair<float, float>>
-	trainAndValidate(DataSet &data, HyperParameters params,float trainingLossThreshold=1);
+    void setParams(const HyperParameters &params);
+
+    float getLoss();
+
+    float train(DataSet &data, HyperParameters params, float trainingLossThreshold = 1);
+
+    TrainingEvaluation trainAndValidate(DataSet &data, HyperParameters params, float trainingLossThreshold = 1);
 
 
 private:
-	std::vector<Matrix> extractBatchList(std::vector<Matrix> &dataset, int batchSize);
+    std::vector<Matrix> extractBatchList(std::vector<Matrix> &dataset, int batchSize);
 
 
-	std::shared_ptr<Graph> _computeGraph;
-	std::shared_ptr<InputLayer> _inputLayer;
-	std::shared_ptr<LossLayer> _lossLayer;
-	bool _runAchieved;
+    std::shared_ptr<Graph> _computeGraph;
+    std::shared_ptr<InputLayer> _inputLayer;
+    std::shared_ptr<LossLayer> _lossLayer;
+    bool _runAchieved;
 
 };
 

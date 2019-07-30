@@ -41,7 +41,6 @@
 
 int main() {
 //
-
 	/*
 	 * batch_size: if this is changed '#define BATCH_SIZE' in Node.hpp has to be changed as well
 	 * epochs: sets the amount of epochs for training, to big values in combination with a big 'amount_batches' can lead to OutOfMemory Error
@@ -51,7 +50,7 @@ int main() {
 	 * writeWeights: if set the trained Weights  are written to Source_Directory/WeightDeposit
 	 * readWeights: if set (and Weights have already been Written once) weights are initialized with weights from Source_Directory/WeightDeposit
 	 */
-	int batch_size = 4;
+	int batch_size = 16;
 	int epochs = 5;
 	double learningRate = 0.0001;
 	int amount_batches = 10;

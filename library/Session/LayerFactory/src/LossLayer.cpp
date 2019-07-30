@@ -18,28 +18,24 @@ LossLayer::LossLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph
 	 * Initialization Labels
 	 */
 	Matrix tmp;
-//   auto labels = std::make_shared<Placeholder>(tmp,0,0);
 
 
 	/*
 	 * Initialization of Loss Operation
 	 */
-	std::shared_ptr<LossFunction> lossOp;
 
 	switch (losstype) {
 		case LossType::CrossEntropy:
-			lossOp = OperationsFactory::createCrossEntropyOp(getComputeGraph(), getInputNode(), tmp);
-//			std::make_shared<CrossEntropyOp>(getInputNode(), labels);
+			_lossNode = OperationsFactory::createCrossEntropyOp(getComputeGraph(), getInputNode(), tmp);
 			break;
 		case LossType::MSE:
-			lossOp = OperationsFactory::createMSEOp(getComputeGraph(), getInputNode(), tmp);
-			//std::make_shared<MSEOp>(getInputNode(), labels);
+			_lossNode = OperationsFactory::createMSEOp(getComputeGraph(), getInputNode(), tmp);
 			break;
 		default:
 			throw std::runtime_error(std::string("the selected LossType has yet not been Implemented in LossLayer class"));
 	}
 
-	setOutputNode(lossOp);
+	setOutputNode(_lossNode);
 
 }
 
@@ -48,9 +44,16 @@ float LossLayer::getLoss() {
 	return getOutputNode()->getForward()(0, 0);
 }
 
-void LossLayer::updateLabels(Matrix newLabels) {
+void LossLayer::updateLabels(Matrix& newLabels) {
 	if (std::dynamic_pointer_cast<LossFunction>(getOutputNode()) != nullptr) {
 		std::dynamic_pointer_cast<LossFunction>(getOutputNode())->getLabels()->setForward(newLabels);
 	}
+}
+
+const std::shared_ptr<LossFunction> &LossLayer::getLossNode() const {
+    return _lossNode;
+}
+const Matrix LossLayer::getPrediction() const {
+    return _lossNode->getPrediction();
 }
 

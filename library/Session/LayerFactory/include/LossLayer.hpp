@@ -14,8 +14,14 @@ public:
     ~LossLayer()=default;
 
     float getLoss();
-    void updateLabels(Matrix newLabels);
+    void updateLabels(Matrix &newLabels);
 
+    const std::shared_ptr<LossFunction> &getLossNode() const;
+    const Matrix getPrediction() const;
+
+
+private:
+    std::shared_ptr<LossFunction> _lossNode;
 };
 
 

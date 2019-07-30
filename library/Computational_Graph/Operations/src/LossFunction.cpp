@@ -5,5 +5,9 @@
 #include "LossFunction.hpp"
 
 const std::shared_ptr<Placeholder> &LossFunction::getLabels() const {
-	return _labels;
+    return _labels;
+}
+
+const Matrix LossFunction::getPrediction() const {
+    return getInput()->getForward();
 }
