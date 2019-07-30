@@ -92,6 +92,6 @@ void Graph::addOperation(std::shared_ptr<Operation> operation) {
 }
 
 
-void Graph::setHyperParameters(const hyperParameters &hyperParameters) {
+void Graph::setHyperParameters(const HyperParameters &hyperParameters) {
 	Graph::_hyperParameters = hyperParameters;
 }

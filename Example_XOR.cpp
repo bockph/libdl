@@ -20,19 +20,19 @@ int main() {
 	int batchSize = 4;
 	int learningRate = 10;
 
-	hyperParameters config(epochs, batchSize, learningRate);
+	HyperParameters config(epochs, batchSize, learningRate);
 
 	std::shared_ptr<Graph> graph = std::make_shared<Graph>(config);
 	/*
 	 * Setup Layers
 	 */
 	auto inputLayer = std::make_shared<InputLayer>(graph, batchSize, 2, 1);
-	auto dense1 = std::make_shared<DenseLayer>(inputLayer, graph, AbstractLayer::ActivationType::ReLu, 2,
-			AbstractLayer::InitializationType::Xavier);
-	auto dense2 = std::make_shared<DenseLayer>(dense1, graph, AbstractLayer::ActivationType::ReLu, 2,
-			AbstractLayer::InitializationType::Xavier);
+	auto dense1 = std::make_shared<DenseLayer>(inputLayer, graph, ActivationType::ReLu, 2,
+			InitializationType::Xavier);
+	auto dense2 = std::make_shared<DenseLayer>(dense1, graph, ActivationType::ReLu, 2,
+			InitializationType::Xavier);
 	auto softmax = std::make_shared<LogitsLayer>(dense2, graph, 2);
-	auto loss = std::make_shared<LossLayer>(softmax, graph, AbstractLayer::LossType::CrossEntropy);
+	auto loss = std::make_shared<LossLayer>(softmax, graph, LossType::CrossEntropy);
 
 	NeuralNetwork network(graph, inputLayer, loss, config);
 	/*
@@ -63,7 +63,7 @@ int main() {
 	 * Create Data set
 	 */
 	std::vector<Matrix> trainingData{input1, input2, input3, input4}, trainingLabels{label1, label2, label3, label4};
-	dataSet data(trainingData, trainingLabels);
+	DataSet data(trainingData, trainingLabels);
 
 	/*
 	 * Train Network

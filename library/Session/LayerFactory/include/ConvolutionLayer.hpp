@@ -6,23 +6,27 @@
 
 #include <AbstractLayer.hpp>
 
-class ConvolutionLayer: public AbstractLayer {
+class ConvolutionLayer : public AbstractLayer {
 public:
-    ConvolutionLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph> computeGraph, ActivationType
-    activationFunction,int
-    amountFilters, int kernelDim, int stride=1, InitializationType initializationType=InitializationType::Xavier);
-    ~ConvolutionLayer()=default;
+	ConvolutionLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph> computeGraph,
+					 ActivationType activationFunction, int amountFilters, int kernelDim, int stride = 1,
+					 InitializationType initializationType = InitializationType::Xavier);
 
-    Matrix getFilterMatrix();
-    Matrix getBiasMatrix();
+	~ConvolutionLayer() = default;
 
-    void setFilterMatrix(Matrix filter);
-    void setBiasMatrix(Matrix bias);
+	Matrix getFilterMatrix();
+
+	Matrix getBiasMatrix();
+
+	void setFilterMatrix(Matrix filter);
+
+	void setBiasMatrix(Matrix bias);
+
 private:
 
 
-    std::shared_ptr<Parameter> _filter;
-    std::shared_ptr<Parameter> _bias;
+	std::shared_ptr<Parameter> _filter;
+	std::shared_ptr<Parameter> _bias;
 
 };
 

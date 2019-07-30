@@ -5,10 +5,10 @@
 
 #include <vector>
 #include <Eigen/Dense>
+#include <commonDatatypes.hpp>
 
 
 
-using Matrix = Eigen::MatrixXf;
 /*!
  * This class represents the Base Class of all Nodes of the Computational Graph.
  */

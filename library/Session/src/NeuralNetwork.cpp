@@ -7,7 +7,7 @@
 #include "../../Utils/include/commonDatatypes.hpp"
 
 NeuralNetwork::NeuralNetwork(const std::shared_ptr<Graph> computeGraph, const std::shared_ptr<InputLayer> inputLayer,
-							 const std::shared_ptr<LossLayer> lossLayer, const hyperParameters params)
+							 const std::shared_ptr<LossLayer> lossLayer, const HyperParameters params)
 		:
 		_computeGraph(computeGraph)
 		, _inputLayer(inputLayer)
@@ -40,7 +40,7 @@ bool NeuralNetwork::readVariables(std::string dir, std::string networkName) {
 }
 
 
-void NeuralNetwork::setParams(const hyperParameters &params) {
+void NeuralNetwork::setParams(const HyperParameters &params) {
 	_computeGraph->setHyperParameters(params);
 
 }
@@ -50,7 +50,7 @@ float NeuralNetwork::getLoss() {
 	return _lossLayer->getLoss();
 }
 
-float NeuralNetwork::train(dataSet &data, hyperParameters params, float trainingLossThreshold) {
+float NeuralNetwork::train(DataSet &data, HyperParameters params, float trainingLossThreshold) {
 	if (data._trainingSamples.size() != data._trainingLabels.size()) {
 		throw std::runtime_error("The size of the Samples does not equal the Size of the Labels");
 	}
@@ -73,7 +73,7 @@ float NeuralNetwork::train(dataSet &data, hyperParameters params, float training
 }
 
 
-std::vector<std::pair<float, float>> NeuralNetwork::trainAndValidate(dataSet &data, hyperParameters params,
+std::vector<std::pair<float, float>> NeuralNetwork::trainAndValidate(DataSet &data, HyperParameters params,
 																	 float trainingLossThreshold) {
 	if (data._trainingSamples.size() != data._trainingLabels.size()) {
 		throw std::runtime_error(

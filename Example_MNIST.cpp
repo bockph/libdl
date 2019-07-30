@@ -82,7 +82,7 @@
 
 }*/
 
-void getData(int samples, dataSet &data, bool trainData = true) {
+void getData(int samples, DataSet &data, bool trainData = true) {
 
 	mnist::MNIST_dataset<std::vector, std::vector<uint8_t>, uint8_t> dataset =
 			mnist::read_dataset<std::vector, std::vector, uint8_t, uint8_t>(MNIST_DATA_LOCATION, samples);
@@ -146,7 +146,7 @@ int main() {
 
 //    getBatches(batch_size, amount_batches, training_data, training_label);
 //    getBatches(batch_size, amount_batches, test_data, test_label, false);
-	dataSet data;
+	DataSet data;
 	getData(batch_size * amount_batches, data);
 
 
@@ -155,37 +155,37 @@ int main() {
  * Create Neural Network
  */
 
-	hyperParameters config(epochs, batch_size, learningRate);
+	HyperParameters config(epochs, batch_size, learningRate);
 	std::shared_ptr<Graph> graph = std::make_shared<Graph>(config);
 
 
 	//Create InputLayer
-	auto inputLayer = std::make_shared<InputLayer>(graph, batch_size, 28, 1);
+	auto inputLayer = std::make_shared<InputLayer>(graph, batch_size, 28*28, 1);
 
 	//Convolutional Layer 1
 
-	auto convolution1 = std::make_shared<ConvolutionLayer>(inputLayer, graph, AbstractLayer::ActivationType::ReLu, 32, 5, 1, AbstractLayer::InitializationType::Xavier);
+	auto convolution1 = std::make_shared<ConvolutionLayer>(inputLayer, graph, ActivationType::ReLu, 32, 5, 1, InitializationType::Xavier);
 
 	auto maxPool2 = std::make_shared<MaxPoolLayer>(convolution1, graph, 2, 2);
 
 
 	//convolutional Layer 2
-	auto convolution2 = std::make_shared<ConvolutionLayer>(maxPool2, graph, AbstractLayer::ActivationType::ReLu, 64, 5, 1, AbstractLayer::InitializationType::Xavier);
+	auto convolution2 = std::make_shared<ConvolutionLayer>(maxPool2, graph, ActivationType::ReLu, 64, 5, 1, InitializationType::Xavier);
 	//Maxpooling
 	auto maxPool = std::make_shared<MaxPoolLayer>(convolution2, graph, 2, 2);
 
 	//Dense Layer 1
-	auto dense1 = std::make_shared<DenseLayer>(maxPool, graph, AbstractLayer::ActivationType::ReLu, 1024, AbstractLayer::InitializationType::Xavier);
+	auto dense1 = std::make_shared<DenseLayer>(maxPool, graph, ActivationType::ReLu, 1024, InitializationType::Xavier);
 
 	//Dense Layer 2
-	auto dense2 = std::make_shared<DenseLayer>(dense1, graph, AbstractLayer::ActivationType::None, 10, AbstractLayer::InitializationType::Xavier);
+	auto dense2 = std::make_shared<DenseLayer>(dense1, graph, ActivationType::None, 10, InitializationType::Xavier);
 
 
 	//Logits Layer
 	auto logits = std::make_shared<LogitsLayer>(dense2, graph, 10);
 
 	//    Cost Layer
-	auto loss = std::make_shared<LossLayer>(logits, graph, AbstractLayer::LossType::CrossEntropy);
+	auto loss = std::make_shared<LossLayer>(logits, graph, LossType::CrossEntropy);
 
 	//Create Deep Learning session
 	NeuralNetwork network(graph, inputLayer, loss, config);

@@ -12,7 +12,7 @@
 class NeuralNetwork {
 public:
 	NeuralNetwork(const std::shared_ptr<Graph> computeGraph, const std::shared_ptr<InputLayer> inputLayer,
-				  const std::shared_ptr<LossLayer> lossLayer, const hyperParameters params = hyperParameters());
+				  const std::shared_ptr<LossLayer> lossLayer, const HyperParameters params = HyperParameters());
 
 	void trainBatch(Matrix &miniBatch, Matrix &labels);
 
@@ -22,20 +22,20 @@ public:
 
 	bool readVariables(std::string dir, std::string networkName);
 
-	const hyperParameters &getParams() const;
-
-	void setParams(const hyperParameters &params);
+	void setParams(const HyperParameters &params);
 
 	float getLoss();
 
-	float train(dataSet &data, hyperParameters params,float trainingLossThreshold=1);
+	float train(DataSet &data, HyperParameters params,float trainingLossThreshold=1);
 
 	std::vector<std::pair<float, float>>
-	trainAndValidate(dataSet &data, hyperParameters params,float trainingLossThreshold=1);
+	trainAndValidate(DataSet &data, HyperParameters params,float trainingLossThreshold=1);
 
-	std::vector<Matrix> extractBatchList(std::vector<Matrix> &dataset, int batchSize);
 
 private:
+	std::vector<Matrix> extractBatchList(std::vector<Matrix> &dataset, int batchSize);
+
+
 	std::shared_ptr<Graph> _computeGraph;
 	std::shared_ptr<InputLayer> _inputLayer;
 	std::shared_ptr<LossLayer> _lossLayer;

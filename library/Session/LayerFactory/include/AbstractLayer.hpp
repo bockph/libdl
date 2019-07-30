@@ -11,15 +11,7 @@
 
 class AbstractLayer {
 public:
-    enum ActivationType {
-        ReLu, Sigmoid, LeakyRelu,None
-    };
-    enum InitializationType{
-        Xavier
-    };
-    enum LossType{
-        CrossEntropy,MSE
-    };
+
 
     AbstractLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph> computeGraph);
     AbstractLayer(std::shared_ptr<Graph> computeGraph):_computeGraph(computeGraph){};

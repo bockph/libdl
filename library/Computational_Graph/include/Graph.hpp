@@ -11,7 +11,7 @@
 
 class Graph {
 public:
-	Graph(hyperParameters params=hyperParameters()):_hyperParameters(params){};
+	Graph(HyperParameters params=HyperParameters()):_hyperParameters(params){};
 	~Graph()=default;
 	void updateWeightsAndBiases();
 	void predict();
@@ -35,13 +35,13 @@ public:
 
 	void addOperation(std::shared_ptr<Operation> operation);
 
-	void setHyperParameters(const hyperParameters &hyperParameters);
+	void setHyperParameters(const HyperParameters &hyperParameters);
 
 private:
 	std::shared_ptr<Placeholder> _input, _labels;
 	std::vector<std::shared_ptr<Parameter>> _variables;
 	std::vector<std::shared_ptr<Operation>> _operations;
-	hyperParameters _hyperParameters;
+	HyperParameters _hyperParameters;
 
 
 };

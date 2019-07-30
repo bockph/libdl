@@ -39,7 +39,7 @@ public:
      * updates the output of the Variable according to the Optimizer and Hyperparameters that are passed.
      * @param hyperParameters Object containing all hyperParameters for Neural Networks
      */
-	void updateVariable(const hyperParameters& hyperParameters);
+	void updateVariable(const HyperParameters& hyperParameters);
 
 
 private:

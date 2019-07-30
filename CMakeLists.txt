@@ -4,7 +4,7 @@ project(libdl VERSION 0.1
         LANGUAGES CXX)
 #set (CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -I/usr/include/python2.7 -O0 -march=native")#-O0 -march=native")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -std=c++17 -O0 -march=native")#-O0 -march=native")
 #find_package(Eigen3 REQUIRED)
 add_subdirectory(extern)
 add_subdirectory(extern/pybind11)

@@ -3,17 +3,28 @@
 //
 #pragma once
 
+#include <Eigen/Dense>
+using Matrix = Eigen::MatrixXf;
+
 enum Optimizer {
 	Adam
 };
+enum ActivationType {
+	ReLu, Sigmoid, LeakyReLu, None
+};
+enum InitializationType {
+	Xavier
+};
+enum LossType {
+	CrossEntropy, MSE
+};
 
-struct hyperParameters {
-	hyperParameters(int epochs = 10, int batchsize = 8, float learningRate = 0.01, Optimizer optimizer =
-	Optimizer::Adam,
-					float beta1 = 0.9, float beta2 = 0.999)
+struct HyperParameters {
+	HyperParameters(int epochs = 10, int batchSize = 8, float learningRate = 0.01,
+					Optimizer optimizer = Optimizer::Adam, float beta1 = 0.9, float beta2 = 0.999)
 			:
 			_epochs(epochs)
-			, _batchsize(batchsize)
+			, _batchsize(batchSize)
 			, _learningRate(learningRate)
 			, _optimizer(optimizer)
 			, _beta1(beta1)
@@ -25,14 +36,24 @@ struct hyperParameters {
 	int _batchsize;
 	int _epochs;
 	Optimizer _optimizer;
+	std::string toString(){
+		std::stringstream ss;
+		ss<<"Epochs: "<<_epochs<<std::endl;
+		ss<<"BatchSize: "<<_batchsize<<std::endl;
+		ss<<"Learning Rate: "<<_learningRate<<std::endl;
+		ss<<"Beta1: "<<_beta1<<std::endl;
+		ss<<"Beta2: "<<_beta2<<std::endl;
+		return ss.str();
+	}
 };
 
-struct dataSet {
-	dataSet(){};
-	dataSet(std::vector<Matrix> trainingSamples, std::vector<Matrix> trainingLabels)
+struct DataSet {
+	DataSet() {};
+
+	DataSet(std::vector<Matrix> trainingSamples, std::vector<Matrix> trainingLabels)
 			: _trainingSamples(trainingSamples), _trainingLabels(trainingLabels) {};
 
-	dataSet(std::vector<Matrix> trainingSamples, std::vector<Matrix> trainingLabels, std::vector<Matrix>
+	DataSet(std::vector<Matrix> trainingSamples, std::vector<Matrix> trainingLabels, std::vector<Matrix>
 	validationSamples, std::vector<Matrix> validationLabels)
 			: _trainingSamples(trainingSamples)
 			, _trainingLabels(trainingLabels)

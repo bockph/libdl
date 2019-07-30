@@ -18,7 +18,7 @@ Parameter::Parameter(Matrix& matrix) {
 	_s1 = Matrix::Zero(matrix.rows(),matrix.cols());
 }
 
-void Parameter::updateVariable(const hyperParameters& params) {
+void Parameter::updateVariable(const HyperParameters& params) {
 	Matrix tmp = getPreviousGradients()/params._batchsize;
 
     switch(params._optimizer){
