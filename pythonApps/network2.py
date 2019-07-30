@@ -9,13 +9,13 @@ import libdl as dl
 
 import matplotlib.pyplot as plt
 
-
-batchSize =4
-epochs =5
+nameNetwork = "multipleConvolutions"
+nameNewNetwork = "batch16_Amount_100"
+batchSize =16
+epochs =15
 
 learningRate=0.0001
-amountBatches=10
-
+amountBatches=100
 dataStringPairs = dl.LegoDataLoader.shuffleData(projectDir+"data/")
 
 data = dl.DataSet()
@@ -27,13 +27,14 @@ graph = dl.Graph(config)
 
 inputLayer = dl.InputLayer(graph,batchSize,160000,4)
 
-convolution1 = dl.ConvolutionLayer(inputLayer,graph, dl.ActivationType.ReLu,32,3,1,dl.InitializationType.Xavier)
-convolution11 = dl.ConvolutionLayer(convolution1,graph, dl.ActivationType.ReLu,32,3,1,dl.InitializationType.Xavier)
+convolution1 = dl.ConvolutionLayer(inputLayer,graph, dl.ActivationType.ReLu,32,8,2,dl.InitializationType.Xavier)
+maxPool1 = dl.MaxPoolLayer(convolution1,graph,2,2)
 
 
-convolution2 = dl.ConvolutionLayer(convolution11,graph, dl.ActivationType.ReLu,64,5,2,dl.InitializationType.Xavier)
+convolution3 = dl.ConvolutionLayer(maxPool1,graph, dl.ActivationType.ReLu,64,5,2,dl.InitializationType.Xavier)
 
-maxPool2 = dl.MaxPoolLayer(convolution2,graph,2,2)
+maxPool2 = dl.MaxPoolLayer(convolution3,graph,2,2)
+
 
 dense1 = dl.DenseLayer(maxPool2,graph,dl.ActivationType.ReLu,1024,dl.InitializationType.Xavier)
 
@@ -44,9 +45,10 @@ logits = dl.LogitsLayer(dense2,graph,16)
 loss = dl.LossLayer(logits,graph, dl.LossType.CrossEntropy)
 
 network = dl.NeuralNetwork(graph,inputLayer,loss,config)
-print("go")
-
+network.readVariables("/home/pbo/Schreibtisch/StoredValues/",nameNetwork)
 trainingEvaluation = network.trainAndValidate(data,config,1)
+
+network.writeVariables("/home/pbo/Schreibtisch/StoredValues/",nameNewNetwork)
 
 
 epochs = np.arange(trainingEvaluation._hyperParameters._epochs)
@@ -73,22 +75,24 @@ plt.plot()
 plt.title('Train vs Validation Loss')
 plt.plot(epochs, trainingEvaluation._trainingLoss, '-o', label='train')
 plt.plot(epochs, trainingEvaluation._validationLoss, '-o', label='val')
-plt.plot([0.5] * len(epochs), 'k--')
+plt.plot(len(epochs), 'k--')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy in percent')
 plt.legend(loc='lower right')
 plt.gcf().set_size_inches(15, 12)
+plt.savefig("/home/pbo/Schreibtisch/StoredValues/loss_Graph_"+nameNewNetwork+".png")
 plt.show()
 
 plt.plot()
 plt.title('Train vs Validation Accuracy')
 plt.plot(epochs, trainingEvaluation._trainingAccuracy, '-o', label='train')
 plt.plot(epochs, trainingEvaluation._validationAccuracy, '-o', label='val')
-plt.plot([0.5] * len(epochs), 'k--')
+plt.plot(len(epochs), 'k--')
 plt.xlabel('Epoch')
 plt.ylabel('Cost')
 plt.legend(loc='lower right')
 plt.gcf().set_size_inches(15, 12)
+plt.savefig("/home/pbo/Schreibtisch/StoredValues/accuracy_Graph_"+nameNewNetwork+".png")
 plt.show()
 
 
