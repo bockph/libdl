@@ -112,8 +112,8 @@ int main() {
 	 * Train the Network
 	 */
 	if (trainModel) {
-
-		network.trainAndValidate(legoData, config);
+    std::cout<<"GO"<<std::endl;
+		TrainingEvaluation eval =network.trainAndValidate(legoData, config);
 //		network.train(legoData,config);
 		/*
 		 * Write calculated Weights to Network
