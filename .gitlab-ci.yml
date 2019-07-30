@@ -1,7 +1,8 @@
-#stages:
-#  - compile
+stages:
+  - compile
 
 build-gcc9:
+  stage: compile
   image: elsa/gcc:9
   script:
     - mkdir -p build
