@@ -1,20 +1,21 @@
-stages:
-  - compile
+#stages:
+#  - compile
+
 build-gcc9:
-  <<: *build_job_artifact
-    image: elsa/gcc:9
-      script:
-      - mkdir -p build
-      - cd build
-      - cmake ..
-      - make -j${nproc}
+  image: elsa/gcc:9
+  script:
+    - mkdir -p build
+    - cd build
+    - cmake ..
+    - make -j${nproc}
 
-      tags:
-        - linux
-        - elsa
-        - gcc
+  tags:
+    - linux
+    - elsa
+    - gcc
 
-      #image: elsa/ubu18-clang6:latest
+
+    #image: elsa/ubu18-clang6:latest
 
       #build-linux-gcc:
       #  stage: compile
