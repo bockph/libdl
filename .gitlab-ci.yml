@@ -12,8 +12,7 @@ build-gcc9:
 
   tags:
     - linux
-    - elsa
-    - gcc
+    
 
 
     #image: elsa/ubu18-clang6:latest
