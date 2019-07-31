@@ -37,10 +37,10 @@ The Project aimed, to classify 16 different types of LEGO Bricks.
 For each Lego Brick Type there exist around 400 images showing the brick from a different angle
 e.g.:
 
-![title](pythonApps\jupyterResources\img\brick1.png)
-![title](pythonApps\jupyterResources\img\brick5.png)
-![title](pythonApps\jupyterResources\img\brick8.png)
-![title](pythonApps\jupyterResources\img\brick13.png)
+![title](pythonApps/jupyterResources/img/brick1.png)
+![title](pythonApps/jupyterResources/imgbrick5.png)
+![title](pythonApps/jupyterResources/imgbrick8.png)
+![title](pythonApps/jupyterResources/imgbrick13.png)
 
 There are in total three examples that run a network on this data:
 
