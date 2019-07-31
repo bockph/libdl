@@ -37,7 +37,6 @@ PYBIND11_MODULE(libdl, m) {
     py::enum_<ActivationType>(m, "ActivationType")
             .value("ReLu", ActivationType::ReLu)
             .value("Sigmoid", ActivationType::Sigmoid)
-            .value("LeakyReLu", ActivationType::LeakyReLu)
             .value("None", ActivationType::None);
     py::enum_<InitializationType>(m, "InitializationType")
             .value("Xavier", InitializationType::Xavier);

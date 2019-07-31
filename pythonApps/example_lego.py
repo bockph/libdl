@@ -12,7 +12,7 @@ import libdl as dl
 import matplotlib.pyplot as plt
 
 # for testing purposes also other networks from /data/storage may be selected
-# the name of the network results in files with naming: networkName+'[1-7].bin'
+# the name of the network results in files (libdl/data/storage/ with naming: networkName+'[1-7].bin'
 pretrainedNetwork = "batch16_Samples_10"
 newNetworkName = "test"
 
