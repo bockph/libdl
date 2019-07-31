@@ -46,7 +46,7 @@ else (DOXYGEN_FOUND)
     set(TEST_TARGET_TWO Example_MNIST)
     add_executable(${TEST_TARGET_TWO} Example_MNIST.cpp)
     target_link_libraries(${TEST_TARGET_TWO} session mnist utils)
-    target_compile_definitions(${TEST_TARGET_TWO} PRIVATE MNIST_DATA_LOCATION="${CMAKE_SOURCE_DIR}/extern/mnist" WEIGHT_DEPOSIT="${CMAKE_SOURCE_DIR}/WeightDeposit/")
+    target_compile_definitions(${TEST_TARGET_TWO} PRIVATE MNIST_DATA_LOCATION="${CMAKE_SOURCE_DIR}/extern/mnist" STORAGE="${CMAKE_SOURCE_DIR}/data/Storage/")
 
     #target_compile_features(${TEST_TARGET_TWO} PUBLIC cxx_std_17)
 
@@ -54,7 +54,7 @@ else (DOXYGEN_FOUND)
     set(TEST_TARGET_FOUR Example_LEGO)
     add_executable(${TEST_TARGET_FOUR} Example_LEGO.cpp)
     target_link_libraries(${TEST_TARGET_FOUR} session mnist utils lodepng)
-    target_compile_definitions(${TEST_TARGET_FOUR} PRIVATE MNIST_DATA_LOCATION="${CMAKE_SOURCE_DIR}/extern/mnist" WEIGHT_DEPOSIT="${CMAKE_SOURCE_DIR}/WeightDeposit/" DATA_DIR="${CMAKE_SOURCE_DIR}/data/")
+    target_compile_definitions(${TEST_TARGET_FOUR} PRIVATE MNIST_DATA_LOCATION="${CMAKE_SOURCE_DIR}/extern/mnist" STORAGE="${CMAKE_SOURCE_DIR}/data/Storage/" DATA_DIR="${CMAKE_SOURCE_DIR}/data/")
 
     #target_compile_features(${TEST_TARGET_FOUR} PUBLIC cxx_std_17)
 

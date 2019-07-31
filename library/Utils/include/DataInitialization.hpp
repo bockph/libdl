@@ -10,7 +10,7 @@ class DataInitialization {
 public:
 
 
-static Eigen::MatrixXf generateRandomMatrix(float LO, float HI, int rows, int cols);
+static Eigen::MatrixXf generateRandomMatrix( int rows, int cols);
 static Eigen::MatrixXf generateRandomMatrixNormalDistribution(float mean, float stdev, int rows, int cols);
 
 };

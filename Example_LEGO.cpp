@@ -106,51 +106,23 @@ int main() {
 	/*
 	 * Initialize Network with precalculated Weights
 	 */
-	if (readWeights) { network.readParameters(WEIGHT_DEPOSIT, "lego_layer"); }
+	if (readWeights) { network.readParameters(STORAGE, "lego_layer"); }
 
 	/*
 	 * Train the Network
 	 */
 	if (trainModel) {
-    std::cout<<"GO"<<std::endl;
 		TrainingEvaluation eval =network.trainAndValidate(legoData, config);
 //		network.train(legoData,config);
+
 		/*
 		 * Write calculated Weights to Network
 		 */
-		if (writeWeights) { network.writeParameters(WEIGHT_DEPOSIT, "lego_layer"); }
+		if (writeWeights) { network.writeParameters(STORAGE, "lego_layer"); }
 	}
 
 
 
-	/*
-	 * Test the Network
-	 */
-
-	if (testModel) {
-
-		/*for (int b = 0; b < amount_batches; b++) {
-
-			network.run(test_data[b], test_label[b]);
-
-			Eigen::MatrixXf::Index maxRow, maxCol;
-
-			for (int i = 0; i < test_data[b].rows(); i++) {
-				logits->getOutputNode()->getForward().block(i, 0, 1, 10).maxCoeff(&maxRow, &maxCol);
-				int p = maxCol;
-				test_label[b].block(i, 0, 1, 10).maxCoeff(&maxRow, &maxCol);
-				int A = maxCol;
-
-				if (p == A) { correct++; }
-				total++;
-
-			}
-
-
-		}
-		std::cout << "Amount Correct: " << correct << "\nAmount Wrong: " << total - correct << "\nPercentage Correct: "
-				  << correct / (float) total << std::endl;*/
-	}
 
 
 }

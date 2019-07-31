@@ -33,9 +33,9 @@ find_package(OpenMP)
 add_library(eigenI INTERFACE)
 target_include_directories(eigenI INTERFACE ${PROJECT_SOURCE_DIR}/extern/eigen)
 #uncomment the following in order to activate parallelization for Eigen
-#if(OpenMP_CXX_FOUND)
-#    target_link_libraries(eigenI INTERFACE  OpenMP::OpenMP_CXX)
-#endif()
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(eigenI INTERFACE  OpenMP::OpenMP_CXX)
+endif()
 add_library(catch2I INTERFACE)
 target_include_directories(catch2I INTERFACE ${PROJECT_SOURCE_DIR}/extern/Catch2/single_include)
 

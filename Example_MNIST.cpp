@@ -127,7 +127,7 @@ int main() {
 	 * amount_batches: 'batch_size*amount_batches' gives the total amount of samples
 	 * trainModel: defines if the model should be trained with the aboved set parameters
 	 * testModel: defines if the model should be tested (using the MNIST test_data)
-	 * writeWeights: if set the trained Weights  are written to Source_Directory/WeightDeposit
+	 * writeWeights: if set the trained Weights  are written to Source_Directory/data/STORAGE
 	 * readWeights: if set (and Weights have already been Written once) weights are initialized with weights from Source_Directory/WeightDeposit
 	 */
 	int batch_size = 32;
@@ -191,7 +191,7 @@ int main() {
 	/*
 	 * Initialize Network with precalculated Weights
 	 */
-	if (readWeights) { network.readParameters(WEIGHT_DEPOSIT, "mnist_layer"); }
+	if (readWeights) { network.readParameters(STORAGE, "mnist_layer"); }
 
 	/*
 	 * Train the Network
@@ -203,7 +203,7 @@ int main() {
 		/*
 		 * Write calculated Weights to Network
 		 */
-		if (writeWeights) { network.writeParameters(WEIGHT_DEPOSIT, "mnist_layer"); }
+		if (writeWeights) { network.writeParameters(STORAGE, "mnist_layer"); }
 	}
 
 

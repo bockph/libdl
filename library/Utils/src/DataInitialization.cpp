@@ -11,11 +11,7 @@ Eigen::MatrixXf DataInitialization::generateRandomMatrix(int rows, int cols){
     Eigen::MatrixXf m = Eigen::MatrixXf::Random(rows,cols);
 
     float test =std::sqrt(2/((float)rows-1));
-
     m = m *test;
-
-
-
     return m;
 }
 Eigen::MatrixXf DataInitialization::generateRandomMatrixNormalDistribution(float mean, float stdev, int rows, int cols){

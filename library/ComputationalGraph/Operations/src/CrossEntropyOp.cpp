@@ -24,12 +24,8 @@ void CrossEntropyOp::forwardPass() {
 void CrossEntropyOp::backwardPass() {
 	Matrix predictions =  getInput()->getForward();
 	Matrix labels = getLabels()->getForward();
-	Matrix tmp2 = predictions - labels;
-	//TODO check if this can be deleted
-	tmp2 = tmp2 / getInput()->getForward().rows();
-
-	getInput()->setPreviousGradients(tmp2);
-
-
+	Matrix dSoftmaxCrossEntropy = predictions - labels;
+    dSoftmaxCrossEntropy = dSoftmaxCrossEntropy / getInput()->getForward().rows();
+	getInput()->setPreviousGradients(dSoftmaxCrossEntropy);
 }
 
