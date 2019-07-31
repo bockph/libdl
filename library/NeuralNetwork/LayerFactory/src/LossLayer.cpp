@@ -9,7 +9,7 @@
 
 
 LossLayer::LossLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph> computeGraph, LossType losstype)
-		: AbstractLayer(input, computeGraph) {
+		: AbstractLayer(std::move(input), std::move(computeGraph)) {
 
 
 

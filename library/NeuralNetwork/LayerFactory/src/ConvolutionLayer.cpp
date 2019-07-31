@@ -14,7 +14,7 @@ ConvolutionLayer::ConvolutionLayer(std::shared_ptr<AbstractLayer> input, std::sh
                                    ActivationType activationFunction, int amountFilter, int kernelDim, int stride,
                                    InitializationType initializationType)
         :
-        AbstractLayer(input, computeGraph) {
+        AbstractLayer(input, std::move(computeGraph)) {
 
     int inputSizeOneChannel = input->getOutputSize() / getInputChannels();
     int inputDim = static_cast<int>(std::sqrt(inputSizeOneChannel));

@@ -12,8 +12,8 @@ void CrossEntropyOp::forwardPass() {
 	float negative = reduceSum * -1;
 	Matrix result(cwiseLogInput.rows(), cwiseLogInput.cols());
 
-	for (int i = 0; i < result.rows(); i++) {
-		for (int j = 0; j < result.cols(); j++) {
+	for (Eigen::Index i = 0; i < result.rows(); i++) {
+		for (Eigen::Index j = 0; j < result.cols(); j++) {
 			result(i, j) = negative;
 		}
 	}

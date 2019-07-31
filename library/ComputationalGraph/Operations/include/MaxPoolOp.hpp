@@ -8,7 +8,9 @@
 
 
 #include "NormalFunction.hpp"
-
+/*!
+ *  Implements a MaxPooling operation
+ */
 class MaxPoolOp : public NormalFunction {
 public:
 	MaxPoolOp(std::shared_ptr<Node> X, int windowSize, int stride = 1);

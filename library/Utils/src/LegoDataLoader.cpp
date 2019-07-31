@@ -75,14 +75,14 @@ void LegoDataLoader::getData(int samples, std::vector<std::pair<std::string, int
 }
 
 
-std::vector<std::pair<std::string, int>> LegoDataLoader::shuffleData(std::string dataDir) {
+std::vector<std::pair<std::string, int>> LegoDataLoader::shuffleData(const std::string& dataDir) {
 	std::ofstream(dataDir + std::string("lego/shuffledData.csv"));
 	std::vector<std::pair<std::string, int>> values;
-
+    values.reserve(16*400);
 	for (int i = 0; i < 16; i++) {
 		std::string path = dataDir + std::string("lego/train/") + std::to_string(i + 1) + std::string("/");
 		for (const auto &entry : std::filesystem::directory_iterator(path)) {
-			values.push_back(std::pair<std::string, int>(entry.path(), i));
+			values.emplace_back(std::pair<std::string, int>(entry.path(), i));
 		}// << std::endl;
 
 	}

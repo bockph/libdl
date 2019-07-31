@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include "NeuralNetwork.hpp"
-#include "../../Utils/include/commonDatatypes.hpp"
 
 NeuralNetwork::NeuralNetwork(const std::shared_ptr<Graph> computeGraph, const std::shared_ptr<InputLayer> inputLayer,
 							 const std::shared_ptr<LossLayer> lossLayer)

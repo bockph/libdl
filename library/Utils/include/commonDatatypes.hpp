@@ -4,6 +4,8 @@
 #pragma once
 
 #include <Eigen/Dense>
+#include <utility>
+#include <utility>
 
 using Matrix = Eigen::MatrixXf;
 
@@ -51,19 +53,19 @@ struct HyperParameters {
 };
 
 struct DataSet {
-	DataSet() {};
+	DataSet() = default;;
 
 	~DataSet() = default;
 
 	DataSet(std::vector<Matrix> trainingSamples, std::vector<Matrix> trainingLabels)
-			: _trainingSamples(trainingSamples), _trainingLabels(trainingLabels) {};
+			: _trainingSamples(std::move(std::move(trainingSamples))), _trainingLabels(std::move(std::move(trainingLabels))) {};
 
 	DataSet(std::vector<Matrix> trainingSamples, std::vector<Matrix> trainingLabels, std::vector<Matrix>
 	validationSamples, std::vector<Matrix> validationLabels)
-			: _trainingSamples(trainingSamples)
-			, _trainingLabels(trainingLabels)
-			, _validationSamples(validationSamples)
-			, _validationLabels(validationLabels) {};
+			: _trainingSamples(std::move(trainingSamples))
+			, _trainingLabels(std::move(trainingLabels))
+			, _validationSamples(std::move(validationSamples))
+			, _validationLabels(std::move(validationLabels)) {};
 
 	std::vector<Matrix> _trainingSamples{}, _trainingLabels{};
 	std::vector<Matrix> _validationSamples{}, _validationLabels{};
@@ -75,17 +77,17 @@ struct TrainingEvaluation {
 
 	TrainingEvaluation(std::vector<float> trainingLoss, std::vector<float> trainingAccuracy,
 					   HyperParameters hyperParameters)
-			: _trainingLoss(trainingLoss)
-			, _trainingAccuracy(trainingAccuracy)
+			: _trainingLoss(std::move(trainingLoss))
+			, _trainingAccuracy(std::move(trainingAccuracy))
 			, _hyperParameters(hyperParameters) {}
 
 	TrainingEvaluation(std::vector<float> trainingLoss, std::vector<float> trainingAccuracy,
 					   std::vector<float> validationLoss, std::vector<float> validationAccuracy,
 					   HyperParameters hyperParameters)
-			: _trainingLoss(trainingLoss)
-			, _trainingAccuracy(trainingAccuracy)
-			, _validationLoss(validationLoss)
-			, _validationAccuracy(validationAccuracy)
+			: _trainingLoss(std::move(trainingLoss))
+			, _trainingAccuracy(std::move(trainingAccuracy))
+			, _validationLoss(std::move(validationLoss))
+			, _validationAccuracy(std::move(validationAccuracy))
 			, _hyperParameters(hyperParameters) {}
 
 	std::vector<float> _trainingLoss;
@@ -93,25 +95,7 @@ struct TrainingEvaluation {
 	std::vector<float> _trainingAccuracy;
 	std::vector<float> _validationAccuracy;
 
-	const std::vector<float> &getTrainingLoss() const {
-		return _trainingLoss;
-	}
 
-	const std::vector<float> &getValidationLoss() const {
-		return _validationLoss;
-	}
-
-	const std::vector<float> &getTrainingAccuracy() const {
-		return _trainingAccuracy;
-	}
-
-	const std::vector<float> &getValidationAccuracy() const {
-		return _validationAccuracy;
-	}
-
-	const HyperParameters &getHyperParameters() const {
-		return _hyperParameters;
-	}
 
 	HyperParameters _hyperParameters;
 };

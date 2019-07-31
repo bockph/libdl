@@ -5,10 +5,10 @@
 #include "SoftmaxOp.hpp"
 
 
-#include <iostream>
+#include <utility>
 
 SoftmaxOp::SoftmaxOp(std::shared_ptr<Node> X, int amountClasses)
-		: ActivationFunction(X), _amountClasses(amountClasses) {}
+		: ActivationFunction(std::move(X)), _amountClasses(amountClasses) {}
 
 void SoftmaxOp::forwardPass() {
 	Eigen::MatrixXf tmp = getInput()->getForward();

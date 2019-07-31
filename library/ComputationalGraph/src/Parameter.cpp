@@ -2,7 +2,6 @@
 // Created by phili on 14.06.2019.
 //
 
-#include <iostream>
 #include "Parameter.hpp"
 
 

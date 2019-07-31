@@ -6,7 +6,7 @@
 #include <fstream>
 #include <iostream>
 
-    bool write_binary(const std::string filename, const Eigen::MatrixXf& matrix){
+    bool write_binary(const std::string& filename, const Eigen::MatrixXf& matrix){
         std::ofstream out(filename, std::ios::out | std::ios::binary | std::ios::trunc);
         if(!out.is_open()){
             std::cout<<"During Write_binary, File:\n"<<filename<<"\ncould not be opened."<<std::endl;
@@ -19,7 +19,7 @@
         out.close();
         return true;
     }
-    bool read_binary(const std::string filename, Eigen::MatrixXf& matrix){
+    bool read_binary(const std::string& filename, Eigen::MatrixXf& matrix){
         std::ifstream in(filename, std::ios::in | std::ios::binary);
         if(!in.is_open()){
             std::cout<<"During Read_binary, File:\n"<<filename<<"\ncould not be opened."<<std::endl;

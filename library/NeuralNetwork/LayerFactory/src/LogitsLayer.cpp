@@ -4,10 +4,11 @@
 
 #include <SoftmaxOp.hpp>
 #include <LogitsLayer.hpp>
+#include <utility>
 
 
 LogitsLayer::LogitsLayer(std::shared_ptr<AbstractLayer> input,std::shared_ptr<Graph> computeGraph, int outputClasses) :
-        AbstractLayer(input,computeGraph) {
+        AbstractLayer(std::move(input),computeGraph) {
 
 
 

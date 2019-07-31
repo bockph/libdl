@@ -8,7 +8,7 @@
 
 class MaxPoolLayer: public AbstractLayer {
 public:
-    MaxPoolLayer(std::shared_ptr<AbstractLayer> input,std::shared_ptr<Graph> computeGraph, int kernelDim, int stride);
+    MaxPoolLayer(const std::shared_ptr<AbstractLayer>& input,std::shared_ptr<Graph> computeGraph, int kernelDim, int stride);
     ~MaxPoolLayer()=default;
 
 

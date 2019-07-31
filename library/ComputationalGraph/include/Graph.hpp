@@ -37,32 +37,42 @@ public:
 	void updateParameters(HyperParameters params = HyperParameters());
 
 	/*!
-	 * Writes all Parameters 
-	 * @param dir
-	 * @return
+	 * Writes all Parameters to path dir
+	 * @param dir path/to/Parameter/files/Networkname
+	 * @return success
 	 */
 	bool writeParameters(std::string dir);
+    /*!
+     * Reads all Parameters from path dir
+     * @param dir path/to/Parameter/files/Networkname
+     * @return success
+     */
 	bool readParameters(std::string dir);
 
 
 
-public:
-	const std::shared_ptr<Placeholder> &getInput() const;
-
-	void setInput(const std::shared_ptr<Placeholder> &input);
-
-	const std::shared_ptr<Placeholder> &getLabels() const;
-
-	void setLabels(const std::shared_ptr<Placeholder> &labels);
-
-	void addParameter(std::shared_ptr<Parameter> variable);
-
-	void addOperation(std::shared_ptr<Operation> operation);
-
 private:
-	std::shared_ptr<Placeholder> _input, _labels;
-	std::vector<std::shared_ptr<Parameter>> _parameters;
-	std::vector<std::shared_ptr<Operation>> _operations;
+	std::shared_ptr<Placeholder> _input; //! represents the Input Node of the graph
+    std::shared_ptr<Placeholder> _labels; //! represents the correct labels ( onlyneeded for a Loss function)
+	std::vector<std::shared_ptr<Parameter>> _parameters; //!contains all updatable nodes of the graph
+	std::vector<std::shared_ptr<Operation>> _operations; //!contains all operations of the graph ordered according to their position in the graph
+
+    /*
+     * Getters & Setters
+     */
+
+public:
+    const std::shared_ptr<Placeholder> &getInput() const;
+
+    void setInput(const std::shared_ptr<Placeholder> &input);
+
+    const std::shared_ptr<Placeholder> &getLabels() const;
+
+    void setLabels(const std::shared_ptr<Placeholder> &labels);
+
+    void addParameter(std::shared_ptr<Parameter> variable);
+
+    void addOperation(std::shared_ptr<Operation> operation);
 
 
 };

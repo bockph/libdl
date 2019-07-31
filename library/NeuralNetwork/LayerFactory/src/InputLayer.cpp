@@ -7,7 +7,7 @@
 
 
 InputLayer::InputLayer(std::shared_ptr<Graph> computeGraph,int batchSize, int dataPoints, int channel ) :
-        AbstractLayer(computeGraph) {
+        AbstractLayer(std::move(computeGraph)) {
 
     /*
      * Initialization of Placeholder

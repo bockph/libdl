@@ -12,7 +12,7 @@
 class LegoDataLoader {
 public:
 	static void getData(int samples, std::vector<std::pair<std::string, int>> shuffledFiles, DataSet &data);
-	static std::vector<std::pair<std::string, int>> shuffleData(std::string dataDir);
+	static std::vector<std::pair<std::string, int>> shuffleData(const std::string& dataDir);
 };
 
 

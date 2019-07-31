@@ -3,3 +3,6 @@
 //
 
 #include "ActivationFunction.hpp"
+
+ActivationFunction::ActivationFunction(std::shared_ptr<Node> X)
+        : Operation(X, X->getOutputChannels()) {}
