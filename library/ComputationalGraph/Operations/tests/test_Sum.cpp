@@ -25,7 +25,7 @@ TEST_CASE("SUM ForwardPass ", "[operation]") {
 		graph->setInput(X);
 
 		auto sum = OperationsFactory::createSummationOp(graph,X,Add,1);
-		graph->predict();
+		graph->computeForward();
 
 		Matrix test(1,1);
 		test<<75;
@@ -47,7 +47,7 @@ TEST_CASE("SUM ForwardPass ", "[operation]") {
 
 		auto sum = OperationsFactory::createSummationOp(graph,X,Add,1);
 		auto sum2 = OperationsFactory::createSummationOp(graph,sum,Add2,1);
-		graph->predict();
+		graph->computeForward();
 
 		Matrix test(1,1);
 		test<<125;

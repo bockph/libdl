@@ -5,28 +5,20 @@
 #include <iostream>
 #include "SigmoidOP.hpp"
 
+SigmoidOP::SigmoidOP(std::shared_ptr<Node> X)
+		: ActivationFunction(X) {}
 
 void SigmoidOP::forwardPass() {
-
-    setForward(getInput()->getForward().unaryExpr(std::ref(sigmoid)));
-
-
-};
+	setForward(getInput()->getForward().unaryExpr(std::ref(sigmoid)));
+}
 
 void SigmoidOP::backwardPass() {
-
-    auto tmp = getForward();
-    tmp.setOnes();
-    auto dSigmoid = getForward().cwiseProduct(tmp - getForward());
+	auto tmp = getForward();
+	tmp.setOnes();
+	auto dSigmoid = getForward().cwiseProduct(tmp - getForward());
 	getInput()->setPreviousGradients(getPreviousGradients().cwiseProduct(dSigmoid));
-
-    /*
-     * Debug Information
-     */
-    /* std::cout<<"Sigmoid FOrward:"<<getForward()<<std::endl;
-     std::cout<<"Sigmoid Backwards:"<<getCurrentGradients()<<std::endl;*/
 }
 
 float SigmoidOP::sigmoid(float a) {
-    return 1 / (1 + std::exp(-a));
+	return 1 / (1 + std::exp(-a));
 }

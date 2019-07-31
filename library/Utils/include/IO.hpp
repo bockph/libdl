@@ -6,9 +6,9 @@
 
 #include <Eigen/Dense>
 
-bool write_binary(const std::string filename, const Eigen::MatrixXf &matrix);
+bool write_binary(std::string filename, const Eigen::MatrixXf &matrix);
 
-bool read_binary(const std::string filename, Eigen::MatrixXf &matrix);
+bool read_binary(std::string filename, Eigen::MatrixXf &matrix);
 
 
 

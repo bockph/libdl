@@ -25,6 +25,10 @@ DenseLayer::DenseLayer(std::shared_ptr<AbstractLayer> input,std::shared_ptr<Grap
     switch (initializationType){
         case InitializationType ::Xavier:
             weightMatrix = DataInitialization::generateRandomMatrix(0,.1,input->getOutputSize(),_amountNeurons);
+            break;
+		default:
+			throw std::runtime_error(std::string("the selected Initializationtype has yet not been Implemented in "
+										"DenseLayer class"));
 
     }
 
@@ -36,14 +40,6 @@ DenseLayer::DenseLayer(std::shared_ptr<AbstractLayer> input,std::shared_ptr<Grap
     auto multiplication = OperationsFactory::createMultiplicationOp(getComputeGraph(),getInputNode(),weightMatrix);
 	auto biasSummation = OperationsFactory::createSummationOp(getComputeGraph(), multiplication, biasMatrix, 1);
 	std::shared_ptr<Operation> activationOp;
-
-    /*_weights = std::make_shared<Parameter>(weightMatrix,1,1);
-    _bias = std::make_shared<Parameter>(biasMatrix);
-
-    auto multiplicationOp = std::make_shared<MultiplicationOp>(getInputNode(),_weights);
-    auto biasOp = std::make_shared<SummationOp>(multiplicationOp, _bias);
-
-    std::shared_ptr<Node> activationOp;*/
 
     /*
      * Initialize activation Function
@@ -68,16 +64,3 @@ DenseLayer::DenseLayer(std::shared_ptr<AbstractLayer> input,std::shared_ptr<Grap
 
 }
 
-Matrix DenseLayer::getWeightMatrix(){
-    return _weights->getForward();
-}
-Matrix DenseLayer::getBiasMatrix(){
-    return _bias->getForward();
-}
-
-void DenseLayer::setWeightMatrix(Matrix filter){
-    _weights->setForward(filter);
-}
-void DenseLayer::setBiasMatrix(Matrix bias){
-    _bias->setForward(bias);
-}

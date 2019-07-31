@@ -16,7 +16,6 @@ LogitsLayer::LogitsLayer(std::shared_ptr<AbstractLayer> input,std::shared_ptr<Gr
      */
 
     auto softmax = OperationsFactory::createSoftmaxOp(getComputeGraph(),getInputNode(),outputClasses);
-//    std::shared_ptr<SoftmaxOp> softmax = std::make_shared<SoftmaxOp>(getInputNode(), outputClasses);
 
 
     setOutputNode(softmax);

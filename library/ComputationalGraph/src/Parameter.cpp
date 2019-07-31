@@ -19,7 +19,7 @@ Parameter::Parameter(Matrix& matrix) {
 }
 
 void Parameter::updateParameter(const HyperParameters &hyperParameters) {
-	Matrix tmp = getPreviousGradients()/hyperParameters._batchsize;
+	Matrix tmp = getPreviousGradients()/hyperParameters._batchSize;
 
     switch(hyperParameters._optimizer){
         case Optimizer::Adam:

@@ -32,7 +32,7 @@ TEST_CASE("Maxpool Forwardpass ", "[operation]") {
     auto X = std::make_shared<Placeholder>(img,1);
 	graph->setInput(X);
 	std::shared_ptr<MaxPoolOp> maxPool = OperationsFactory::createMaxpoolOp(graph, X, 2,2);
-	graph->train();
+	graph->computeForward();
 
     SECTION("general Functionality", "[One_Channel_Image]") {
 
@@ -74,7 +74,8 @@ TEST_CASE("Maxpool Backwardpass ", "[operation]") {
 
 	graph->setInput(X);
 	std::shared_ptr<MaxPoolOp> maxPool = OperationsFactory::createMaxpoolOp(graph, X, 2,2);
-	graph->train();
+	graph->computeForward();
+	graph->computeBackwards();
 
     SECTION("IndexMatrix", "[One_Channel_Image]") {
 

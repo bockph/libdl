@@ -2,7 +2,6 @@
 // Created by pbo on 23.07.19.
 //
 
-
 #pragma once
 
 #include <AbstractLayer.hpp>
@@ -13,20 +12,11 @@ public:
     activationFunction,int amountNeurons, InitializationType initializationType=InitializationType::Xavier);
     ~DenseLayer()=default;
 
-    Matrix getWeightMatrix();
-    Matrix getBiasMatrix();
-
-    void setWeightMatrix(Matrix filter);
-    void setBiasMatrix(Matrix bias);
-
 private:
 
-    ActivationType _activationFunction;
-    InitializationType _initializationType;
+	InitializationType _initializationType;
     int _amountNeurons;
 
-    std::shared_ptr<Parameter> _weights;
-    std::shared_ptr<Parameter> _bias;
 };
 
 

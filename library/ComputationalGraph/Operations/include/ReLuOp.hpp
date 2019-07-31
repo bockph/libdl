@@ -8,14 +8,13 @@
 
 class ReLuOp : public ActivationFunction {
 public:
-    ReLuOp(std::shared_ptr<Node> X)
-            : ActivationFunction(X) {};
+	explicit ReLuOp(std::shared_ptr<Node> X);
 
-    ~ReLuOp() = default;
+	~ReLuOp() override = default;
 
-    void forwardPass() override;
+	void forwardPass() override;
 
-    void backwardPass() override;
+	void backwardPass() override;
 
-    static float deriveReLu(const float element) ;
+	static float deriveReLu(float element);
 };

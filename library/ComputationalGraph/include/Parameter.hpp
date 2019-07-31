@@ -28,12 +28,12 @@ public:
 	 * Further it initializes the momentum and RMSprob for possible future Updates using the ADAM optimizer
 	 * @param input
 	 */
-	Parameter(Matrix &input);
+	explicit Parameter(Matrix &input);
 
 	/*!
 	 * Default Destructor
 	 */
-    ~Parameter() = default;
+    ~Parameter() override = default;
 
     /*!
      * updates the output of the Variable according to the Optimizer and Hyperparameters that are passed.

@@ -26,8 +26,8 @@ void Operation::startTimeMeasurement() {
 int Operation::stopTimeMeasurement(char function) {
     _end = std::chrono::system_clock::now();
 
-    int elapsed_seconds = std::chrono::duration_cast<std::chrono::microseconds>
-            (_end-_start).count();
+    int elapsed_seconds = static_cast<int>(std::chrono::duration_cast<std::chrono::microseconds>
+			(_end - _start).count());
 
     switch (function){
         case 0: _forwardTime=elapsed_seconds;

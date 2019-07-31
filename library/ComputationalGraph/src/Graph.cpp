@@ -21,7 +21,7 @@ void Graph::computeBackwards() {
 		(*op)->backwardPass();
 }
 
-void Graph::updateParameters(HyperParameters& params) {
+void Graph::updateParameters(HyperParameters params) {
 	for (std::shared_ptr<Parameter> parameter:_parameters)
 		parameter->updateParameter(params);
 }

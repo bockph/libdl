@@ -9,8 +9,7 @@
 
 
 LossLayer::LossLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph> computeGraph, LossType losstype)
-		:
-		AbstractLayer(input, computeGraph) {
+		: AbstractLayer(input, computeGraph) {
 
 
 
@@ -38,22 +37,23 @@ LossLayer::LossLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph
 	setOutputNode(_lossNode);
 
 }
-
+//TODO set static or check if it can be using a different call
 float LossLayer::getLoss() {
 
 	return getOutputNode()->getForward()(0, 0);
 }
 
-void LossLayer::updateLabels(Matrix& newLabels) {
+void LossLayer::updateLabels(Matrix &newLabels) {
 	if (std::dynamic_pointer_cast<LossFunction>(getOutputNode()) != nullptr) {
 		std::dynamic_pointer_cast<LossFunction>(getOutputNode())->getLabels()->setForward(newLabels);
 	}
 }
 
 const std::shared_ptr<LossFunction> &LossLayer::getLossNode() const {
-    return _lossNode;
+	return _lossNode;
 }
+
 const Matrix LossLayer::getPrediction() const {
-    return _lossNode->getPrediction();
+	return _lossNode->getPrediction();
 }
 

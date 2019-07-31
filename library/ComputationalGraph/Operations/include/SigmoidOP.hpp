@@ -8,10 +8,9 @@
 
 class SigmoidOP : public ActivationFunction {
 public:
-	SigmoidOP(std::shared_ptr<Node> X)
-			: ActivationFunction(X) {};
+	explicit SigmoidOP(std::shared_ptr<Node> X);
 
-	~SigmoidOP() = default;
+	~SigmoidOP() override = default;
 
 	void forwardPass() override;
 

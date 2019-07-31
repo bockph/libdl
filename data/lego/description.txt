@@ -1,10 +1,10 @@
 Folder 1: 2357-Brick corner 1x2x2
 Folder 2: 3003-Brick 2x2
-Folder 3: 3004 Brick 1x2
-Folder 4: 3005 Brick 1x2
-Folder 5: 3022 Plate 2x2
-Folder 6: 3023 Plate 1x2
-Folder 7: 3024 Plate 1x1
+Folder 3: 3004-Brick 1x2
+Folder 4: 3005-Brick 1x2
+Folder 5: 3022-Plate 2x2
+Folder 6: 3023-Plate 1x2
+Folder 7: 3024-Plate 1x1
 Folder 8:3040 Roof Tile 1x2x45deg
 Folder 9: 3069 Flat Tile 1x2
 Folder 10: 3673 Peg 2M
@@ -14,20 +14,3 @@ Folder 13: 6632 Technic Lever 3M
 Folder 14: 11214 Bush 3M friction with Cross axis
 Folder 15: 18651 Cross Axle 2M with Snap friction
 Folder 16: 32123 half Bush
-
-[[0, '2357 - Brick corner 1x2x2','lego/train/1/0001.png']
- [1, '3003 - Brick 2x2','lego/train/2/0001.png']
- [2, '3004 - Brick 1x2','lego/train/3/0001.png']
- [3, '3005 - Brick 1x2','lego/train/4/0001.png']
- [4, '3022 - Plate 2x2','lego/train/5/0001.png']
- [5, '3023 - Plate 1x2','lego/train/6/0001.png']
- [6, '3024 - Plate 1x1','lego/train/7/0001.png']
- [7, '3040 - Roof Tile 1x2x45deg','lego/train/8/0001.png']
- [8, '3069 - Flat Tile 1x2','lego/train/9/0001.png']
- [9, '3673 - Peg 2M','lego/train/10/0001.png']
- [10, '3713 - Bush for Cross Axle','lego/train/11/0001.png']
- [11, '3794 - Plate 1x2 with 1 Knob','lego/train/12/0001.png']
- [12, '6632 - Technic Lever 3M','lego/train/13/0001.png']
- [13, '11214 - Bush 3M friction with Cross axis','lego/train/14/0001.png']
- [14, '18651 - Cross Axle 2M with Snap friction','lego/train/15/0001.png']
- [15, '32123 - half Bush','lego/train/16/0001.png']]

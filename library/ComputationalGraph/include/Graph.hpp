@@ -12,7 +12,7 @@
 class Graph {
 public:
 
-	void updateParameters(HyperParameters& params);
+	void updateParameters(HyperParameters params = HyperParameters());
 	void computeForward();
 	void computeBackwards();
 	bool writeVariables(std::string dir);
@@ -32,8 +32,6 @@ public:
 	void addParameter(std::shared_ptr<Parameter> variable);
 
 	void addOperation(std::shared_ptr<Operation> operation);
-
-	void setHyperParameters(const HyperParameters &hyperParameters);
 
 private:
 	std::shared_ptr<Placeholder> _input, _labels;

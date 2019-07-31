@@ -24,7 +24,7 @@ public:
 	/*!
 	 * Default destructor
 	 */
-    virtual ~Operation() = default;
+    ~Operation() override = default;
 
 	/*!
 	 * calculates the outputValue of this Operation using the Input Nodes.

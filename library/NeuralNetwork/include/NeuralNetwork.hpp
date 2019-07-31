@@ -11,8 +11,8 @@
 
 class NeuralNetwork {
 public:
-    NeuralNetwork(const std::shared_ptr<Graph> computeGraph, const std::shared_ptr<InputLayer> inputLayer,
-                  const std::shared_ptr<LossLayer> lossLayer);
+    NeuralNetwork(std::shared_ptr<Graph> computeGraph, std::shared_ptr<InputLayer> inputLayer,
+                  std::shared_ptr<LossLayer> lossLayer);
 
     void trainBatch(Matrix &miniBatch, Matrix &labels, HyperParameters& params);
 
@@ -20,10 +20,9 @@ public:
 
     bool writeParameters(std::string dir, std::string networkName);
 
-    void testAccuracy(Matrix &results, Matrix &labels, float &correct, float &total);
+    static void testAccuracy(Matrix &results, Matrix &labels, float &correct, float &total);
 
 
-    bool writeTrainingLog(std::string dir, std::string training);
 
     bool readParameters(std::string dir, std::string networkName);
 

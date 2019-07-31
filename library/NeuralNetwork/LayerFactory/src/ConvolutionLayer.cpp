@@ -17,9 +17,9 @@ ConvolutionLayer::ConvolutionLayer(std::shared_ptr<AbstractLayer> input, std::sh
 		AbstractLayer(input, computeGraph) {
 
 	int inputSizeOneChannel = input->getOutputSize() / getInputChannels();
-	int inputDim = std::sqrt(inputSizeOneChannel);
-	int outputDim = std::floor((inputDim - kernelDim) / stride) + 1;
-	int outputSize = std::pow(outputDim, 2) * amountFilter;
+	int inputDim = static_cast<int>(std::sqrt(inputSizeOneChannel));
+	int outputDim = static_cast<int>(std::floor((inputDim - kernelDim) / stride) + 1);
+	int outputSize = static_cast<int>(std::pow(outputDim, 2) * amountFilter);
 
 
 
@@ -30,7 +30,7 @@ ConvolutionLayer::ConvolutionLayer(std::shared_ptr<AbstractLayer> input, std::sh
 	switch (initializationType) {
 		case InitializationType::Xavier:
 			filterMatrix = DataInitialization::generateRandomMatrix(0, .1, amountFilter,
-					std::pow(kernelDim, 2) * getInputChannels());
+					static_cast<int>(std::pow(kernelDim, 2) * getInputChannels()));
 			break;
 		default:
 			throw std::runtime_error(std::string("the selected Initializationtype has yet not been Implemented in ConvolutionLayer class"));
@@ -49,18 +49,7 @@ ConvolutionLayer::ConvolutionLayer(std::shared_ptr<AbstractLayer> input, std::sh
 
 	std::shared_ptr<Operation> activationOp;
 
-	/*_filter = std::make_shared<Parameter>(filterMatrix , getInputChannels(), kernelDim);
-	getComputeGraph()->addVariable(_filter);
-	_bias = std::make_shared<Parameter>(biasMatrix,amountFilter);
-	getComputeGraph()->addParameter(_bias);
 
-	std::shared_ptr<NormalFunction> convolutionOp = std::make_shared<ConvolutionOp>(getInputNode(),_filter,stride);
-	getComputeGraph()->addOperation(convolutionOp);
-
-	std::shared_ptr<NormalFunction> biasOp = std::make_shared<SummationOp>(convolutionOp,_bias);
-	getComputeGraph()->addOperation(biasOp);
-
-	std::shared_ptr<ActivationFunction> activationOp;*/
 
 	/*
 	 * Initialize activation Function

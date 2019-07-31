@@ -10,7 +10,7 @@
 
 
 void LegoDataLoader::getData(int samples, std::vector<std::pair<std::string, int>> shuffledFiles, DataSet &data) {
-	int numberValidation = std::floor(samples * 0.2);
+	int numberValidation = static_cast<int>(std::floor(samples * 0.2));
 	assert(samples + numberValidation <= shuffledFiles.size());
 
 	std::vector<Matrix> trainingSamples, trainingLabels;

@@ -30,7 +30,7 @@ TEST_CASE("RELU Forward ", "[operation]") {
         auto X = std::make_shared<Placeholder>(img,1);
 		graph->setInput(X);
 		auto relu = OperationsFactory::createReLuOp(graph,X);
-		graph->predict();
+		graph->computeForward();
 
 
         Eigen::MatrixXf test = Eigen::MatrixXf(1, 3);
@@ -51,8 +51,9 @@ TEST_CASE("RELU Backward ", "[operation]") {
 	auto X = std::make_shared<Placeholder>(img,1);
 	graph->setInput(X);
 	auto relu = OperationsFactory::createReLuOp(graph,X);
-	graph->train();
-
+	graph->computeForward();
+	graph->computeBackwards();
+	graph->updateParameters();
     Eigen::MatrixXf test = Eigen::MatrixXf(1, 3);
     test <<1,1,1;
     REQUIRE(X->getPreviousGradients().isApprox(test)

@@ -9,12 +9,11 @@
 
 class NormalFunction : public Operation {
 public:
-	NormalFunction(std::shared_ptr<Node> X, std::shared_ptr<Parameter> parameter, int outputChannels)
-			: Operation(X,outputChannels), _parameter(parameter) {};
+	NormalFunction(std::shared_ptr<Node> X, std::shared_ptr<Parameter> parameter, int outputChannels);
 
-	NormalFunction(std::shared_ptr<Node> X, int outputChannels)
-			: Operation(X,outputChannels) {};
-	~NormalFunction()=default;
+	NormalFunction(std::shared_ptr<Node> X, int outputChannels);
+
+	~NormalFunction() override = default;
 
 private:
 	std::shared_ptr<Parameter> _parameter;

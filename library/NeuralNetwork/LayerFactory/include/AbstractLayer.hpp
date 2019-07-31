@@ -13,43 +13,44 @@ class AbstractLayer {
 public:
 
 
-    AbstractLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph> computeGraph);
-    AbstractLayer(std::shared_ptr<Graph> computeGraph):_computeGraph(computeGraph){};
+	AbstractLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph> computeGraph);
 
-    ~AbstractLayer() = default;
+	explicit AbstractLayer(std::shared_ptr<Graph> computeGraph);
 
-    const std::shared_ptr<Node> &getInputNode() const;
+	~AbstractLayer() = default;
 
-    const std::shared_ptr<Node> &getOutputNode() const;
+	const std::shared_ptr<Node> &getInputNode() const;
 
-    void setOutputNode(const std::shared_ptr<Node> &outputNode);
+	const std::shared_ptr<Node> &getOutputNode() const;
+
+	void setOutputNode(const std::shared_ptr<Node> &outputNode);
 
 
-    int getOutputChannels() const;
+	int getOutputChannels() const;
 
-    void setOutputChannels(int outputChannels);
+	void setOutputChannels(int outputChannels);
 
-    int getInputChannels() const;
+	int getInputChannels() const;
 
-    int getOutputSize() const;
+	int getOutputSize() const;
 
-    void setOutputSize(int outputSize);
+	void setOutputSize(int outputSize);
 
-    int getBatchSize() const;
+	int getBatchSize() const;
 
-    void setBatchSize(int batchSize);
+	void setBatchSize(int batchSize);
 
 	const std::shared_ptr<Graph> &getComputeGraph() const;
 
 private:
-    std::shared_ptr<AbstractLayer> _inputLayer;
-    std::shared_ptr<Node> _inputNode;
-    std::shared_ptr<Node> _outputNode;
-    int _outputChannels;
-    int _outputSize;
-    int _inputChannels;
-    int _batchSize;
-    std::shared_ptr<Graph> _computeGraph;
+	std::shared_ptr<AbstractLayer> _inputLayer;
+	std::shared_ptr<Node> _inputNode;
+	std::shared_ptr<Node> _outputNode;
+	int _outputChannels;
+	int _outputSize;
+	int _inputChannels;
+	int _batchSize;
+	std::shared_ptr<Graph> _computeGraph;
 
 };
 

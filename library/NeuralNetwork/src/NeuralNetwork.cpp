@@ -51,8 +51,8 @@ float NeuralNetwork::train(DataSet &data, HyperParameters params, float training
 	if (data._trainingSamples.size() != data._trainingLabels.size()) {
 		throw std::runtime_error("The size of the Samples does not equal the Size of the Labels");
 	}
-	std::vector<Matrix> sampleBatches = extractBatchList(data._trainingSamples, params._batchsize);
-	std::vector<Matrix> labelBatches = extractBatchList(data._trainingLabels, params._batchsize);
+	std::vector<Matrix> sampleBatches = extractBatchList(data._trainingSamples, params._batchSize);
+	std::vector<Matrix> labelBatches = extractBatchList(data._trainingLabels, params._batchSize);
 	float cost = 0;
 	for (int k = 0; k < params._epochs; k++) {
 		cost = 0;
@@ -94,10 +94,10 @@ TrainingEvaluation NeuralNetwork::trainAndValidate(DataSet &data, HyperParameter
 	/*
 	 * Extract Batches
 	 */
-	std::vector<Matrix> sampleTrainBatches = extractBatchList(data._trainingSamples, params._batchsize);
-	std::vector<Matrix> labelTrainBatches = extractBatchList(data._trainingLabels, params._batchsize);
-	std::vector<Matrix> sampleValidationBatches = extractBatchList(data._validationSamples, params._batchsize);
-	std::vector<Matrix> labelValidationBatches = extractBatchList(data._validationLabels, params._batchsize);
+	std::vector<Matrix> sampleTrainBatches = extractBatchList(data._trainingSamples, params._batchSize);
+	std::vector<Matrix> labelTrainBatches = extractBatchList(data._trainingLabels, params._batchSize);
+	std::vector<Matrix> sampleValidationBatches = extractBatchList(data._validationSamples, params._batchSize);
+	std::vector<Matrix> labelValidationBatches = extractBatchList(data._validationLabels, params._batchSize);
 
 
 	/*
@@ -155,13 +155,12 @@ void NeuralNetwork::testAccuracy(Matrix &results, Matrix &labels, float &correct
 	Eigen::Index maxRow, maxCol;
 	for (int i = 0; i < results.rows(); i++) {
 		results.row(i).maxCoeff(&maxRow, &maxCol);
-		int prediction = maxCol;
+		int prediction = static_cast<int>(maxCol);
 		labels.row(i).maxCoeff(&maxRow, &maxCol);
-		int Actual = maxCol;
+		int Actual = static_cast<int>(maxCol);
 
 		if (prediction == Actual) { correct++; }
 		total++;
-
 	}
 }
 
@@ -176,7 +175,7 @@ std::vector<Matrix> NeuralNetwork::extractBatchList(std::vector<Matrix> &dataset
 
 	std::vector<Matrix> batches;
 	batches.reserve(dataset.size() / batchSize);
-	int sampleSize = dataset[0].size();
+	int sampleSize = static_cast<int>(dataset[0].size());
 	for (int i = 0; i < dataset.size() / batchSize; i++) {
 		Matrix tmp(batchSize, sampleSize);
 		for (int s = 0; s < batchSize; s++) {

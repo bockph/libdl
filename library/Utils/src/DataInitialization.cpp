@@ -6,20 +6,14 @@
 
 
 
-Eigen::MatrixXf DataInitialization::generateRandomMatrix(float LO, float HI, int rows, int cols){
+Eigen::MatrixXf DataInitialization::generateRandomMatrix(int rows, int cols){
 
-    float range= HI-LO;
-    Eigen::MatrixXf m = Eigen::MatrixXf::Random(rows,cols); // 3x3 Matrix filled with random numbers between (-1,1)
-    /*m = (m + Eigen::MatrixXf::Constant(rows,cols,1.))*range/2.; // add 1 to the matrix to have values between 0 and 2;
-    // multiply with range/2
-    m = (m + Eigen::MatrixXf::Constant(rows,cols,LO)); //set LO as the lower bound (offset)*/
-//	m.normalize();
+    Eigen::MatrixXf m = Eigen::MatrixXf::Random(rows,cols);
 
     float test =std::sqrt(2/((float)rows-1));
 
     m = m *test;
 
-//	m.normalize();
 
 
     return m;
@@ -34,13 +28,7 @@ Eigen::MatrixXf DataInitialization::generateRandomMatrixNormalDistribution(float
             tmp(i,j) = normalDistribution(__randomGen);
         }
     }
-    /*float range= HI-LO;
-    Eigen::MatrixXf m = Eigen::MatrixXf::Random(rows,cols); // 3x3 Matrix filled with random numbers between (-1,1)
-    m = (m + Eigen::MatrixXf::Constant(rows,cols,1.))*range/2.; // add 1 to the matrix to have values between 0 and 2;
-    // multiply with range/2
-    m = (m + Eigen::MatrixXf::Constant(rows,cols,LO)); //set LO as the lower bound (offset)
-//	m.normalize();
-    m = m *std::sqrt(2/(cols-1));*/
+    //TODO maybe move to NeuralNetwork CleanUp
     float test =std::sqrt(2/((float)rows-1));
 
     tmp = tmp *test;
@@ -48,20 +36,3 @@ Eigen::MatrixXf DataInitialization::generateRandomMatrixNormalDistribution(float
     return tmp;
 }
 
-Eigen::MatrixXf DataInitialization::initializeFilter(int rows, int cols, float scale){
-    int size = rows*cols;
-    float stddev = scale/std::sqrt(size);
-    auto m =generateRandomMatrixNormalDistribution(0,stddev,rows,cols);
-//	std::cout<<m<<std::endl;
-
-    return m;
-
-}
-Eigen::MatrixXf DataInitialization::initializeWeights(int rows, int cols){
-    int size = rows*cols;
-    float stddev = 1;
-    auto m= generateRandomMatrixNormalDistribution(0,stddev,rows,cols)*0.01;
-//	std::cout<<m<<std::endl;
-    return m;
-
-}

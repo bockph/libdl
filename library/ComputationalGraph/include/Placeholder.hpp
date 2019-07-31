@@ -26,12 +26,12 @@ public:
 	 * @param labels each row corresponds to the label of one sample, while the Dimension of each row is the #labels,
 	 * this way the corresponding label is identified by the collumn that holds a "1"
 	 */
-	Placeholder(Matrix &labels);
+	explicit Placeholder(Matrix &labels);
 
 	/*!
 	 * Default Destructor
 	 */
-	~Placeholder() = default;
+	~Placeholder() override = default;
 };
 
 

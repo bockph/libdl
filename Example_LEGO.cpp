@@ -70,7 +70,7 @@ int main() {
  */
 	HyperParameters config(epochs, batch_size, learningRate);
 
-	std::shared_ptr<Graph> graph = std::make_shared<Graph>(config);
+	std::shared_ptr<Graph> graph = std::make_shared<Graph>();
 	//Create InputLayer
 	auto inputLayer = std::make_shared<InputLayer>(graph, batch_size, 160000, 4);
 
@@ -101,7 +101,7 @@ int main() {
 	auto loss = std::make_shared<LossLayer>(logits, graph, LossType::CrossEntropy);
 
 	//Create Deep Learning session
-	NeuralNetwork network(graph, inputLayer, loss, config);
+	NeuralNetwork network(graph, inputLayer, loss);
 
 	/*
 	 * Initialize Network with precalculated Weights

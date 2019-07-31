@@ -12,9 +12,9 @@ MaxPoolLayer::MaxPoolLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr
 		:
 		AbstractLayer(input, computeGraph) {
 	int inputSizeOneChannel = input->getOutputSize() / getInputChannels();
-	int inputDim = std::sqrt(inputSizeOneChannel);
-	int outputDim = std::floor((inputDim - kernelDim) / stride) + 1;
-	int outputSize = std::pow(outputDim, 2) * getInputChannels();
+	int inputDim = static_cast<int>(std::sqrt(inputSizeOneChannel));
+	int outputDim = static_cast<int>(std::floor((inputDim - kernelDim) / stride) + 1);
+	int outputSize = static_cast<int>(std::pow(outputDim, 2) * getInputChannels());
 	/*
 	 * Initialization of Operation Nodes
 	 */

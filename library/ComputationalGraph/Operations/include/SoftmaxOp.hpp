@@ -10,10 +10,9 @@
 
 class SoftmaxOp : public ActivationFunction {
 public:
-	SoftmaxOp(std::shared_ptr<Node> X,int amountClasses)
-			: ActivationFunction(X),_amountClasses(amountClasses) {};
+	SoftmaxOp(std::shared_ptr<Node> X,int amountClasses);
 
-	~SoftmaxOp() = default;
+	~SoftmaxOp() override = default;
 
 	void forwardPass() override;
 

@@ -56,7 +56,7 @@ PYBIND11_MODULE(libdl, m) {
 			.def_readwrite("_epochs", &HyperParameters::_epochs);
 	py::class_<Graph, std::shared_ptr<Graph>>(m, "Graph").def(py::init<>());
 	/*
-	 * Definition NeuralNetwor Interface
+	 * Definition NeuralNetwork Interface
 	 */
 	py::class_<NeuralNetwork>(m, "NeuralNetwork")
 			.def(py::init<const std::shared_ptr<Graph>, const std::shared_ptr<InputLayer>, const

@@ -5,12 +5,15 @@
 #include <iostream>
 #include "MaxPoolOp.hpp"
 
+MaxPoolOp::MaxPoolOp(std::shared_ptr<Node> X, int windowSize, int stride)
+		: NormalFunction(X, X->getOutputChannels()), _windowSize(windowSize), _stride(stride) {};
+
 void MaxPoolOp::forwardPass() {
 
-	int batchSize = getInput()->getForward().rows();
-	int imgSize = getInput()->getForward().cols() / getInputChannels();
-	int imgDim = std::sqrt(imgSize);
-	int outputDim = std::floor((imgDim - _windowSize) / _stride) + 1;
+	int batchSize = static_cast<int>(getInput()->getForward().rows());
+	int imgSize = static_cast<int>(getInput()->getForward().cols() / getInputChannels());
+	int imgDim = static_cast<int>(std::sqrt(imgSize));
+	int outputDim = static_cast<int>(std::floor((imgDim - _windowSize) / _stride) + 1);
 
 	Eigen::MatrixXf::Index maxRow, maxCol;
 
@@ -28,8 +31,8 @@ void MaxPoolOp::forwardPass() {
 					.reshaped(imgDim, imgDim);
 
 			//get the current block of the maxIndexMatrix
-			Eigen::MatrixXf currentMaxIndexMatrix = maxIndexMatrix.block(i, imgSize * c, 1, imgSize)
-					.reshaped(imgDim, imgDim);
+			Eigen::MatrixXf currentMaxIndexMatrix = maxIndexMatrix.block(i,
+					imgSize * c, 1, imgSize).reshaped(imgDim, imgDim);
 
 
 			for (int x = 0; x < outputDim; x++) {
@@ -55,15 +58,14 @@ void MaxPoolOp::forwardPass() {
 	}
 	setMaxIndexMatrix(maxIndexMatrix);
 	setForward(outputMatrix);
-
-};
+}
 
 void MaxPoolOp::backwardPass() {
 
-	int batchSize = getInput()->getForward().rows();
-	int imgSize = getInput()->getForward().cols() / getInputChannels();
-	int imgDim = std::sqrt(imgSize);
-	int outputDim = std::floor((imgDim - _windowSize) / _stride) + 1;
+	int batchSize = static_cast<int>(getInput()->getForward().rows());
+	int imgSize = static_cast<int>(getInput()->getForward().cols() / getInputChannels());
+	int imgDim = static_cast<int>(std::sqrt(imgSize));
+	int outputDim = static_cast<int>(std::floor((imgDim - _windowSize) / _stride) + 1);
 
 
 	Eigen::MatrixXf dX = Eigen::MatrixXf::Zero(batchSize, imgSize * getInputChannels());
@@ -91,12 +93,6 @@ void MaxPoolOp::backwardPass() {
 
 	}
 	getInput()->setPreviousGradients(dX);
-
-	/*
-	 * Debug Information
-	 */
-	/*std::cout<<" MaxPoolOp FOrward:"<<getForward()<<std::endl;
-	std::cout<<" MaxPoolOp Backwards:"<<getCurrentGradients()<<std::endl;*/
 }
 
 

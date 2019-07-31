@@ -12,7 +12,7 @@ public:
 	MSEOp(std::shared_ptr<Node> X, std::shared_ptr<Placeholder> C)
 			: LossFunction(X, C) {};
 
-	~MSEOp() = default;
+	~MSEOp() override = default;
 
 	void forwardPass() override;
 

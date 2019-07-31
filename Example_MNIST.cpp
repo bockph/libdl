@@ -82,7 +82,7 @@
 
 }*/
 
-void getData(int samples, DataSet &data, bool trainData = true) {
+void getData(int samples, DataSet &data) {
 
 	mnist::MNIST_dataset<std::vector, std::vector<uint8_t>, uint8_t> dataset =
 			mnist::read_dataset<std::vector, std::vector, uint8_t, uint8_t>(MNIST_DATA_LOCATION, samples);
@@ -140,12 +140,10 @@ int main() {
 	bool readWeights = false;
 
 
-	float correct, total;
 	std::vector<Eigen::MatrixXf> training_data, training_label;
 	std::vector<Eigen::MatrixXf> test_data, test_label;
 
-//    getBatches(batch_size, amount_batches, training_data, training_label);
-//    getBatches(batch_size, amount_batches, test_data, test_label, false);
+
 	DataSet data;
 	getData(batch_size * amount_batches, data);
 
@@ -156,7 +154,7 @@ int main() {
  */
 
 	HyperParameters config(epochs, batch_size, learningRate);
-	std::shared_ptr<Graph> graph = std::make_shared<Graph>(config);
+	std::shared_ptr<Graph> graph = std::make_shared<Graph>();
 
 
 	//Create InputLayer
@@ -188,7 +186,7 @@ int main() {
 	auto loss = std::make_shared<LossLayer>(logits, graph, LossType::CrossEntropy);
 
 	//Create Deep Learning session
-	NeuralNetwork network(graph, inputLayer, loss, config);
+	NeuralNetwork network(graph, inputLayer, loss);
 
 	/*
 	 * Initialize Network with precalculated Weights
@@ -210,34 +208,6 @@ int main() {
 
 
 
-	/*
-	 * Test the Network
-	 */
-
-	if (testModel) {
-
-		/* for (int b = 0; b < amount_batches; b++) {
-
-			 network.run(test_data[b], test_label[b]);
-
-			 Eigen::MatrixXf::Index maxRow, maxCol;
-
-			 for (int i = 0; i < test_data[b].rows(); i++) {
-				 logits->getOutputNode()->getForward().block(i, 0, 1, 10).maxCoeff(&maxRow, &maxCol);
-				 int p = maxCol;
-				 test_label[b].block(i, 0, 1, 10).maxCoeff(&maxRow, &maxCol);
-				 int A = maxCol;
-
-				 if (p == A)correct++;
-				 total++;
-
-			 }
-
-
-		 }
-		 std::cout << "Amount Correct: " << correct << "\nAmount Wrong: " << total - correct << "\nPercentage Correct: "
-				   << correct / (float) total << std::endl;*/
-	}
 
 
 }

@@ -22,7 +22,7 @@ int main() {
 
 	HyperParameters config(epochs, batchSize, learningRate);
 
-	std::shared_ptr<Graph> graph = std::make_shared<Graph>(config);
+	std::shared_ptr<Graph> graph = std::make_shared<Graph>();
 	/*
 	 * Setup Layers
 	 */
@@ -34,7 +34,7 @@ int main() {
 	auto softmax = std::make_shared<LogitsLayer>(dense2, graph, 2);
 	auto loss = std::make_shared<LossLayer>(softmax, graph, LossType::CrossEntropy);
 
-	NeuralNetwork network(graph, inputLayer, loss, config);
+	NeuralNetwork network(graph, inputLayer, loss);
 	/*
 	 * Prepare Data Inputs
 	 */
