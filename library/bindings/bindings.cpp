@@ -59,11 +59,12 @@ PYBIND11_MODULE(libdl, m) {
 	 * Definition NeuralNetwor Interface
 	 */
 	py::class_<NeuralNetwork>(m, "NeuralNetwork")
-			.def(py::init<const std::shared_ptr<Graph>, const std::shared_ptr<InputLayer>, const std::shared_ptr<LossLayer>, const HyperParameters>())
+			.def(py::init<const std::shared_ptr<Graph>, const std::shared_ptr<InputLayer>, const
+			        std::shared_ptr<LossLayer>>())
 			.def("trainBatch", &NeuralNetwork::trainBatch)
 			.def("predictBatch", &NeuralNetwork::predictBatch)
-			.def("writeVariables", &NeuralNetwork::writeVariables)
-			.def("readVariables", &NeuralNetwork::readVariables)
+			.def("writeParameters", &NeuralNetwork::writeParameters)
+			.def("readParameters", &NeuralNetwork::readParameters)
 			.def("getLoss", &NeuralNetwork::getLoss)
 			.def("train", &NeuralNetwork::train)
 			.def("trainAndValidate", &NeuralNetwork::trainAndValidate)

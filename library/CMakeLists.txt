@@ -11,7 +11,7 @@ ENDMACRO (LIBDL_TEST)
 
 add_subdirectory(Utils)
 
-add_subdirectory(Computational_Graph)
+add_subdirectory(ComputationalGraph)
 
 add_subdirectory(NeuralNetwork)
 

@@ -193,7 +193,7 @@ int main() {
 	/*
 	 * Initialize Network with precalculated Weights
 	 */
-	if (readWeights) { network.readVariables(WEIGHT_DEPOSIT, "mnist_layer"); }
+	if (readWeights) { network.readParameters(WEIGHT_DEPOSIT, "mnist_layer"); }
 
 	/*
 	 * Train the Network
@@ -205,7 +205,7 @@ int main() {
 		/*
 		 * Write calculated Weights to Network
 		 */
-		if (writeWeights) { network.writeVariables(WEIGHT_DEPOSIT, "mnist_layer"); }
+		if (writeWeights) { network.writeParameters(WEIGHT_DEPOSIT, "mnist_layer"); }
 	}
 
 
