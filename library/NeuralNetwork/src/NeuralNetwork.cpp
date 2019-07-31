@@ -31,11 +31,11 @@ Matrix NeuralNetwork::predictBatch(Matrix &miniBatch, Matrix &labels) {
 }
 
 bool NeuralNetwork::writeParameters(std::string dir, std::string networkName) {
-	return _computeGraph->writeVariables(dir + networkName);
+	return _computeGraph->writeParameters(dir + networkName);
 }
 
 bool NeuralNetwork::readParameters(std::string dir, std::string networkName) {
-	return _computeGraph->readVariables(dir + networkName);
+	return _computeGraph->readParameters(dir + networkName);
 
 }
 

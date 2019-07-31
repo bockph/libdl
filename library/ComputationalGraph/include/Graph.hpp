@@ -8,15 +8,41 @@
 #include <Parameter.hpp>
 #include <Operation.hpp>
 #include <iostream>
-
+/*!
+ * This class controls the Behaviour of our list of Nodes aka Computational Graph.
+ *
+ */
 class Graph {
 public:
-
-	void updateParameters(HyperParameters params = HyperParameters());
+	/*!
+	 * iterates through the list of Operations and executes forwardPass() on each.
+	 * !this expects that each following Operation holds the previous Operation as input!
+	 */
 	void computeForward();
+
+	/*!
+	 * First sets the previousGradient for the last Operation to One.
+	 * Second it iterates through the reversed list of Operations and  executes backwardsPass() on each.
+	 * !this expects that each following Operation holds the previous Operation as input!
+	 */
 	void computeBackwards();
-	bool writeVariables(std::string dir);
-	bool readVariables(std::string dir);
+
+	/*!
+	 * This function may first be called after execution of the Backward Pass
+	 * It uses the gradients of computation w.r.t Parameter to update its forward pass value.
+	 *
+	 * @param params a HyperParameters object, specifying things like learningRate, BatchSize and which Optimizer
+	 * should be used
+	 */
+	void updateParameters(HyperParameters params = HyperParameters());
+
+	/*!
+	 * Writes all Parameters 
+	 * @param dir
+	 * @return
+	 */
+	bool writeParameters(std::string dir);
+	bool readParameters(std::string dir);
 
 
 

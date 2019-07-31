@@ -22,6 +22,7 @@ void Graph::computeBackwards() {
 }
 
 void Graph::updateParameters(HyperParameters params) {
+	//TODO check if gradient has been set or throw exception in Parameter
 	for (std::shared_ptr<Parameter> parameter:_parameters)
 		parameter->updateParameter(params);
 }
@@ -30,7 +31,7 @@ void Graph::updateParameters(HyperParameters params) {
 
 
 
-bool Graph::writeVariables(std::string dir) {
+bool Graph::writeParameters(std::string dir) {
 
 	int idx = 0;
 	for (std::shared_ptr<Parameter> parameter: _parameters) {
@@ -42,7 +43,7 @@ bool Graph::writeVariables(std::string dir) {
 	return true;
 }
 
-bool Graph::readVariables(std::string dir) {
+bool Graph::readParameters(std::string dir) {
 	int idx = 0;
 	for (std::shared_ptr<Parameter> parameter: _parameters) {
 
