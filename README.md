@@ -2,16 +2,16 @@ How to use my awesome Deep Learning library:
 ==============================================
 Documentation:
 ---------------
-The Documentation can be found in the docs folder
+The Documentation can be found in the docs folder.
 It contains:
-    - the doxygen-config File
-    - a pdf Documentation, explainin the Top-level concepts
-    - a ready compiled doxygen documentation
+     -  the doxygen-config File
+     -  a pdf Documentation, explainin the Top-level concepts
+     -  a ready compiled doxygen documentation
 
 Python Bindings:
 -----------------
-In order to use the python Bindings one most build the target 'libdl'
-in the next step one can import libdl into a python script as follows:
+In order to use the python Bindings one most build the target 'libdl'.
+In the next step one can then import libdl into a python script as follows:
 ```python
 import sys
 pathBuildDir = 'path/to/your/build/directory/'
@@ -23,7 +23,7 @@ import libdl as dl
 ```
 Problems that may Occur
 ---------------------------
-in the Top Level CMakeLists.txt -march=native is set as CXX Flag, this causes problems for some processors
+in the Top Level CMakeLists.txt -march=native is set as CXX Flag, this causes problems for some processors resulting in SIGSEVs
 
 
 Example Applications:
@@ -59,7 +59,7 @@ with the Corresponding Classes stored in the Vector C\
 \
 and randomly initialized Weights and Biases.\
 \
-As a output it gives the prediction and loss after 10 epochs with learning Rate 10.\
+As a output it gives the prediction and loss after 10 epochs with learning Rate 10.
 
 # MNIST
 The MNIST problem is simulated in the build File Example_MNIST, which is build from the Code in Example_MNIST.cpp\
