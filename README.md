@@ -4,9 +4,10 @@ Documentation:
 ---------------
 The Documentation can be found in the docs folder.
 It contains:
-..* the doxygen-config File
-..* a pdf Documentation, explainin the Top-level concepts
-..* a ready compiled doxygen documentation
+
+ - the doxygen-config File
+- a pdf Documentation, explainin the Top-level concepts
+ -  a ready compiled doxygen documentation
 
 Python Bindings:
 -----------------
