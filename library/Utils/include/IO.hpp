@@ -5,7 +5,6 @@
 #pragma once
 
 #include <Eigen/Dense>
-#include <>
 
 bool write_binary(const std::string filename, const Eigen::MatrixXf &matrix);
 

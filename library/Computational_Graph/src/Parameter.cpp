@@ -18,24 +18,24 @@ Parameter::Parameter(Matrix& matrix) {
 	_s1 = Matrix::Zero(matrix.rows(),matrix.cols());
 }
 
-void Parameter::updateVariable(const HyperParameters& params) {
-	Matrix tmp = getPreviousGradients()/params._batchsize;
+void Parameter::updateParameter(const HyperParameters &hyperParameters) {
+	Matrix tmp = getPreviousGradients()/hyperParameters._batchsize;
 
-    switch(params._optimizer){
+    switch(hyperParameters._optimizer){
         case Optimizer::Adam:
         {
             Matrix tmpPow =tmp.array().pow(2);
-            _v1 = params._beta1*_v1 + (1-params._beta1)*tmp;// # momentum update
-            _s1 = params._beta2*_s1 + (1-params._beta2)*tmpPow;//# RMSProp update
+            _v1 = hyperParameters._beta1*_v1 + (1-hyperParameters._beta1)*tmp;// # momentum update
+            _s1 = hyperParameters._beta2*_s1 + (1-hyperParameters._beta2)*tmpPow;//# RMSProp update
             Eigen::MatrixXf f1 = getForward();
             Eigen::MatrixXf div = (_s1.array()+1e-7).array().sqrt();
-            f1 -= params._learningRate * _v1.cwiseQuotient(div);
+            f1 -= hyperParameters._learningRate * _v1.cwiseQuotient(div);
 
             setForward(f1);
             break;
         }
         default:
-            setForward(getForward()-params._learningRate*tmp);
+            setForward(getForward()-hyperParameters._learningRate*tmp);
             break;
     }
 

@@ -11,16 +11,14 @@
 
 class Graph {
 public:
-	Graph(HyperParameters params=HyperParameters()):_hyperParameters(params){};
-	~Graph()=default;
-	void updateWeightsAndBiases();
-	void predict();
-	void train();
-	bool writeVariables(std::string dir);
-	bool readVariables(std::string dir);
-private:
+
+	void updateParameters(HyperParameters& params);
 	void computeForward();
 	void computeBackwards();
+	bool writeVariables(std::string dir);
+	bool readVariables(std::string dir);
+
+
 
 public:
 	const std::shared_ptr<Placeholder> &getInput() const;
@@ -31,7 +29,7 @@ public:
 
 	void setLabels(const std::shared_ptr<Placeholder> &labels);
 
-	void addVariable(std::shared_ptr<Parameter> variable);
+	void addParameter(std::shared_ptr<Parameter> variable);
 
 	void addOperation(std::shared_ptr<Operation> operation);
 
@@ -39,9 +37,8 @@ public:
 
 private:
 	std::shared_ptr<Placeholder> _input, _labels;
-	std::vector<std::shared_ptr<Parameter>> _variables;
+	std::vector<std::shared_ptr<Parameter>> _parameters;
 	std::vector<std::shared_ptr<Operation>> _operations;
-	HyperParameters _hyperParameters;
 
 
 };

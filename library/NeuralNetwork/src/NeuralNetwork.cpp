@@ -12,10 +12,13 @@ NeuralNetwork::NeuralNetwork(const std::shared_ptr<Graph> computeGraph, const st
         _computeGraph(computeGraph), _inputLayer(inputLayer), _lossLayer(lossLayer), _runAchieved(false) {
 }
 
-void NeuralNetwork::trainBatch(Matrix &miniBatch, Matrix &labels) {
+void NeuralNetwork::trainBatch(Matrix &miniBatch, Matrix &labels,HyperParameters& params) {
     _inputLayer->updateX(miniBatch);
     _lossLayer->updateLabels(labels);
-    _computeGraph->train();
+
+	_computeGraph->computeForward();
+	_computeGraph->computeBackwards();
+	_computeGraph->updateParameters(params);
     _runAchieved = true;
 
 }
@@ -23,7 +26,7 @@ void NeuralNetwork::trainBatch(Matrix &miniBatch, Matrix &labels) {
 Matrix NeuralNetwork::predictBatch(Matrix &miniBatch, Matrix &labels) {
     _inputLayer->updateX(miniBatch);
     _lossLayer->updateLabels(labels);
-    _computeGraph->predict();
+	_computeGraph->computeForward();
     _runAchieved = true;
     return _lossLayer->getPrediction();
 }
@@ -38,10 +41,7 @@ bool NeuralNetwork::readVariables(std::string dir, std::string networkName) {
 }
 
 
-void NeuralNetwork::setParams(const HyperParameters &params) {
-    _computeGraph->setHyperParameters(params);
 
-}
 
 float NeuralNetwork::getLoss() {
     if (!_runAchieved) {
@@ -61,7 +61,7 @@ float NeuralNetwork::train(DataSet &data, HyperParameters params, float training
         cost = 0;
         //train Batch
         for (int i = 0; i < sampleBatches.size(); i++) {
-            trainBatch(sampleBatches[i], labelBatches[i]);
+            trainBatch(sampleBatches[i], labelBatches[i],params);
             cost += getLoss();
         }
         cost /= (float) sampleBatches.size();
@@ -111,7 +111,7 @@ TrainingEvaluation NeuralNetwork::trainAndValidate(DataSet &data, HyperParameter
         correctTraining=0, correctValidation=0, totalTraining=0, totalValidation=0;
         //First Do Training
         for (int i = 0; i < sampleTrainBatches.size(); i++) {
-            trainBatch(sampleTrainBatches[i], labelTrainBatches[i]);
+            trainBatch(sampleTrainBatches[i], labelTrainBatches[i],params);
         }
         /*
          * Second evaluate Training and Validationset

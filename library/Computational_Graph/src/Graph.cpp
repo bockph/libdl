@@ -5,63 +5,57 @@
 #include <IO.hpp>
 #include "Graph.hpp"
 
-void Graph::updateWeightsAndBiases() {
-	for (std::shared_ptr<Parameter> variable:_variables) {
-		variable->updateVariable(_hyperParameters);
-	}
-}
-
-void Graph::predict() {
-	computeForward();
-}
-
-void Graph::train() {
-	computeForward();
-	computeBackwards();
-	updateWeightsAndBiases();
-}
 
 void Graph::computeForward() {
 	for (std::shared_ptr<Operation> op:_operations) {
 		op->forwardPass();
 	}
-
 }
 
 void Graph::computeBackwards() {
-	Eigen::MatrixXf tmp = _operations.back()->getForward();
-	tmp.setOnes();
-	_operations.back()->setPreviousGradients(tmp);
+	Matrix gradientInit = _operations.back()->getForward();
+	gradientInit.setOnes();
+	_operations.back()->setPreviousGradients(gradientInit);
 	for (std::vector<std::shared_ptr<Operation>>::reverse_iterator op = _operations.rbegin();
-			op != _operations.rend(); ++op) {
+			op != _operations.rend(); ++op)
 		(*op)->backwardPass();
-	}
 }
+
+void Graph::updateParameters(HyperParameters& params) {
+	for (std::shared_ptr<Parameter> parameter:_parameters)
+		parameter->updateParameter(params);
+}
+
+
+
+
 
 bool Graph::writeVariables(std::string dir) {
 
-	int idx =0;
-    for (std::shared_ptr<Parameter> parameter: _variables) {
-            if(!write_binary(dir+std::to_string(idx)+std::string(".bin"), parameter->getForward()))
-                return false;
-        idx++;
-    }
+	int idx = 0;
+	for (std::shared_ptr<Parameter> parameter: _parameters) {
+		if (!write_binary(dir + std::to_string(idx) + std::string(".bin"), parameter->getForward())) {
+			return false;
+		}
+		idx++;
+	}
 	return true;
 }
 
 bool Graph::readVariables(std::string dir) {
-	    int idx =0;
-    for (std::shared_ptr<Parameter> parameter: _variables) {
+	int idx = 0;
+	for (std::shared_ptr<Parameter> parameter: _parameters) {
 
 
-            Matrix tmpStore;
-            if(!read_binary(dir+std::to_string(idx)+std::string(".bin"), tmpStore))
-                return false;
-            parameter->setForward(tmpStore);
+		Matrix tmpStore;
+		if (!read_binary(dir + std::to_string(idx) + std::string(".bin"), tmpStore)) {
+			return false;
+		}
+		parameter->setForward(tmpStore);
 
 
-        idx++;
-    }
+		idx++;
+	}
 
 	return true;
 }
@@ -82,8 +76,8 @@ void Graph::setLabels(const std::shared_ptr<Placeholder> &labels) {
 	_labels = labels;
 }
 
-void Graph::addVariable(std::shared_ptr<Parameter> variable) {
-	_variables.push_back(variable);
+void Graph::addParameter(std::shared_ptr<Parameter> variable) {
+	_parameters.push_back(variable);
 }
 
 void Graph::addOperation(std::shared_ptr<Operation> operation) {
@@ -92,6 +86,3 @@ void Graph::addOperation(std::shared_ptr<Operation> operation) {
 }
 
 
-void Graph::setHyperParameters(const HyperParameters &hyperParameters) {
-	Graph::_hyperParameters = hyperParameters;
-}

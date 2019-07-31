@@ -17,7 +17,7 @@ if (DOXYGEN_FOUND)
     configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
     message("Doxygen build started")
 
-    add_custom_target(doc_oxygen
+    add_custom_target(doc_doxygen
             COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             COMMENT "Generating API documentation with Doxygen"
@@ -28,6 +28,12 @@ else (DOXYGEN_FOUND)
 
     add_subdirectory(extern/pybind11)
     add_subdirectory(library)
+
+#copy sampe data to build dir
+#This would be nice to use, so that the python applications could load the data from the build dir (where also the
+#libdl is), but copying takes quite some time so it is commented and all paths set to project_dir/data
+#file(COPY ${CMAKE_SOURCE_DIR}/data/ DESTINATION ${CMAKE_BINARY_DIR}/data)
+
 
 
     #<-------Stuff for directly building an Application----->

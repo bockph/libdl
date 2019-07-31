@@ -52,7 +52,7 @@ ConvolutionLayer::ConvolutionLayer(std::shared_ptr<AbstractLayer> input, std::sh
 	/*_filter = std::make_shared<Parameter>(filterMatrix , getInputChannels(), kernelDim);
 	getComputeGraph()->addVariable(_filter);
 	_bias = std::make_shared<Parameter>(biasMatrix,amountFilter);
-	getComputeGraph()->addVariable(_bias);
+	getComputeGraph()->addParameter(_bias);
 
 	std::shared_ptr<NormalFunction> convolutionOp = std::make_shared<ConvolutionOp>(getInputNode(),_filter,stride);
 	getComputeGraph()->addOperation(convolutionOp);

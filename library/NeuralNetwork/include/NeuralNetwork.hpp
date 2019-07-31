@@ -14,7 +14,7 @@ public:
     NeuralNetwork(const std::shared_ptr<Graph> computeGraph, const std::shared_ptr<InputLayer> inputLayer,
                   const std::shared_ptr<LossLayer> lossLayer, const HyperParameters params = HyperParameters());
 
-    void trainBatch(Matrix &miniBatch, Matrix &labels);
+    void trainBatch(Matrix &miniBatch, Matrix &labels, HyperParameters& params);
 
     Matrix predictBatch(Matrix &miniBatch, Matrix &labels);
 
@@ -27,7 +27,6 @@ public:
 
     bool readVariables(std::string dir, std::string networkName);
 
-    void setParams(const HyperParameters &params);
 
     float getLoss();
 
@@ -35,9 +34,9 @@ public:
 
     TrainingEvaluation trainAndValidate(DataSet &data, HyperParameters params, float trainingLossThreshold = 1);
 
+	static std::vector<Matrix> extractBatchList(std::vector<Matrix> &dataset, int batchSize);
 
 private:
-    std::vector<Matrix> extractBatchList(std::vector<Matrix> &dataset, int batchSize);
 
 
     std::shared_ptr<Graph> _computeGraph;

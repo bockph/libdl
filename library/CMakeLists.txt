@@ -13,7 +13,7 @@ add_subdirectory(Utils)
 
 add_subdirectory(Computational_Graph)
 
-add_subdirectory(Session)
+add_subdirectory(NeuralNetwork)
 
 add_subdirectory(bindings)
 

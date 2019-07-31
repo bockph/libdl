@@ -9,7 +9,7 @@ std::shared_ptr<ConvolutionOp> OperationsFactory::createConvolutionOp(std::share
 																	  Matrix filterMatrix, int channels,
 																	  int stride) {
 	std::shared_ptr<Parameter> filter = std::make_shared<Parameter>(filterMatrix, channels);
-	graph->addVariable(filter);
+	graph->addParameter(filter);
 	std::shared_ptr<ConvolutionOp> convolutionOp = std::make_shared<ConvolutionOp>(input, filter, stride);
 	graph->addOperation(convolutionOp);
 	return convolutionOp;
@@ -20,7 +20,7 @@ std::shared_ptr<SummationOp> OperationsFactory::createSummationOp(std::shared_pt
 																  biasMatrix, int channel) {
 
 	auto bias = std::make_shared<Parameter>(biasMatrix, channel);
-	graph->addVariable(bias);
+	graph->addParameter(bias);
 
 	auto summation = std::make_shared<SummationOp>(input, bias);
 	graph->addOperation(summation);
@@ -31,7 +31,7 @@ std::shared_ptr<MultiplicationOp> OperationsFactory::createMultiplicationOp(std:
 																			const std::shared_ptr<Node> input,
 																			Matrix weightMatrix) {
 	auto weights = std::make_shared<Parameter>(weightMatrix);
-	graph->addVariable(weights);
+	graph->addParameter(weights);
 	auto multiplication = std::make_shared<MultiplicationOp>(input, weights);
 	graph->addOperation(multiplication);
 	return multiplication;

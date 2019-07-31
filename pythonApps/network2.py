@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 projectDir='/mnt/c/Users/phili/Desktop/Projekte/libdl/'
-projectDir='/home/pbo/CLionProjects/libdl/'
+# projectDir='/home/pbo/CLionProjects/libdl/'
 sys.path.append(projectDir+'cmake-build-release/library/bindings')
 
 
@@ -21,9 +21,8 @@ dataStringPairs = dl.LegoDataLoader.shuffleData(projectDir+"data/")
 data = dl.DataSet()
 dl.LegoDataLoader.getData(batchSize*amountBatches,dataStringPairs,data)
 
-config = dl.HyperParameters(epochs,batchSize,learningRate)
 
-graph = dl.Graph(config)
+graph = dl.Graph()
 
 inputLayer = dl.InputLayer(graph,batchSize,160000,4)
 
@@ -44,9 +43,11 @@ logits = dl.LogitsLayer(dense2,graph,16)
 
 loss = dl.LossLayer(logits,graph, dl.LossType.CrossEntropy)
 
-network = dl.NeuralNetwork(graph,inputLayer,loss,config)
+
+learningParameters = dl.HyperParameters(epochs,batchSize,learningRate)
+network = dl.NeuralNetwork(graph,inputLayer,loss,learningParameters)
 network.readVariables("/home/pbo/Schreibtisch/StoredValues/",nameNetwork)
-trainingEvaluation = network.trainAndValidate(data,config,1)
+trainingEvaluation = network.trainAndValidate(data,learningParameters,1)
 
 network.writeVariables("/home/pbo/Schreibtisch/StoredValues/",nameNewNetwork)
 
