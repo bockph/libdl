@@ -77,12 +77,23 @@ void Graph::setLabels(const std::shared_ptr<Placeholder> &labels) {
 	_labels = labels;
 }
 
-void Graph::addParameter(std::shared_ptr<Parameter> variable) {
-	_parameters.push_back(variable);
+void Graph::addParameter(std::shared_ptr<Parameter> parameter) {
+    if(parameter == nullptr)
+        throw std::runtime_error("Can not add a nullptr to _parameters in graph");
+	_parameters.push_back(parameter);
 }
 
 void Graph::addOperation(std::shared_ptr<Operation> operation) {
-	_operations.push_back(operation);
+    if(operation == nullptr)
+        throw std::runtime_error("Can not add a nullptr to _operations in graph");
+    if(_operations.empty() )
+        if(operation->getInput()!=_input)
+            throw std::runtime_error("Cant add operation to graph, because the Input Node is not the label ");
+    if(!_operations.empty()&&(operation->getInput())!=_operations.back())
+        throw std::runtime_error("Cant add operation to graph, because the Input Node is not the last added operation");
+
+
+    _operations.push_back(operation);
 
 }
 

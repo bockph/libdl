@@ -76,7 +76,7 @@ void ConvolutionOp::forwardsConvolution(const Matrix &miniBatch, const Matrix &f
     /*
      * Calculate Sizes and Dimensions of miniBatch and filter according to channels and row length
      */
-    int amountSamples = static_cast<int>(miniBatch.rows());
+    int batchSize = static_cast<int>(miniBatch.rows());
     int sampleSizeOneChannel = static_cast<int>(miniBatch.cols() / channels);
     int sampleDim = static_cast<int>(std::sqrt(sampleSizeOneChannel));
 
@@ -91,7 +91,7 @@ void ConvolutionOp::forwardsConvolution(const Matrix &miniBatch, const Matrix &f
     /*
      * Transform input to im2Col
      */
-    im2col(im2ColM, miniBatch, kernelSizeOneChannel, stride, channels, amountSamples);
+    im2col(im2ColM, miniBatch, kernelSizeOneChannel, stride, channels, batchSize);
 
     /*
      * Convolution
@@ -101,9 +101,9 @@ void ConvolutionOp::forwardsConvolution(const Matrix &miniBatch, const Matrix &f
     /*
      * Reshape Needed because in libdl a sample corresponds to one row in the Batch and not one Collumn
      */
-    outputMatrix = Matrix::Zero(amountSamples, outputSize * amountFilters);
+    outputMatrix = Matrix::Zero(batchSize, outputSize * amountFilters);
 
-    for (int i = 0; i < amountSamples; i++) {
+    for (int i = 0; i < batchSize; i++) {
         for (int f = 0; f < amountFilters; f++) {
             outputMatrix.block(i, outputSize * f, 1, outputSize) = conv.block(f, i * outputSize, 1, outputSize);
         }

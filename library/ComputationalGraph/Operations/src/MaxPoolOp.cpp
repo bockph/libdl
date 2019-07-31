@@ -5,15 +5,17 @@
 #include <iostream>
 #include "MaxPoolOp.hpp"
 
-MaxPoolOp::MaxPoolOp(std::shared_ptr<Node> X, int windowSize, int stride)
-		: NormalFunction(X, X->getOutputChannels()), _windowSize(windowSize), _stride(stride) {};
+MaxPoolOp::MaxPoolOp(std::shared_ptr<Node> X, int windowDim, int stride)
+		: NormalFunction(X, X->getOutputChannels()), _windowSize(windowDim), _stride(stride) {};
 
 void MaxPoolOp::forwardPass() {
-
+    /*
+     * Calculate Sizes and Dimensions of miniBatch
+     */
 	int batchSize = static_cast<int>(getInput()->getForward().rows());
-	int imgSize = static_cast<int>(getInput()->getForward().cols() / getInputChannels());
-	int imgDim = static_cast<int>(std::sqrt(imgSize));
-	int outputDim = static_cast<int>(std::floor((imgDim - _windowSize) / _stride) + 1);
+	int sampleSizeOneChannel = static_cast<int>(getInput()->getForward().cols() / getInputChannels());
+	int sampleDim = static_cast<int>(std::sqrt(sampleSizeOneChannel));
+	int outputDim = static_cast<int>(std::floor((sampleDim - _windowSize) / _stride) + 1);
 
 	Eigen::MatrixXf::Index maxRow, maxCol;
 
@@ -27,12 +29,12 @@ void MaxPoolOp::forwardPass() {
 		//loop over all channels
 		for (int c = 0; c < getInputChannels(); c++) {
 			//get the Current Channel of the Current Sample
-			Eigen::MatrixXf currentChannelOfSample = getInput()->getForward().block(i, imgSize * c, 1, imgSize)
-					.reshaped(imgDim, imgDim);
+			Eigen::MatrixXf currentChannelOfSample = getInput()->getForward().block(i, sampleSizeOneChannel * c, 1, sampleSizeOneChannel)
+					.reshaped(sampleDim, sampleDim);
 
 			//get the current block of the maxIndexMatrix
 			Eigen::MatrixXf currentMaxIndexMatrix = maxIndexMatrix.block(i,
-					imgSize * c, 1, imgSize).reshaped(imgDim, imgDim);
+                                                                         sampleSizeOneChannel * c, 1, sampleSizeOneChannel).reshaped(sampleDim, sampleDim);
 
 
 			for (int x = 0; x < outputDim; x++) {
@@ -50,7 +52,7 @@ void MaxPoolOp::forwardPass() {
 			}
 
 			maxIndexMatrix.block(i,
-					imgSize * c, 1, imgSize) = currentMaxIndexMatrix.reshaped(1, imgSize).block(0, 0, 1, imgSize);
+                                 sampleSizeOneChannel * c, 1, sampleSizeOneChannel) = currentMaxIndexMatrix.reshaped(1, sampleSizeOneChannel).block(0, 0, 1, sampleSizeOneChannel);
 
 		}
 
@@ -63,12 +65,12 @@ void MaxPoolOp::forwardPass() {
 void MaxPoolOp::backwardPass() {
 
 	int batchSize = static_cast<int>(getInput()->getForward().rows());
-	int imgSize = static_cast<int>(getInput()->getForward().cols() / getInputChannels());
-	int imgDim = static_cast<int>(std::sqrt(imgSize));
-	int outputDim = static_cast<int>(std::floor((imgDim - _windowSize) / _stride) + 1);
+	int sampleSizeOneChannel = static_cast<int>(getInput()->getForward().cols() / getInputChannels());
+	int sampleDim = static_cast<int>(std::sqrt(sampleSizeOneChannel));
+	int outputDim = static_cast<int>(std::floor((sampleDim - _windowSize) / _stride) + 1);
 
 
-	Eigen::MatrixXf dX = Eigen::MatrixXf::Zero(batchSize, imgSize * getInputChannels());
+	Eigen::MatrixXf dX = Eigen::MatrixXf::Zero(batchSize, sampleSizeOneChannel * getInputChannels());
 
 
 	//loop over all samples :
@@ -77,7 +79,7 @@ void MaxPoolOp::backwardPass() {
 		for (int c = 0; c < getInputChannels(); c++) {
 			//get the maxIndexMatrix for current sample & channel
 			Eigen::MatrixXf currentMaxIndexMatrix = getMaxIndexMatrix()
-					.block(i, imgSize * c, 1, imgSize).reshaped(imgDim, imgDim);
+					.block(i, sampleSizeOneChannel * c, 1, sampleSizeOneChannel).reshaped(sampleDim, sampleDim);
 			//apply Gradients to corrresponding maxIndex
 			for (int x = 0; x < outputDim; x++) {
 				for (int y = 0; y < outputDim; y++) {
@@ -87,7 +89,7 @@ void MaxPoolOp::backwardPass() {
 							getPreviousGradients()(i, y + x * outputDim + c * outputDim * outputDim);
 				}
 			}
-			dX.block(i, imgSize * c, 1, imgSize) = currentMaxIndexMatrix.reshaped(1, imgSize);
+			dX.block(i, sampleSizeOneChannel * c, 1, sampleSizeOneChannel) = currentMaxIndexMatrix.reshaped(1, sampleSizeOneChannel);
 
 		}
 

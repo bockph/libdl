@@ -14,6 +14,17 @@
  */
 class Graph {
 public:
+    /*!
+     * Adds an parameter to the list of parameters
+     * @param variable
+     */
+    void addParameter(std::shared_ptr<Parameter> parameters);
+    /*!
+     * Adds an parameter to the list of parameters
+     * ! the input Node of the passed operation must already be in _operations List or stored as label. Otherwise an exception is thrown!
+     * @param operation
+     */
+    void addOperation(std::shared_ptr<Operation> operation);
 	/*!
 	 * iterates through the list of Operations and executes forwardPass() on each.
 	 * !this expects that each following Operation holds the previous Operation as input!
@@ -70,9 +81,7 @@ public:
 
     void setLabels(const std::shared_ptr<Placeholder> &labels);
 
-    void addParameter(std::shared_ptr<Parameter> variable);
 
-    void addOperation(std::shared_ptr<Operation> operation);
 
 
 };

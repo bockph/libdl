@@ -17,9 +17,13 @@
 #include <ReLuOp.hpp>
 #include <SigmoidOP.hpp>
 #include <SoftmaxOp.hpp>
-
+/*!
+ * This class implements the Factory Pattern in a functional way.
+ * Each creation function assures that an Operation is added to the graph
+ */
 class OperationsFactory {
 public:
+
 	/*
 	 * Normal Functions
 	 */

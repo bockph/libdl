@@ -1,1 +1,1 @@
-LIBDL_TEST(Session graph)
+LIBDL_TEST(Graph graph)
