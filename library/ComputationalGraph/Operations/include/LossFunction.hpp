@@ -35,6 +35,8 @@ public:
 
     const Matrix getPrediction() const; //!returns the forward pass of the input Node aka the prediction
 
+    const float getLoss() const; //!returns the current loss
+
 };
 
 

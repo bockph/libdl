@@ -37,10 +37,8 @@ LossLayer::LossLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph
 	setOutputNode(_lossNode);
 
 }
-//TODO set static or check if it can be using a different call
 float LossLayer::getLoss() {
-
-	return getOutputNode()->getForward()(0, 0);
+	return _lossNode->getLoss();
 }
 
 void LossLayer::updateLabels(Matrix &newLabels) {
@@ -49,11 +47,7 @@ void LossLayer::updateLabels(Matrix &newLabels) {
 	}
 }
 
-const std::shared_ptr<LossFunction> &LossLayer::getLossNode() const {
-	return _lossNode;
-}
-
 const Matrix LossLayer::getPrediction() const {
-	return _lossNode->getPrediction();
+    return _lossNode->getPrediction();
 }
 

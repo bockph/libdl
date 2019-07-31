@@ -12,5 +12,12 @@ const std::shared_ptr<Placeholder> &LossFunction::getLabels() const {
 }
 
 const Matrix LossFunction::getPrediction() const {
+    //TODO throw runtime_error if not yet predicted
 	return getInput()->getForward();
+}
+
+const float LossFunction::getLoss() const {
+    //TODO throw runtime_error if not yet predicted
+
+    return getForward()(0,0);
 }

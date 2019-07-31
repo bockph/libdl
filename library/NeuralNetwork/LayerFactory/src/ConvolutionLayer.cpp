@@ -14,9 +14,9 @@ ConvolutionLayer::ConvolutionLayer(std::shared_ptr<AbstractLayer> input, std::sh
                                    ActivationType activationFunction, int amountFilter, int kernelDim, int stride,
                                    InitializationType initializationType)
         :
-        AbstractLayer(input, std::move(computeGraph)) {
+        AbstractLayer(std::move(input), std::move(computeGraph)) {
 
-    int inputSizeOneChannel = input->getOutputSize() / getInputChannels();
+    int inputSizeOneChannel = getInputSize() / getInputChannels();
     int inputDim = static_cast<int>(std::sqrt(inputSizeOneChannel));
     int outputDim = static_cast<int>(std::floor((inputDim - kernelDim) / stride) + 1);
     int outputSize = static_cast<int>(std::pow(outputDim, 2) * amountFilter);
@@ -79,18 +79,3 @@ ConvolutionLayer::ConvolutionLayer(std::shared_ptr<AbstractLayer> input, std::sh
     setOutputSize(outputSize);
 }
 
-Matrix ConvolutionLayer::getFilterMatrix() {
-    return _filter->getForward();
-}
-
-Matrix ConvolutionLayer::getBiasMatrix() {
-    return _bias->getForward();
-}
-
-void ConvolutionLayer::setFilterMatrix(Matrix filter) {
-    _filter->setForward(filter);
-}
-
-void ConvolutionLayer::setBiasMatrix(Matrix bias) {
-    _bias->setForward(bias);
-}

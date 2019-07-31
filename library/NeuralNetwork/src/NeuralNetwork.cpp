@@ -25,7 +25,6 @@ Matrix NeuralNetwork::predictBatch(Matrix &miniBatch, Matrix &labels) {
 	_inputLayer->updateX(miniBatch);
 	_lossLayer->updateLabels(labels);
 	_computeGraph->computeForward();
-	_runAchieved = true;
 	return _lossLayer->getPrediction();
 }
 
@@ -65,7 +64,9 @@ float NeuralNetwork::train(DataSet &data, HyperParameters params, float training
 		if (cost < trainingLossThreshold) { break; }
 
 	}
-	return cost;
+    _runAchieved = true;
+
+    return cost;
 }
 
 
@@ -125,8 +126,7 @@ TrainingEvaluation NeuralNetwork::trainAndValidate(DataSet &data, HyperParameter
 		}
 
 
-//        trainingCost /= (float) sampleTrainBatches.size();
-//        validationCost /= (float) sampleValidationBatches.size();
+
 		/*
 		 * Fill Evaluation Object
 		 */
@@ -138,7 +138,6 @@ TrainingEvaluation NeuralNetwork::trainAndValidate(DataSet &data, HyperParameter
 		evaluation._validationLoss.push_back(validationCost);
 		evaluation._trainingAccuracy.push_back(correctTraining);
 		evaluation._validationAccuracy.push_back(correctValidation);
-//		losses.push_back(std::pair<float, float>(trainingCost, validationCost));
 		std::cout << "Epoch: " << k << std::endl;
 		std::cout << "Current Training Cost:   " << trainingCost << " Accuracy:" << correctTraining << std::endl;
 		std::cout << "Current Validation Cost: " << validationCost << " Accuracy:" << correctValidation << std::endl;
@@ -146,6 +145,7 @@ TrainingEvaluation NeuralNetwork::trainAndValidate(DataSet &data, HyperParameter
 
 	}
 
+    _runAchieved = true;
 
 	return evaluation;
 }

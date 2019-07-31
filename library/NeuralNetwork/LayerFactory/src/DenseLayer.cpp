@@ -14,8 +14,7 @@
 
 DenseLayer::DenseLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Graph> computeGraph,
                        ActivationType activationFunction, int amountNeurons, InitializationType initializationType) :
-        AbstractLayer(input, std::move(computeGraph)), _amountNeurons(amountNeurons),
-        _initializationType(initializationType) {
+        AbstractLayer(std::move(input), std::move(computeGraph)) {
 
 
 
@@ -25,7 +24,7 @@ DenseLayer::DenseLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Gra
     Matrix weightMatrix;
     switch (initializationType) {
         case InitializationType::Xavier:
-            weightMatrix = DataInitialization::generateRandomMatrix(input->getOutputSize(), _amountNeurons);
+            weightMatrix = DataInitialization::generateRandomMatrix(getInputSize(), amountNeurons);
             break;
         default:
             throw std::runtime_error(std::string("the selected Initializationtype has yet not been Implemented in "
@@ -33,7 +32,7 @@ DenseLayer::DenseLayer(std::shared_ptr<AbstractLayer> input, std::shared_ptr<Gra
 
     }
 
-    Matrix biasMatrix = Matrix::Zero(getBatchSize(), _amountNeurons);
+    Matrix biasMatrix = Matrix::Zero(getBatchSize(), amountNeurons);
 
     /*
      * Initialization of Operation Nodes

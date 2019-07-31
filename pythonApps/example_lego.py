@@ -13,19 +13,29 @@ import matplotlib.pyplot as plt
 
 pretrainedNetwork = "batch16_Samples_10"
 newNetworkName = "test"
+
+#################################################
+# specification of the most important Parameters#
+#################################################
 batchSize =16
 epochs =5
 
 learningRate=0.0001
 amountBatches=5
-dataStringPairs = dl.LegoDataLoader.shuffleData(projectDir+"data/")
 
+#
+#Loading of the Dataset
+#
+dataStringPairs = dl.LegoDataLoader.shuffleData(projectDir+"data/")
 data = dl.DataSet()
 dl.LegoDataLoader.getData(batchSize*amountBatches,dataStringPairs,data)
 
-
+#constructing the compute Graph
 graph = dl.Graph()
 
+#
+# Creation of the NN-Layers, syntax can be check in the corresponding classes in NeuralNetwork/LayerFactory/
+#
 inputLayer = dl.InputLayer(graph,batchSize,160000,4)
 
 convolution1 = dl.ConvolutionLayer(inputLayer,graph, dl.ActivationType.ReLu,32,8,2,dl.InitializationType.Xavier)
@@ -45,15 +55,24 @@ logits = dl.LogitsLayer(dense2,graph,16)
 
 loss = dl.LossLayer(logits,graph, dl.LossType.CrossEntropy)
 
-
+#specifying hyper parameters, change the values in the top of the file
 learningParameters = dl.HyperParameters(epochs,batchSize,learningRate)
+
+# NeuralNetwork creation
 network = dl.NeuralNetwork(graph,inputLayer,loss)
+
+# for testing we do want to use the above specified pretrained Network, if not comment the follow line
 network.readParameters(dataStorage,pretrainedNetwork)
 trainingEvaluation = network.trainAndValidate(data,learningParameters,1)
 
-network.writeParameters(dataStorage,newNetworkName)
+#the following line can be uncommented if the weights should be written
+#network.writeParameters(dataStorage,newNetworkName)
 
 
+
+###
+# Plotting the Training Results
+###
 epochs = np.arange(trainingEvaluation._hyperParameters._epochs)
 
 

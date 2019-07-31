@@ -31,56 +31,6 @@
 #include <LogitsLayer.hpp>
 #include <NeuralNetwork.hpp>
 
-/*void getBatches(int batch_size, int amountBatches, std::vector<Eigen::MatrixXf> &training_data,
-                std::vector<Eigen::MatrixXf> &label_data, bool trainData = true) {
-
-    mnist::MNIST_dataset<std::vector, std::vector<uint8_t>, uint8_t> dataset =
-            mnist::read_dataset<std::vector, std::vector, uint8_t, uint8_t>(MNIST_DATA_LOCATION,
-                                                                            batch_size * amountBatches);
-    mnist::normalize_dataset(dataset);
-
-    training_data.clear();
-    label_data.clear();
-
-    for (int j = 0; j < amountBatches; j++) {
-        Eigen::MatrixXf img(batch_size, 28 * 28);
-        for (int i = 0; i < batch_size; i++) {
-            if (trainData) {
-                Eigen::Matrix<unsigned char, 1, 784> tmp(dataset.training_images.at(i + j * batch_size).data());
-                Eigen::MatrixXf tmp2 = tmp.cast<float>();
-                img.block(i, 0, 1, 784) = tmp2;
-            } else {
-                if (i + j * batch_size < 5000) {
-                    Eigen::Matrix<unsigned char, 1, 784> tmp(dataset.test_images.at(i + j * batch_size).data());
-                    Eigen::MatrixXf tmp2 = tmp.cast<float>();
-                    img.block(i, 0, 1, 784) = tmp2;
-                }
-
-            }
-
-        }
-
-
-        training_data.push_back(img);
-        Eigen::MatrixXf C(batch_size, 10);
-        C.setZero();
-        for (int i = 0; i < batch_size; i++) {
-            if (trainData)
-                C(i, dataset.training_labels.at(i + j * batch_size)) = 1;
-            else {
-                if (i + j * batch_size < 5000) {
-                    C(i, dataset.test_labels.at(i + j * batch_size)) = 1;
-                }
-            }
-
-
-        }
-
-        label_data.push_back(C);
-    }
-
-
-}*/
 
 void getData(int samples, DataSet &data) {
 
@@ -136,7 +86,7 @@ int main() {
 	double learningRate = 0.001;
 	bool trainModel = true;
 	bool testModel = true;
-	bool writeWeights = false;
+	bool writeWeights = true;
 	bool readWeights = false;
 
 
@@ -198,7 +148,7 @@ int main() {
 	 */
 	if (trainModel) {
 		//trainAndValidate causes right now some Problems check Data preparation
-		network.train(data, config);
+		network.trainAndValidate(data, config);
 
 		/*
 		 * Write calculated Weights to Network

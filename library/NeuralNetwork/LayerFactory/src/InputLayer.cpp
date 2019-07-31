@@ -14,11 +14,11 @@ InputLayer::InputLayer(std::shared_ptr<Graph> computeGraph,int batchSize, int da
      */
     Matrix tmp;
     std::shared_ptr<Placeholder> X = std::make_shared<Placeholder>(tmp,channel);
+    //We have no Factory for a Placeholder Node therefore the inptu must set manually
 	getComputeGraph()->setInput(X);
 
     setOutputNode(X);
     setOutputChannels(channel);
-    //TODO check if OutputSize really needs to be set
     setOutputSize(dataPoints);
     setBatchSize(batchSize);
 

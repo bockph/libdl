@@ -6,22 +6,38 @@
 #include <Eigen/Dense>
 #include <utility>
 #include <utility>
-
+/*!
+ * Throughout the project only dynamic float Eigen matrices should be used
+ */
 using Matrix = Eigen::MatrixXf;
-
+/*!
+ * Defines possible Optimizer
+ */
 enum Optimizer {
 	Adam
 };
+/*!
+ * Defines possible Activation functions
+ */
 enum ActivationType {
-	ReLu, Sigmoid, LeakyReLu, None
+	ReLu, Sigmoid,  None
 };
+/*!
+ * Defines possible Initialization Types
+ */
 enum InitializationType {
 	Xavier
 };
+/*!
+ * Defines possible LossTypes
+ */
 enum LossType {
 	CrossEntropy, MSE
 };
 
+/*!
+ * This struct holds all kind of possible Hyper parameters, that may be used to update an Parameter during training
+ */
 struct HyperParameters {
 	explicit HyperParameters(int epochs = 10, int batchSize = 8, float learningRate = 0.01,
 							 Optimizer optimizer = Optimizer::Adam, float beta1 = 0.9, float beta2 = 0.999)
@@ -51,7 +67,11 @@ struct HyperParameters {
 		return ss.str();
 	}
 };
-
+/*!
+ * This struct holds four vectors.
+ * The first two holding the data and labels of the training set
+ * The second two hild the data and labels of the validation set
+ */
 struct DataSet {
 	DataSet() = default;;
 
@@ -71,6 +91,9 @@ struct DataSet {
 	std::vector<Matrix> _validationSamples{}, _validationLabels{};
 };
 
+/*!
+ * This struct holds the results of a training, storing in each field of a vecotr, the value for one epoch
+ */
 struct TrainingEvaluation {
 	explicit TrainingEvaluation(HyperParameters hyperParameters)
 			: _hyperParameters(hyperParameters) {}

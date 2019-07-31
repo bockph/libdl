@@ -69,3 +69,7 @@ void AbstractLayer::setOutputSize(int outputSize) {
 const std::shared_ptr<Graph> &AbstractLayer::getComputeGraph() const {
 	return _computeGraph;
 }
+
+int AbstractLayer::getInputSize() {
+    return _inputLayer->getOutputSize();
+}
