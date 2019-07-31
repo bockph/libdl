@@ -4,8 +4,8 @@
 
 #include "SummationOp.hpp"
 
-SummationOp::SummationOp(std::shared_ptr<Node> X, std::shared_ptr<Parameter> W)
-		: NormalFunction(X, W, X->getOutputChannels()) {}
+SummationOp::SummationOp(std::shared_ptr<Node> X, std::shared_ptr<Parameter> biases)
+		: NormalFunction(X, std::move(biases), X->getOutputChannels()) {}
 
 void SummationOp::forwardPass() {
 	setForward(getInput()->getForward() + getParameter()->getForward());
