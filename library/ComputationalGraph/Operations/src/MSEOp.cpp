@@ -5,13 +5,15 @@
 #include <iostream>
 #include "MSEOp.hpp"
 
+MSEOp::MSEOp(std::shared_ptr<Node> X, std::shared_ptr<Placeholder> labels)
+        : LossFunction(std::move(X), labels) {};
 
 void MSEOp::forwardPass() {
 
     auto diff = getInput()->getForward() - getLabels()->getForward();
-    Eigen::MatrixXf squared = diff.array().pow(2);
+    Matrix squared = diff.array().pow(2);
 
-    Eigen::MatrixXf mse(squared.rows(), squared.cols());
+    Matrix mse(squared.rows(), squared.cols());
     mse.setZero();
     float tmp = 0;
 
@@ -32,6 +34,6 @@ void MSEOp::forwardPass() {
 
 
 void MSEOp::backwardPass() {
-	getInput()->setPreviousGradients(2 * (getForward() - getLabels()->getForward()));
+    getInput()->setPreviousGradients(2 * (getForward() - getLabels()->getForward()));
 }
 

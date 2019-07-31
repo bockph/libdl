@@ -6,7 +6,7 @@
 #include "SigmoidOP.hpp"
 
 SigmoidOP::SigmoidOP(std::shared_ptr<Node> X)
-		: ActivationFunction(X) {}
+		: ActivationFunction(std::move(X)) {}
 
 void SigmoidOP::forwardPass() {
 	setForward(getInput()->getForward().unaryExpr(std::ref(sigmoid)));
