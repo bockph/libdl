@@ -4,9 +4,9 @@ Documentation:
 ---------------
 The Documentation can be found in the docs folder.
 It contains:
-     -  the doxygen-config File
-     -  a pdf Documentation, explainin the Top-level concepts
-     -  a ready compiled doxygen documentation
+..* the doxygen-config File
+..* a pdf Documentation, explainin the Top-level concepts
+..* a ready compiled doxygen documentation
 
 Python Bindings:
 -----------------
@@ -32,9 +32,9 @@ Example Applications:
 LEGO Bricks Classification:
 ----------------------------
 There are in total three examples:
-    - the presentation jupyter notebook in pythonApps/
-    - the example_lego.py
-    - a C++ examples Example_LEGO build from Example_LEGO.cpp
+..* the presentation jupyter notebook in pythonApps/
+..* the example_lego.py
+..* a C++ examples Example_LEGO build from Example_LEGO.cpp
 
 For the python examples please first apply the steps from the above provided instructions.
 
