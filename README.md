@@ -50,12 +50,14 @@ There are in total three examples that run a network on this data:
 
  - the presentation jupyter notebook in pythonApps/ :
     - mostly visualization and explanation
- - the example_lego.py :
-    - playground in python with comments in the file / a pretrained network is set
- - a C++ examples Example_LEGO build from Example_LEGO.cpp :
-    - this is mostly a fallback where no pretrained network is set
+ - pythonApps/example_lego.py :
+    - playground in python with comments in the file
+    - a pretrained Network is set
+ - example_LEGO.cpp :
+    - similiar to the MNIST examples, comments on the parameters are in the beginning of main()
+    - no pretrained network is set
 
-For the python examples please first apply the steps from the above provided instructions.
+Note: For the python examples please first apply the above provided instructions.
 
 XOR Problem
 -------------

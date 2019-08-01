@@ -24,10 +24,10 @@ if (DOXYGEN_FOUND)
             VERBATIM)
 else (DOXYGEN_FOUND)
     message("Doxygen need to be installed to generate the doxygen documentation")
-    endif(DOXYGEN_FOUND)
+endif (DOXYGEN_FOUND)
 
-    add_subdirectory(extern/pybind11)
-    add_subdirectory(library)
+add_subdirectory(extern/pybind11)
+add_subdirectory(library)
 
 #copy sampe data to build dir
 #This would be nice to use, so that the python applications could load the data from the build dir (where also the
@@ -35,28 +35,23 @@ else (DOXYGEN_FOUND)
 #file(COPY ${CMAKE_SOURCE_DIR}/data/ DESTINATION ${CMAKE_BINARY_DIR}/data)
 
 
-
-    #<-------Stuff for directly building an Application----->
-    set(TEST_TARGET_ONE Example_XOR)
-    add_executable(${TEST_TARGET_ONE} Example_XOR.cpp)
-    target_link_libraries(${TEST_TARGET_ONE} session eigenI)
-    #target_compile_features(${TEST_TARGET_ONE} PUBLIC cxx_std_17)
+#<-------Stuff for directly building an Application----->
+set(TEST_TARGET_ONE Example_XOR)
+add_executable(${TEST_TARGET_ONE} Example_XOR.cpp)
+target_link_libraries(${TEST_TARGET_ONE} session eigenI)
 
 
-    set(TEST_TARGET_TWO Example_MNIST)
-    add_executable(${TEST_TARGET_TWO} Example_MNIST.cpp)
-    target_link_libraries(${TEST_TARGET_TWO} session mnist utils)
-    target_compile_definitions(${TEST_TARGET_TWO} PRIVATE MNIST_DATA_LOCATION="${CMAKE_SOURCE_DIR}/extern/mnist" STORAGE="${CMAKE_SOURCE_DIR}/data/Storage/")
-
-    #target_compile_features(${TEST_TARGET_TWO} PUBLIC cxx_std_17)
+set(TEST_TARGET_TWO Example_MNIST)
+add_executable(${TEST_TARGET_TWO} Example_MNIST.cpp)
+target_link_libraries(${TEST_TARGET_TWO} session mnist utils)
+target_compile_definitions(${TEST_TARGET_TWO} PRIVATE MNIST_DATA_LOCATION="${CMAKE_SOURCE_DIR}/extern/mnist" STORAGE="${CMAKE_SOURCE_DIR}/data/Storage/")
 
 
-    set(TEST_TARGET_FOUR Example_LEGO)
-    add_executable(${TEST_TARGET_FOUR} Example_LEGO.cpp)
-    target_link_libraries(${TEST_TARGET_FOUR} session mnist utils lodepng)
-    target_compile_definitions(${TEST_TARGET_FOUR} PRIVATE MNIST_DATA_LOCATION="${CMAKE_SOURCE_DIR}/extern/mnist" STORAGE="${CMAKE_SOURCE_DIR}/data/Storage/" DATA_DIR="${CMAKE_SOURCE_DIR}/data/")
+set(TEST_TARGET_FOUR Example_LEGO)
+add_executable(${TEST_TARGET_FOUR} Example_LEGO.cpp)
+target_link_libraries(${TEST_TARGET_FOUR} session mnist utils lodepng)
+target_compile_definitions(${TEST_TARGET_FOUR} PRIVATE MNIST_DATA_LOCATION="${CMAKE_SOURCE_DIR}/extern/mnist" STORAGE="${CMAKE_SOURCE_DIR}/data/Storage/" DATA_DIR="${CMAKE_SOURCE_DIR}/data/")
 
-    #target_compile_features(${TEST_TARGET_FOUR} PUBLIC cxx_std_17)
 
 
 
