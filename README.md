@@ -48,9 +48,12 @@ Label: 6632 Technic Lever 3M
 
 There are in total three examples that run a network on this data:
 
- - the presentation jupyter notebook in pythonApps/ <-- mostly visualization and explanation
- - the example_lego.py <-- playground in python with comments in the file / pretrained network is set
- - a C++ examples Example_LEGO build from Example_LEGO.cpp <-- fallback no pretrained network is set, but could be equally as in python
+ - the presentation jupyter notebook in pythonApps/ :
+    - mostly visualization and explanation
+ - the example_lego.py :
+    - playground in python with comments in the file / a pretrained network is set
+ - a C++ examples Example_LEGO build from Example_LEGO.cpp :
+    - this is mostly a fallback where no pretrained network is set
 
 For the python examples please first apply the steps from the above provided instructions.
 
