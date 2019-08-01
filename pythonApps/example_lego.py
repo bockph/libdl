@@ -1,7 +1,7 @@
 import numpy as np
 import sys
-# projectDir='/mnt/c/Users/phili/Desktop/Projekte/libdl/'
-projectDir='/home/pbo/CLionProjects/libdl/'
+projectDir='/mnt/c/Users/phili/Desktop/Projekte/libdl/'
+# projectDir='/home/pbo/CLionProjects/libdl/'
 dataStorage = projectDir+"data/Storage/"
 
 sys.path.append(projectDir+'cmake-build-release/library/bindings')

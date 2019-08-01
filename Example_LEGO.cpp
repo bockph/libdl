@@ -36,17 +36,12 @@
 #include <LegoDataLoader.hpp>
 
 
-
-
-
 int main() {
 //
 	/*
 	 * batch_size: if this is changed '#define BATCH_SIZE' in Node.hpp has to be changed as well
-	 * epochs: sets the amount of epochs for training, to big values in combination with a big 'amount_batches' can lead to OutOfMemory Error
+	 * epochs: sets the amount of epochs for training
 	 * amount_batches: 'batch_size*amount_batches' gives the total amount of samples
-	 * trainModel: defines if the model should be trained with the aboved set parameters
-	 * testModel: defines if the model should be tested (using the MNIST test_data)
 	 * writeWeights: if set the trained Weights  are written to Source_Directory/WeightDeposit
 	 * readWeights: if set (and Weights have already been Written once) weights are initialized with weights from Source_Directory/WeightDeposit
 	 */
@@ -54,8 +49,6 @@ int main() {
 	int epochs = 5;
 	double learningRate = 0.0001;
 	int amount_batches = 10;
-	bool trainModel = true;
-	bool testModel = false;
 	bool writeWeights = true;
 	bool readWeights = false;
 
@@ -65,9 +58,9 @@ int main() {
 
 
 
-/*
- * Create Neural Network
- */
+	/*
+ 	* Create Neural Network
+ 	*/
 	HyperParameters config(epochs, batch_size, learningRate);
 
 	std::shared_ptr<Graph> graph = std::make_shared<Graph>();
@@ -85,7 +78,7 @@ int main() {
 	//convolutional Layer 2
 	auto convolution2 = std::make_shared<ConvolutionLayer>(maxPool1, graph, ActivationType::ReLu, 64, 5, 2, InitializationType::Xavier);
 	//Maxpooling
-	auto maxPool2 = std::make_shared<MaxPoolLayer>(convolution2,graph, 2, 2);
+	auto maxPool2 = std::make_shared<MaxPoolLayer>(convolution2, graph, 2, 2);
 
 	//Dense Layer 1
 	auto dense1 = std::make_shared<DenseLayer>(maxPool2, graph, ActivationType::ReLu, 1024, InitializationType::Xavier);
@@ -111,18 +104,13 @@ int main() {
 	/*
 	 * Train the Network
 	 */
-	if (trainModel) {
-		TrainingEvaluation eval =network.trainAndValidate(legoData, config);
-//		network.train(legoData,config);
+	TrainingEvaluation eval = network.trainAndValidate(legoData, config);
+	//		network.train(legoData,config);
 
-		/*
-		 * Write calculated Weights to Network
-		 */
-		if (writeWeights) { network.writeParameters(STORAGE, "lego_layer"); }
-	}
-
-
-
+	/*
+	 * Write calculated Weights to Network
+	 */
+	if (writeWeights) { network.writeParameters(STORAGE, "lego_layer"); }
 
 
 }

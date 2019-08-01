@@ -18,8 +18,6 @@
 #include <mnist/mnist_utils.hpp>
 
 
-
-
 #include <IO.hpp>
 #include <SigmoidOP.hpp>
 #include <InputLayer.hpp>
@@ -70,22 +68,17 @@ void getData(int samples, DataSet &data) {
 
 
 int main() {
-	Eigen::initParallel();
 	/*
 	 * batch_size: if this is changed '#define BATCH_SIZE' in Node.hpp has to be changed as well
-	 * epochs: sets the amount of epochs for training, to big values in combination with a big 'amount_batches' can lead to OutOfMemory Error
+	 * epochs: sets the amount of epochs for training
 	 * amount_batches: 'batch_size*amount_batches' gives the total amount of samples
-	 * trainModel: defines if the model should be trained with the aboved set parameters
-	 * testModel: defines if the model should be tested (using the MNIST test_data)
-	 * writeWeights: if set the trained Weights  are written to Source_Directory/data/STORAGE
+	 * writeWeights: if set the trained Weights  are written to Source_Directory/WeightDeposit
 	 * readWeights: if set (and Weights have already been Written once) weights are initialized with weights from Source_Directory/WeightDeposit
 	 */
 	int batch_size = 32;
 	int epochs = 50;
 	int amount_batches = 10;
 	double learningRate = 0.001;
-	bool trainModel = true;
-	bool testModel = true;
 	bool writeWeights = true;
 	bool readWeights = false;
 
@@ -99,16 +92,16 @@ int main() {
 
 
 
-/*
- * Create Neural Network
- */
+	/*
+	 * Create Neural Network
+	 */
 
 	HyperParameters config(epochs, batch_size, learningRate);
 	std::shared_ptr<Graph> graph = std::make_shared<Graph>();
 
 
 	//Create InputLayer
-	auto inputLayer = std::make_shared<InputLayer>(graph, batch_size, 28*28, 1);
+	auto inputLayer = std::make_shared<InputLayer>(graph, batch_size, 28 * 28, 1);
 
 	//Convolutional Layer 1
 
@@ -146,18 +139,12 @@ int main() {
 	/*
 	 * Train the Network
 	 */
-	if (trainModel) {
-		//trainAndValidate causes right now some Problems check Data preparation
-		network.trainAndValidate(data, config);
+	network.trainAndValidate(data, config);
 
-		/*
-		 * Write calculated Weights to Network
-		 */
-		if (writeWeights) { network.writeParameters(STORAGE, "mnist_layer"); }
-	}
-
-
-
+	/*
+	 * Write calculated Weights to Network
+	 */
+	if (writeWeights) { network.writeParameters(STORAGE, "mnist_layer"); }
 
 
 }
