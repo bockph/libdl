@@ -1,5 +1,3 @@
-include_directories(include)
-include_directories(Operations/include)
 set(GRAPH_NAME graph)
 set(GRAPH_SOURCES
         src/Node.cpp

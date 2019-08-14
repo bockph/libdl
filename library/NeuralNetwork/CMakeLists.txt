@@ -1,6 +1,5 @@
 add_subdirectory(LayerFactory)
 
-include_directories(include)
 set(LIB_NAME session)
 
 set(LIB_SOURCES

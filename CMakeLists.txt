@@ -3,7 +3,7 @@ project(libdl VERSION 0.1
         DESCRIPTION "testing CI setup"
         LANGUAGES CXX)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -std=c++17 -O0 -march=native")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -std=c++17 -O3 -march=native")
 #add external Libraries
 add_subdirectory(extern)
 #add Doxygen if installed (Code was taken from ELSA)

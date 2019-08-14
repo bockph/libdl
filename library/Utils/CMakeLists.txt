@@ -1,4 +1,3 @@
-include_directories(include)
 set(UTILS_NAME utils)
 set(UTILS_SOURCES
         src/IO.cpp
