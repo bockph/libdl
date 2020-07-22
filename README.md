@@ -1,4 +1,4 @@
-How to use my awesome Deep Learning library:
+How to use my Deep Learning library:
 ==============================================
 Documentation:
 ---------------
